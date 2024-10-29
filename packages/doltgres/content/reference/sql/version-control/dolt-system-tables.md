@@ -278,11 +278,48 @@ Then you can view them in `dolt_schemas`:
 
 [DOLT_TAG()](./dolt-sql-procedures.md#dolt_tag) procedure can be used to INSERT and DELETE tags on the `dolt_tags` table.
 
+### Schema
+
+```text
++----------+----------+------+-----+---------+-------+
+| Field    | Type     | Null | Key | Default | Extra |
++----------+----------+------+-----+---------+-------+
+| tag_name | text     | NO   | PRI | NULL    |       |
+| tag_hash | text     | NO   | PRI | NULL    |       |
+| tagger   | text     | NO   |     | NULL    |       |
+| email    | text     | NO   |     | NULL    |       |
+| date     | datetime | NO   |     | NULL    |       |
+| message  | text     | NO   |     | NULL    |       |
++----------+----------+------+-----+---------+-------+
+```
+
+### Example Query
+
+Create a tag using dolt_tag() stored procedure.
+
+```sql
+CALL DOLT_TAG('_migrationtest','head','-m','savepoint for migration testing');
+```
+
+```text
++--------+
+| status |
++--------+
+| 0      |
++--------+
+```
+
+Get all the tags.
+
+{% embed url="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_tags%3B" %}
+
 ## `dolt_statistics`
 
 `dolt_statistics` includes currently collected
 database statistics. This information is stored outside of the
 commit graph and is not subject to versioning semantics.
+
+### Schema
 
 ```sql
 +-----------------+----------+------+-----+---------+-------+
@@ -309,41 +346,6 @@ commit graph and is not subject to versioning semantics.
 | mcvCounts       | json     | NO   |     | NULL    |       |
 +-----------------+----------+------+-----+---------+-------+
 ```
-
-### Schema
-
-```text
-+----------+----------+
-| Field    | Type     |
-+----------+----------+
-| tag_name | text     |
-| tag_hash | text     |
-| tagger   | text     |
-| email    | text     |
-| date     | datetime |
-| message  | text     |
-+----------+----------+
-```
-
-### Example Query
-
-Create a tag using dolt_tag() stored procedure.
-
-```sql
-SELECT DOLT_TAG('_migrationtest','head','-m','savepoint for migration testing');
-```
-
-```text
-+--------+
-| status |
-+--------+
-| 0      |
-+--------+
-```
-
-Get all the tags.
-
-{% embed url="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_tags%3B" %}
 
 # Database History System Tables
 
