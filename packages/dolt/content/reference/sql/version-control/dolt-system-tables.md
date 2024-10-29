@@ -339,11 +339,48 @@ Then you can view them in `dolt_schemas`:
 
 [DOLT_TAG()](./dolt-sql-procedures.md#dolt_tag) procedure can be used to INSERT and DELETE tags on the `dolt_tags` table.
 
+### Schema
+
+```text
++----------+----------+------+-----+---------+-------+
+| Field    | Type     | Null | Key | Default | Extra |
++----------+----------+------+-----+---------+-------+
+| tag_name | text     | NO   | PRI | NULL    |       |
+| tag_hash | text     | NO   | PRI | NULL    |       |
+| tagger   | text     | NO   |     | NULL    |       |
+| email    | text     | NO   |     | NULL    |       |
+| date     | datetime | NO   |     | NULL    |       |
+| message  | text     | NO   |     | NULL    |       |
++----------+----------+------+-----+---------+-------+
+```
+
+### Example Query
+
+Create a tag using dolt_tag() stored procedure.
+
+```sql
+CALL DOLT_TAG('_migrationtest','head','-m','savepoint for migration testing');
+```
+
+```text
++--------+
+| status |
++--------+
+| 0      |
++--------+
+```
+
+Get all the tags.
+
+{% embed url="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_tags%3B" %}
+
 ## `dolt_statistics`
 
 `dolt_statistics` includes currently collected
 database statistics. This information is stored outside of the
 commit graph and is not subject to versioning semantics.
+
+### Schema
 
 ```sql
 +-----------------+----------+------+-----+---------+-------+
@@ -370,41 +407,6 @@ commit graph and is not subject to versioning semantics.
 | mcvCounts       | json     | NO   |     | NULL    |       |
 +-----------------+----------+------+-----+---------+-------+
 ```
-
-### Schema
-
-```text
-+----------+----------+
-| Field    | Type     |
-+----------+----------+
-| tag_name | text     |
-| tag_hash | text     |
-| tagger   | text     |
-| email    | text     |
-| date     | datetime |
-| message  | text     |
-+----------+----------+
-```
-
-### Example Query
-
-Create a tag using dolt_tag() stored procedure.
-
-```sql
-CALL DOLT_TAG('_migrationtest','head','-m','savepoint for migration testing');
-```
-
-```text
-+--------+
-| status |
-+--------+
-| 0      |
-+--------+
-```
-
-Get all the tags.
-
-{% embed url="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_tags%3B" %}
 
 # Database History System Tables
 
@@ -1114,8 +1116,8 @@ These tables can be modified in order to update what changes are staged for comm
 ### Schema
 
 The schema of the source table is going to effect the schema of the workspace table. The first
-three column are always the same, then the schema of the source table is used to create "to_" and
-"from_" columns.
+three column are always the same, then the schema of the source table is used to create "to\_" and
+"from\_" columns.
 
 Each row in the `dolt_workspace_$TABLENAME` corresponds to a single row update in the table.
 
@@ -1139,18 +1141,21 @@ workspace which means all queries in your session contain them but they will not
 in the event that [`dolt_commit()`](dolt-sql-procedures.md#dolt_commit) is executed.
 
 There are two ways you can alter the state of your workspace using these tables.
-1) The `staged` column can be toggled for any row. If changing from false to true, the row values will be moved
-to staging. If there are already staged changes for that row, they will be overwritten. If changing from true to
-false, the row values will be unstaged. If there are other changes in the workspace for that row, the workspace
-change will be preserved and the staged change will be dropped.
-2) Any row which has `staged = FALSE` can be deleted. This will result in reverting the change to the row in the source table.
+
+1. The `staged` column can be toggled for any row. If changing from false to true, the row values will be moved
+   to staging. If there are already staged changes for that row, they will be overwritten. If changing from true to
+   false, the row values will be unstaged. If there are other changes in the workspace for that row, the workspace
+   change will be preserved and the staged change will be dropped.
+2. Any row which has `staged = FALSE` can be deleted. This will result in reverting the change to the row in the source table.
 
 ### Example Query
+
 ```sql
 SELECT *
 FROM dolt_workspace_mytable
 WHERE staged=false
 ```
+
 ```text
 +----+--------+-----------+-------+----------+---------+------------+
 | id | staged | diff_type | to_id | to_value | from_id | from_value |
@@ -1168,6 +1173,7 @@ call dolt_commit("-m", "Added row id 3 in my table")
 ```
 
 ### Notes
+
 The `dolt_workspace_$TABLENAME` tables are generated based on the session state when inspected,
 so they can not be considered stable on a branch which has multiple editors.
 
