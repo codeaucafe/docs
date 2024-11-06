@@ -26,7 +26,7 @@ If you would like to use a current view with an different version of the data, `
 
 ## Example
 
-```
+```sql
 mysql> create table salaries (name varchar(255), salary int, primary key(name));
 mysql> insert into salaries values ('Jim', 120000), ('Bob', 240000), ('Sally', 360000);
 mysql> create view monthly_salaries as select name, salary/12 as monthly_pay from salaries; 
@@ -41,7 +41,8 @@ mysql> select * from monthly_salaries order by monthly_pay asc;
 ```
 
 ### Using `as of` with Views
-```
+
+```sql
 mysql> call dolt_add('-A');
 mysql> call dolt_commit('-am', 'Created table and view');
 +----------------------------------+
