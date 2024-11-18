@@ -32,7 +32,7 @@ procedure](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-proce
 
 ```bash
 % doltgres &
-% psql -h 127.0.0.1 -U postgres -c "SELECT DOLT_PULL()"
+% PGPASSWORD=password psql -h 127.0.0.1 -U postgres -c "SELECT DOLT_PULL()"
 ```
 
 Refer to the docs for [version control features](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures) for details on supported stored procedures and system tables.

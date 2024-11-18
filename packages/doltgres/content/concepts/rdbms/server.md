@@ -38,5 +38,5 @@ Starting server with Config HP="localhost:3306"|T="28800000"|R="false"|L="info"
 ### Connect a client
 
 ```bash
-PGPASSWORD=password psql -h 127.0.0.1 -U doltgres
+PGPASSWORD=password psql -h 127.0.0.1 -U postgres
 ```
