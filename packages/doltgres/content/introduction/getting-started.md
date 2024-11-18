@@ -41,7 +41,7 @@ postgres=> create database getting_started;
 
 postgres=> \c getting_started;
 psql (15.4 (Homebrew), server 15.0)
-You are now connected to database "getting_started" as user "doltgres".
+You are now connected to database "getting_started" as user "postgres".
 getting_started=> create table employees (
     id int8,
     last_name text,
