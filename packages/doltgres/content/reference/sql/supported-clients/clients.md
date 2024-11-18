@@ -4,21 +4,21 @@ title: SQL Clients
 
 # SQL Clients
 
-Doltgres ships with a built in Postgres compatible server. To start the server for your Doltgres
-database, you run `doltgres`. The `doltgres` command starts a Postgres compatible server for the
-Doltgres database on port 5432 with no authentication. The database name is the name of the
-repository directory.
+Doltgres ships with a built-in Postgres compatible server. To start the server for your Doltgres
+database, you run `doltgres`. The `doltgres` command starts a Postgres compatible server
+on port 5432. By default, a user named `postgres` with a password of `password` is created, along
+with the `postgres` database.
 
 Once a server is running, any Postgres client should be able to connect to Doltgres SQL Server in
 the exact same way it connects to a standard Postgres database. For instance, if you are running a
 Doltgres sql-server locally, you can connect to it with the `psql` client like so:
 
 ```sql
-PGPASSWORD=password psql -h 127.0.0.1 -U doltgres
+PGPASSWORD=password psql -h 127.0.0.1 -U postgres
 psql (16.1 (Ubuntu 16.1-1.pgdg20.04+1), server 15.0)
 Type "help" for help.
 
-doltgres=>
+postgres=>
 ```
 
 We explicitly support the programmatic clients outlined in this document through integration
