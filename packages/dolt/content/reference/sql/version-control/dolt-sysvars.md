@@ -8,6 +8,7 @@ title: Dolt System Variables
 
   - [dbname_default_branch](#dbname_default_branch)
   - [dolt_allow_commit_conflicts](#dolt_allow_commit_conflicts)
+  - [dolt_dont_merge_json](#dolt_dont_merge_json)
   - [dolt_force_transaction_commit](#dolt_force_transaction_commit)
   - [dolt_log_level](#dolt_log_level)
   - [dolt_override_schema](#dolt_override_schema)
@@ -156,6 +157,10 @@ transaction. Defaults to `0`.
 When set to `1`, this system variable ignores all merge conflicts,
 constraint violations, and other correctness issues resulting from a
 merge and allows them to be committed. Defaults to `0`.
+
+## `dolt_dont_merge_json`
+
+When set to `1`, Dolt will not attempt to automatically merge concurrent changes to the same JSON document, and will instead report the merge as having conflicts which must manually be resolved. Use this if your JSON requires invariants that could be violated if two commits make concurrent changes to different locations in the same document. Defaults to `0`.
 
 # Replication variables
 
