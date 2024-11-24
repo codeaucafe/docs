@@ -112,12 +112,8 @@ CALL DOLT_COMMIT('-m', 'committing all changes');
 
 ## `DOLT_BACKUP()`
 
-Sync with a configured backup. Other backup commands not supported
-via SQL yet.
-
-```sql
-CALL DOLT_BACKUP('sync', 'name');
-```
+Add or remove a configured backup, sync with a configured backup, sync a backup
+to a remote URL, restore a remote URL backup as a new database.
 
 ### Output Schema
 
@@ -129,14 +125,46 @@ CALL DOLT_BACKUP('sync', 'name');
 +--------+------+---------------------------+
 ```
 
+To sync the current database to configured backup:
+
+```sql
+CALL DOLT_BACKUP('sync', 'name');
+```
+
+To sync with a remote URL which is not configured as a backup:
+
+```sql
+CALL DOLT_BACKUP('sync-url', 'https://dolthub.com/some_organization/some_dolthub_repository');
+```
+
+To add and remove a configured backup:
+
+```sql
+CALL DOLT_BACKUP('add', 'dolthub', 'https://dolthub.com/some_organization/some_dolthub_repository');
+
+CALL DOLT_BACKUP('remove', 'dolthub');
+```
+
+To restore a backup:
+
+```sql
+CALL DOLT_BACKUP('restore', 'https://dolthub.com/some_organization/some_dolthub_repository', 'database_name');
+```
+
 ### Example
 
 ```sql
 -- Set the current database for the session
 USE mydb;
 
--- Upload the current database contents to the named backup
+-- Configure a backup to sync to.
+CALL dolt_backup('add', 'my-backup', 'https://dolthub.com/some_organization/some_dolthub_repository');
+
+-- Upload the current database contents to that named backup
 CALL dolt_backup('sync', 'my-backup')
+
+-- Restore the uploaded database to a new database name
+CALL dolt_backup('restore', 'https://dolthub.com/some_organization/some_dolthub_repository', 'mydb_restored');
 ```
 
 ## `DOLT_BRANCH()`
