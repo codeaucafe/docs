@@ -153,6 +153,12 @@ guaranteed to see these changes reflected in the files on disk.
 +----------+------+
 ```
 
+### Example
+
+Gets all docs.
+
+{% embed url="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_docs%3B" %}
+
 ## `dolt_procedures`
 
 `dolt_procedures` stores each stored procedure that has been created
@@ -386,25 +392,22 @@ commit graph and is not subject to versioning semantics.
 +-----------------+----------+------+-----+---------+-------+
 | Field           | Type     | Null | Key | Default | Extra |
 +-----------------+----------+------+-----+---------+-------+
-| database        | text     | NO   | PRI | NULL    |       |
-| table           | text     | NO   | PRI | NULL    |       |
-| index           | text     | NO   | PRI | NULL    |       |
-| position        | bigint   | NO   | PRI | NULL    |       |
-| version         | bigint   | NO   |     | NULL    |       |
-| commit_hash     | text     | NO   |     | NULL    |       |
+| database_name   | text     | NO   | PRI | NULL    |       |
+| table_name      | text     | NO   | PRI | NULL    |       |
+| index_name      | text     | NO   | PRI | NULL    |       |
 | row_count       | bigint   | NO   |     | NULL    |       |
 | distinct_count  | bigint   | NO   |     | NULL    |       |
 | null_count      | bigint   | NO   |     | NULL    |       |
-| columns         | json     | NO   |     | NULL    |       |
-| types           | json     | NO   |     | NULL    |       |
-| upper_bound     | json     | NO   |     | NULL    |       |
+| columns         | text     | NO   |     | NULL    |       |
+| types           | text     | NO   |     | NULL    |       |
+| upper_bound     | text     | NO   |     | NULL    |       |
 | upper_bound_cnt | bigint   | NO   |     | NULL    |       |
 | created_at      | datetime | NO   |     | NULL    |       |
-| mcv1            | json     | NO   |     | NULL    |       |
-| mcv2            | json     | NO   |     | NULL    |       |
-| mcv3            | json     | NO   |     | NULL    |       |
-| mcv4            | json     | NO   |     | NULL    |       |
-| mcvCounts       | json     | NO   |     | NULL    |       |
+| mcv1            | text     | NO   |     | NULL    |       |
+| mcv2            | text     | NO   |     | NULL    |       |
+| mcv3            | text     | NO   |     | NULL    |       |
+| mcv4            | text     | NO   |     | NULL    |       |
+| mcvCounts       | text     | NO   |     | NULL    |       |
 +-----------------+----------+------+-----+---------+-------+
 ```
 
@@ -906,7 +909,7 @@ num_inmates_rated_for have changed the most between 2 versions.
 
 ## `dolt_conflicts`
 
-dolt_conflicts is a system table that has a row for every table in the working set that has an unresolved merge
+`dolt_conflicts` is a system table that has a row for every table in the working set that has an unresolved merge
 conflict.
 
 ```sql
@@ -985,18 +988,18 @@ And of course you can use any combination of `ours`, `theirs` and
   primary key (or keyless hash). If the row does not exist, it will be inserted.
   Updates made to `our_` columns will never delete a row, however.
 
-- `dolt_conflict_id` is a unique identifier for the conflict. It is particulary
+- `dolt_conflict_id` is a unique identifier for the conflict. It is particularly
   useful when writing software that needs to resolve conflicts automatically.
 
 - `from_root_ish` is the commit hash of the "from branch" of the merge. This
   hash can be used to identify which merge produced a conflict, since conflicts
-  can accumalate across merges.
+  can accumulate across merges.
 
 {% endhint %}
 
 ## `dolt_schema_conflicts`
 
-dolt_schema_conflicts is a system table that has a row for every table in the working
+`dolt_schema_conflicts` is a system table that has a row for every table in the working
 set that has an unresolved schema conflict.
 
 ```sql
@@ -1020,19 +1023,19 @@ resolving schema conflicts during merge, see the docs on [conflicts](./merges.md
 
 ## `dolt_merge_status`
 
-The dolt_merge_status system table tells a user if a merge is active. It has the following schema:
+The `dolt_merge_status` system table tells a user if a merge is active. It has the following schema:
 
 ```sql
 CREATE TABLE `dolt_merge_status` (
--- Whether a merge is currently active or not
+  -- Whether a merge is currently active or not
   `is_merging` tinyint NOT NULL,
- -- The commit spec that was used to initiate the merge
+  -- The commit spec that was used to initiate the merge
   `source` text,
--- The commit that the commit spec resolved to at the time of merge
+  -- The commit that the commit spec resolved to at the time of merge
   `source_commit` text,
--- The target destination working set
+  -- The target destination working set
   `target` text,
--- A list of tables that have conflicts or constraint violations
+  -- A list of tables that have conflicts or constraint violations
   `unmerged_tables` text
 )
 ```
@@ -1115,13 +1118,13 @@ These tables can be modified in order to update what changes are staged for comm
 
 ### Schema
 
-The schema of the source table is going to effect the schema of the workspace table. The first
+The schema of the source table is going to affect the schema of the workspace table. The first
 three column are always the same, then the schema of the source table is used to create "to\_" and
 "from\_" columns.
 
 Each row in the `dolt_workspace_$TABLENAME` corresponds to a single row update in the table.
 
-```text
+```sql
 +------------------+----------+
 | field            | type     |
 +------------------+----------+
@@ -1156,7 +1159,7 @@ FROM dolt_workspace_mytable
 WHERE staged=false
 ```
 
-```text
+```sql
 +----+--------+-----------+-------+----------+---------+------------+
 | id | staged | diff_type | to_id | to_value | from_id | from_value |
 +----+--------+-----------+-------+----------+---------+------------+
