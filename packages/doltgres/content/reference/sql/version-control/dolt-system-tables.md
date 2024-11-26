@@ -79,7 +79,7 @@ information that is not schema or table specific, like branches, logs, etc.
 
 ### `dolt.branches`
 
-`dolt.branches` (also known as `dolt_branches`) contains information about branches known
+`dolt.branches` (also usable as `dolt_branches`) contains information about branches known
 to the database.
 
 Because the branch information is global to all clients, not just your
@@ -132,7 +132,7 @@ branches on a remote you have fetched, see
 
 ### `dolt.remote_branches`
 
-`dolt.remote_branches` (also known as `dolt_remote_branches`) contains information about branches on remotes
+`dolt.remote_branches` (also usable as `dolt_remote_branches`) contains information about branches on remotes
 you have fetched. It has the same schema as `dolt.branches`, but
 contains only branches found on remotes, not any local branches.
 
@@ -171,7 +171,7 @@ SELECT name, hash, latest_committer, latest_commit_date, latest_commit_message F
 
 ### `dolt.docs`
 
-`dolt.docs` (also known as `dolt_docs`) stores the contents of Dolt docs \(`LICENSE.md`,
+`dolt.docs` (also usable as `dolt_docs`) stores the contents of Dolt docs \(`LICENSE.md`,
 `README.md`\).
 
 ### Schema
@@ -200,7 +200,7 @@ postgres> SELECT * FROM dolt.docs;
 
 ### `dolt.procedures`
 
-`dolt.procedures` (also known as `dolt_procedures`) stores each stored procedure that has been created
+`dolt.procedures` (also usable as `dolt_procedures`) stores each stored procedure that has been created
 on the database.
 
 The values in this table are implementation details associated with
@@ -238,7 +238,7 @@ CREATE PROCEDURE simple_proc2() SELECT name FROM category;
 
 ### `dolt.remotes`
 
-`dolt.remotes` (also known as `dolt_remotes`) returns the remote subcontents of the `repo_state.json`, similar
+`dolt.remotes` (also usable as `dolt_remotes`) returns the remote subcontents of the `repo_state.json`, similar
 to running `dolt remote -v` from the Dolt command line.
 
 The `dolt.remotes` table is currently read only. Use the [`dolt_remote()` procedure](./dolt-sql-procedures.md#dolt_remote) to add, update or delete remotes.
@@ -274,7 +274,7 @@ WHERE name = 'origin';
 
 ### `dolt.tags`
 
-`dolt.tags` (also known as `dolt_tags`) shows information for all active tags in the current database.
+`dolt.tags` (also usable as `dolt_tags`) shows information for all active tags in the current database.
 
 [DOLT_TAG()](./dolt-sql-procedures.md#dolt_tag) procedure can be used to INSERT and DELETE tags on the `dolt.tags` table.
 
@@ -317,7 +317,7 @@ Get all the tags.
 
 ### `dolt.commit_ancestors`
 
-The `dolt.commit_ancestors` (also known as `dolt_commit_ancestors`) table records the ancestors for every commit in the database. Each commit has one or two
+The `dolt.commit_ancestors` (also usable as `dolt_commit_ancestors`) table records the ancestors for every commit in the database. Each commit has one or two
 ancestors, two in the case of a merge commit.
 
 ### Schema
@@ -338,7 +338,7 @@ merged will have `parent_index` 1.
 
 ### `dolt.commits`
 
-The `dolt.commits` (also known as `dolt_commits`) system table shows _ALL_ commits in a Dolt database.
+The `dolt.commits` (also usable as `dolt_commits`) system table shows _ALL_ commits in a Dolt database.
 
 This is similar, but different from the `dolt.log` [system table](#doltlog)
 and the `dolt log` [CLI command](https://docs.dolthub.com/reference/cli#dolt-log).
@@ -369,7 +369,7 @@ we can query for the five commits before April 20th, 2022, across all commits in
 
 ### `dolt.log`
 
-The `dolt.log` (also known as `dolt_log`) system table contains the commit log for all commits reachable from the current `HEAD`.
+The `dolt.log` (also usable as `dolt_log`) system table contains the commit log for all commits reachable from the current `HEAD`.
 This is the same data returned by the [`dolt log` CLI command](https://docs.dolthub.com/reference/cli#dolt-log).
 
 ### Schema
@@ -396,7 +396,7 @@ The following query shows the commits reachable from the current checked out hea
 
 ### `dolt.diff`
 
-The `dolt.diff` (also known as `dolt_diff`) system table shows which tables in the current database were changed in each commit reachable from the active branch's HEAD. When multiple tables are changed in a single commit, there is one row in the `dolt.diff` system table for each table, all with the same commit hash. Any staged or unstaged changes in the working set are included with the value `WORKING` for their `commit_hash`. After identifying the tables that changed in a commit, the `dolt_diff_$TABLENAME` system tables can be used to determine the data that changed in each table.
+The `dolt.diff` (also usable as `dolt_diff`) system table shows which tables in the current database were changed in each commit reachable from the active branch's HEAD. When multiple tables are changed in a single commit, there is one row in the `dolt.diff` system table for each table, all with the same commit hash. Any staged or unstaged changes in the working set are included with the value `WORKING` for their `commit_hash`. After identifying the tables that changed in a commit, the `dolt_diff_$TABLENAME` system tables can be used to determine the data that changed in each table.
 
 ### Schema
 
@@ -443,7 +443,7 @@ the `dolt_diff_$TABLENAME` system tables specific to each of the changed tables,
 
 ### `dolt.column_diff`
 
-The `dolt.column_diff` (also know as `dolt.column_diff`) system table shows which columns and tables in the current database were changed in each commit
+The `dolt.column_diff` (also usable as `dolt_column_diff`) system table shows which columns and tables in the current database were changed in each commit
 reachable from the active branch's HEAD. When multiple columns are changed in a single commit, there is one row in the
 `dolt.column_diff` system table for each column, all with the same commit hash. Any staged changes in the working set
 are included with the value `STAGED` for their `commit_hash`. Any unstaged changes in the working set are included with
@@ -494,7 +494,7 @@ frequently than the fields holding demographic information about inmates.
 
 ### `dolt.conflicts`
 
-`dolt.conflicts` (also known as `dolt_conflicts`) is a system table that has a row for every table in the working set that has an unresolved merge
+`dolt.conflicts` (also usable as `dolt_conflicts`) is a system table that has a row for every table in the working set that has an unresolved merge
 conflict.
 
 ```sql
@@ -511,7 +511,7 @@ see docs for the [dolt_conflicts\_$TABLENAME](#dolt_conflicts_usdtablename) tabl
 
 ### `dolt.schema_conflicts`
 
-`dolt.schema_conflicts` (also known as `dolt_schema_conflicts`) is a system table that has a row for every table in the working
+`dolt.schema_conflicts` (also usable as `dolt_schema_conflicts`) is a system table that has a row for every table in the working
 set that has an unresolved schema conflict.
 
 ```sql
@@ -584,7 +584,7 @@ Output of `SELECT * from dolt.merge_status;`:
 
 ### `dolt.status`
 
-`dolt.status` (also known as `dolt_status`) returns the status of the database session, analogous to
+`dolt.status` (also usable as `dolt_status`) returns the status of the database session, analogous to
 running `dolt status` from the Dolt command line.
 
 ### Schema
@@ -619,7 +619,7 @@ WHERE staged=false;
 
 ### `dolt.constraint_violations`
 
-The `dolt.constraint_violations` (also known as `dolt_constraint_violations`) system table contains one row for every table that has a constraint violation
+The `dolt.constraint_violations` (also usable as `dolt_constraint_violations`) system table contains one row for every table that has a constraint violation
 introduced by a merge. Dolt enforces constraints (such as foreign keys) during normal SQL operations, but it's possible
 that a merge puts one or more tables in a state where constraints no longer hold. For example, a row deleted in the
 merge base could be referenced via a foreign key constraint by an added row in the merged commit. Use
@@ -640,7 +640,7 @@ merge base could be referenced via a foreign key constraint by an added row in t
 
 ### `dolt.rebase`
 
-`dolt.rebase` (also known as `dolt_rebase`) is only present while an interactive rebase is in progress, and only on the branch where the rebase is being executed. For example, when rebasing the `feature1` branch, the rebase will be executed on the `dolt_rebase_feature1` branch, and the `dolt.rebase` system table will exist on that branch while the rebase is in-progress. The `dolt.rebase` system table starts off with the default rebase plan, which is to `pick` all of the commits identified for the rebase. Users can adjust the rebase plan by updating the `dolt.rebase` table to change the rebase action, reword a commit message, or even add new rows with additional commits to be applied as part of the rebase. For more details about rebasing, see [the `dolt_rebase()` stored procedure](dolt-sql-procedures.md#dolt_rebase).
+`dolt.rebase` (also usable as `dolt_rebase`) is only present while an interactive rebase is in progress, and only on the branch where the rebase is being executed. For example, when rebasing the `feature1` branch, the rebase will be executed on the `dolt_rebase_feature1` branch, and the `dolt.rebase` system table will exist on that branch while the rebase is in-progress. The `dolt.rebase` system table starts off with the default rebase plan, which is to `pick` all of the commits identified for the rebase. Users can adjust the rebase plan by updating the `dolt.rebase` table to change the rebase action, reword a commit message, or even add new rows with additional commits to be applied as part of the rebase. For more details about rebasing, see [the `dolt_rebase()` stored procedure](dolt-sql-procedures.md#dolt_rebase).
 
 ### Schema
 
