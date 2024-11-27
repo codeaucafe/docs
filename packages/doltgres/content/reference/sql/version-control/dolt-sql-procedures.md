@@ -1066,27 +1066,26 @@ select dolt_commit('-am', 'inserting row 3');
 
 -- check out what our commit history on branch1 looks like before we rebase
 select commit_hash, message from dolt_log;
-+----------------------------------+----------------------------+
-| commit_hash                      | message                    |
-+----------------------------------+----------------------------+
-| tsq01op7b48ij6dfa2tst60vbfm9rcus | inserting row 3            |
-| uou7dibe86e9939pu8fdtjdce5pt7v1c | inserting row 2            |
-| 3umkjmqeeep5ho7nn0iggfinajoo1l6q | inserting row 1            |
-| 35gfll6o322aq9uffdqin1dqmq7q3vek | creating table t           |
-| do1tp9u39vsja3c8umshv9p6fernr0lt | Inіtіalizе dаta repоsitоry |
-+----------------------------------+----------------------------+
+           commit_hash            |          message
+----------------------------------+----------------------------
+ m2v3oajs9jesvvc44ihqlsu1uq2c8jf2 | inserting row 3
+ qa1t5ieqs418s1b7mssqlmpn68ackq20 | inserting row 2
+ tgltn67jjho1mp8a3jdl3jkip08jbbun | inserting row 1
+ nof0lk6ufv031mddiahqfqfelqcpjdv5 | creating table t
+ pfjaqljdrdn43877sbc2d2sla9g3eb8u | CREATE DATABASE
+ k23mej9jdej41s0n7o2g8gp5rpgvrfdb | Initialize data repository
+(6 rows)
 
 -- start an interactive rebase and check out the default rebase plan; this will rebase
 -- all the new commits on this branch and move them to the tip of the main branch
 select dolt_rebase('-i', 'main');
 select * from dolt_rebase order by rebase_order;
-+--------------+--------+----------------------------------+-----------------+
-| rebase_order | action | commit_hash                      | commit_message  |
-+--------------+--------+----------------------------------+-----------------+
-| 1.00         | pick   | 3umkjmqeeep5ho7nn0iggfinajoo1l6q | inserting row 1 |
-| 2.00         | pick   | uou7dibe86e9939pu8fdtjdce5pt7v1c | inserting row 2 |
-| 3.00         | pick   | tsq01op7b48ij6dfa2tst60vbfm9rcus | inserting row 3 |
-+--------------+--------+----------------------------------+-----------------+
+ rebase_order | action |           commit_hash            | commit_message
+--------------+--------+----------------------------------+-----------------
+         1.00 | pick   | tgltn67jjho1mp8a3jdl3jkip08jbbun | inserting row 1
+         2.00 | pick   | qa1t5ieqs418s1b7mssqlmpn68ackq20 | inserting row 2
+         3.00 | pick   | m2v3oajs9jesvvc44ihqlsu1uq2c8jf2 | inserting row 3
+(3 rows)
 
 -- adjust the rebase plan to reword the first commit, drop the commit that inserted row 2,
 -- and combine the third commit into the previous commit
@@ -1099,14 +1098,14 @@ select dolt_rebase('--continue');
 
 -- check out the history
 select commit_hash, message from dolt_log;
-+----------------------------------+----------------------------+
-| commit_hash                      | message                    |
-+----------------------------------+----------------------------+
-| 8jc1dpj25fv6f2kn3bd47uokc8hs1vp0 | insert rows                |
-| hb9fnqnrsd5ghq3fgag0kiq6nvpsasvo | inserting row 0            |
-| 35gfll6o322aq9uffdqin1dqmq7q3vek | creating table t           |
-| do1tp9u39vsja3c8umshv9p6fernr0lt | Inіtіalizе dаta repоsitоry |
-+----------------------------------+----------------------------+
+           commit_hash            |          message
+----------------------------------+----------------------------
+ 8jc1dpj25fv6f2kn3bd47uokc8hs1vp0 | insert rows
+ gd5rnrmjvbf0fb6sb8dfaf5a344t68ei | inserting row 0
+ nof0lk6ufv031mddiahqfqfelqcpjdv5 | creating table t
+ pfjaqljdrdn43877sbc2d2sla9g3eb8u | CREATE DATABASE
+ k23mej9jdej41s0n7o2g8gp5rpgvrfdb | Initialize data repository
+(5 rows)
 ```
 
 ## `DOLT_REMOTE()`
