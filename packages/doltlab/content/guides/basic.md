@@ -9,19 +9,20 @@ This guide will cover how to perform common DoltLab administrator configuration 
 1. [File issues and view release notes](#file-issues-and-view-release-notes)
 2. [Backup DoltLab data](#backup-and-restore-volumes)
 3. [Connect with the DoltLab team](#connect-with-the-doltlab-team)
-4. [Send service logs to DoltLab team](#send-service-logs-to-doltlab-team)
-5. [Authenticate a Dolt client to use a DoltLab account](#authenticate-a-dolt-client-to-use-a-doltlab-account)
-6. [Monitor DoltLab with cAdvisor and Prometheus](#monitor-doltlab-with-cadvisor-and-prometheus)
-7. [Prevent unauthorized user account creation](#prevent-unauthorized-user-account-creation)
-8. [Use an external database server with DoltLab](#use-an-external-database-server-with-doltlab)
-9. [DoltLab Jobs](#doltlab-jobs)
-10. [Disable usage metrics](#disable-usage-metrics)
-11. [Use a domain name with DoltLab](#use-a-domain-name-with-doltlab)
-12. [Run DoltLab on Hosted Dolt](#run-doltlab-on-hosted-dolt)
-13. [Improve DoltLab performance](#improve-doltlab-performance)
-14. [Serve DoltLab behind an AWS Network Load Balancer](#serve-doltlab-behind-an-aws-network-load-balancer)
-15. [Update database passwords](#update-application-database-passwords)
-16. [Run DoltLab with no egress access](#run-doltlab-with-no-egress-access)
+4. [View DoltLab service logs](#view-doltlab-service-logs)
+5. [Send service logs to DoltLab team](#send-service-logs-to-doltlab-team)
+6. [Authenticate a Dolt client to use a DoltLab account](#authenticate-a-dolt-client-to-use-a-doltlab-account)
+7. [Monitor DoltLab with cAdvisor and Prometheus](#monitor-doltlab-with-cadvisor-and-prometheus)
+8. [Prevent unauthorized user account creation](#prevent-unauthorized-user-account-creation)
+9. [Use an external database server with DoltLab](#use-an-external-database-server-with-doltlab)
+10. [DoltLab Jobs](#doltlab-jobs)
+11. [Disable usage metrics](#disable-usage-metrics)
+12. [Use a domain name with DoltLab](#use-a-domain-name-with-doltlab)
+13. [Run DoltLab on Hosted Dolt](#run-doltlab-on-hosted-dolt)
+14. [Improve DoltLab performance](#improve-doltlab-performance)
+15. [Serve DoltLab behind an AWS Network Load Balancer](#serve-doltlab-behind-an-aws-network-load-balancer)
+16. [Update database passwords](#update-application-database-passwords)
+17. [Run DoltLab with no egress access](#run-doltlab-with-no-egress-access)
 
 # File issues and view release notes
 
@@ -209,13 +210,21 @@ The database has now been successfully restored, and you can now restart DoltLab
 
 If you need to connect to a DoltLab team member, the best way to do so is on [Discord](https://discord.gg/s8uVgc3), in the `#doltlab` server.
 
-# Send Service Logs to DoltLab Team
+# View DoltLab Service Logs
 
-DoltLab is composed of [multiple services](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/) running in a single Docker network via Docker compose. Logs for a particular service can be viewed using the `docker logs <container name>` command. For example, to view to logs of `doltlabapi` service, run:
+DoltLab is composed of [multiple services](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/) running in a single Docker network via Docker compose. Docker writes the logs of each DoltLab service to an internal location. Logs for a particular service can be viewed using the `docker logs <container name>` command. For example, to view to logs of `doltlabapi` service, run:
 
 ```bash
 docker logs doltlab_doltlabapi_1
 ```
+
+You can find the location where Docker writes a service's logs by inspecting the `LogPath` of the service.
+
+```bash
+docker inspect --format='{{.LogPath}}' doltlab_doltlabapi_1
+```
+
+# Send Service Logs to DoltLab Team
 
 If you need to send service logs to the DoltLab team, first locate the logs on the host using the `docker inspect` command, then `cp` the logs to your working directory:
 
