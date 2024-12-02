@@ -179,6 +179,7 @@ than using this table directly.
 | create_stmt | longtext |
 | created_at  | datetime |
 | modified_at | datetime |
+| sql_mode    | longtext |
 +-------------+----------+
 ```
 
@@ -546,7 +547,7 @@ Consider a table named `mytable` with the following schema:
 +------------+--------+
 ```
 
-The schema for `dolt_history_states` would be:
+The schema for `dolt_history_mytable` would be:
 
 ```text
 +-------------+----------+
@@ -713,7 +714,7 @@ The `dolt_diff` system table shows which tables in the current database were cha
 
 ### Schema
 
-The `DOLT_DIFF` system table has the following columns
+The `DOLT_DIFF` system table has the following columns:
 
 ```text
 +---------------+----------+
@@ -741,11 +742,11 @@ Taking the
 [`dolthub/first-hour-db`](https://www.dolthub.com/repositories/dolthub/first-hour-db)
 database from [DoltHub](https://www.dolthub.com/) as our
 example, the following query uses the `dolt_diff` system table to find all commits, and the tables they changed,
-from the month of April, 2022.
+from the month of April 2022.
 
 {% embed url="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+commit_hash%2C+table_name%2C+schema_change%0AFROM+++dolt_diff%0AWHERE++date+BETWEEN+%222022-04-01%22+AND+%222022-04-30%22%3B%0A" %}
 
-From these results, we can see there were four commits to this database in October, 2020. Commits
+From these results, we can see there were four commits to this database in April 2022. Commits
 `	224helo` only changed the `dolt_schemas` table, commit `7jrvg1a` changed the `dolt_docs`
 table, and commit `5jpgb0f` made changes to two tables. We can also see which of these tables had changes made to their schemas vs just data.
 
@@ -791,7 +792,7 @@ make any changes to tables _(e.g. an empty commit)_, it is not included in the `
 Taking the
 [`first-hour-db`](https://www.dolthub.com/repositories/dolthub/first-hour-db)
 database from [DoltHub](https://www.dolthub.com/) as our
-example, the following query uses the `dolt_column_diff` system table to find commits, and tables where the name was updated.
+example, the following query uses the `dolt_column_diff` system table to find commits and tables where the column `name` was updated.
 
 {% embed url="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+commit_hash%2C+date%0AFROM+dolt_column_diff+where+column_name+%3D+%27name%27%0A%3B%0A" %}
 
@@ -888,7 +889,7 @@ yet to be committed to HEAD. It is often useful to use the
 [`HASHOF()`](dolt-sql-functions.md#hashof)
 function to get the commit hash of a branch, or an ancestor
 commit. For example, to get the differences between the last commit and its parent
-you could use `to_commit=HASHOF("HEAD") and from_commit=HASHOF("HEAD^")`
+you could use `to_commit=HASHOF("HEAD") and from_commit=HASHOF("HEAD^")`.
 
 For each row the field `diff_type` will be one of the values `added`,
 `modified`, or `removed`. You can filter which rows appear in the
