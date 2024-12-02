@@ -13,6 +13,7 @@ Let us know what else you'd like to see tested by sending us [email](mailto:inte
 | Connector                                                                | Language | Blog                                                                                 | Sample Code                                                    |
 |--------------------------------------------------------------------------|----------|--------------------------------------------------------------------------------------|----------------------------------------------------------------|
 | [JDBC](https://docs.oracle.com/javase/8/docs/technotes/guides/jdbc/)     | Java     | [Blog](https://www.dolthub.com/blog/2024-10-11-dolt-with-jdbc/)                      | [Code](https://github.com/dolthub/dolt-jdbc-sample)            |
+| [Perl DBI](https://dev.mysql.com/doc/refman/8.4/en/apis-perl.html)       | Perl     | [Blog](https://www.dolthub.com/blog/2024-11-29-dolt-with-perl/)                      | [Code](https://github.com/dolthub/dolt-perl-sample)            |
 | [MySQL Connector/Python](https://dev.mysql.com/doc/connector-python/en/) | Python   | [Blog](https://www.dolthub.com/blog/2024-11-01-dolt-with-mysql-connector-in-python/) | [Code](https://github.com/dolthub/dolt-mysql-connector-python) |
 
 ## Frameworks/ORMs
