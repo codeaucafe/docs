@@ -2,7 +2,9 @@
 Title: Why Enterprise?
 ---
 
-The free version of DoltLab is designed to work for a small team of people. It runs on a single host. Teams and organizations ~~are~~ will eventually be disabled. There is no built-in user management. Users sign up with email only and manage their own accounts. 
+![DoltLab Feature Summary](../../content/.gitbook/assets/doltlab_feature_summary.svg)
+
+The free version of DoltLab is designed to work for a small team of people. It runs on a single host. Teams and organizations are disabled in the free edition of DoltLab. There is no built-in user management. Users sign up with email only and manage their own accounts. 
 
 DoltLab Enterprise is for companies. If your company is large enough to need Enterprise security, scalability, or support, the three S's, DoltHub Enterprise is for you.
 
