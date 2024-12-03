@@ -11,7 +11,7 @@ title: Dolt System Tables
     - [dolt.branches](#doltbranches)
     - [dolt.remote_branches](#doltremote_branches)
     - [dolt.docs](#doltdocs)
-    - [dolt.procedures](#doltprocedures)
+    <!-- TODO: Uncomment when procedures implemented - [dolt.procedures](#doltprocedures) -->
     - [dolt.remotes](#doltremotes)
     - [dolt.tags](#dolttags)
 
@@ -50,7 +50,8 @@ title: Dolt System Tables
 
   - [Database History](#database-history-system-tables-1)
 
-    - [dolt_blame\_$tablename](#dolt_blame_usdtablename)
+    <!-- TODO: Uncomment when blame view query works - [dolt_blame\_$tablename](#dolt_blame_usdtablename) -->
+
     - [dolt_history\_$tablename](#dolt_history_usdtablename)
 
   - [Database Diffs](#database-diffs-1)
@@ -193,6 +194,8 @@ postgres> SELECT * FROM dolt.docs;
 (1 row)
 ```
 
+<!-- TODO: Uncomment when procedures implemented
+
 ### `dolt.procedures`
 
 `dolt.procedures` (also usable as `dolt_procedures`) stores each stored procedure that has been created
@@ -234,8 +237,7 @@ postgres> SELECT * FROM dolt.procedures;
  simple_proc1 | SELECT x*y                | 2024-11-14 00:11:39 | 2024-11-14 00:11:39
  simple_proc2 | SELECT name FROM category | 2024-11-14 00:11:40 | 2024-11-14 00:11:40
 (2 rows)
-
-```
+``` -->
 
 ### `dolt.remotes`
 
@@ -436,8 +438,8 @@ The `DOLT.DIFF` system table has the following columns
  email         | text       | NO   |     |         |
  date          | datetime   | NO   |     |         |
  message       | text       | NO   |     |         |
- data_change   | tinyint(1) | NO   |     |         |
- schema_change | tinyint(1) | NO   |     |         |
+ data_change   | boolean    | NO   |     |         |
+ schema_change | boolean    | NO   |     |         |
 ```
 
 #### Query Details
@@ -456,8 +458,8 @@ FROM dolt_diff
 WHERE date BETWEEN '2024-11-28' AND '2024-12-03';
            commit_hash            |    table_name    | data_change | schema_change
 ----------------------------------+------------------+-------------+---------------
- mc4ogkoqlnnlk6j2a9bh7qf842um4n8v | public.employees |           0 |             1
- j5b0a0bvpgjgkva0mq8eft0nvl4394gn | public.employees |           1 |             0
+ mc4ogkoqlnnlk6j2a9bh7qf842um4n8v | public.employees | f           | t
+ j5bfa0bvpgjgkva0mq8eft0nvl4394gn | public.employees | t           | f
 (2 rows)
 ```
 
@@ -779,23 +781,21 @@ The values in this table are partly implementation details associated with the i
 
 #### Example Query
 
+<!-- TODO: Add procedures and events once they exist -->
+
 ```sql
 CREATE VIEW four AS SELECT 2+2;
 CREATE TABLE mytable (x INT PRIMARY KEY);
-CREATE TRIGGER inc_insert BEFORE INSERT ON mytable FOR EACH ROW SET NEW.x = NEW.x + 1;
-CREATE EVENT monthly_gc ON SCHEDULE EVERY 1 MONTH DO SELECT DOLT_GC();
 ```
 
 Then you can view them in `dolt_schemas`:
 
 ```sql
 postgres=> select * from public.dolt_schemas;
-  type   |    name    |                                                                             fragment                                                                              |          extra           |                           sql_mode
----------+------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------+---------------------------------------------------------------
- event   | monthly_gc | CREATE DEFINER = "root"@"localhost" EVENT "monthly_gc" ON SCHEDULE EVERY 1 MONTH STARTS '2023-06-26 16:06:41' ON COMPLETION NOT PRESERVE ENABLE DO CALL DOLT_GC() | {"CreatedAt":1687820801} | NO_ENGINE_SUBSTITUTION,ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES
- trigger | inc_insert | CREATE TRIGGER inc_insert BEFORE INSERT ON mytable FOR EACH ROW SET NEW.x = NEW.x + 1                                                                             | {"CreatedAt":1687820791} | NO_ENGINE_SUBSTITUTION,ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES
- view    | four       | CREATE VIEW four AS SELECT 2+2                                                                                                                                    | {"CreatedAt":0}          | NO_ENGINE_SUBSTITUTION,ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES
-(3 rows)
+ type | name |            fragment            |      extra      |                           sql_mode
+------+------+--------------------------------+-----------------+---------------------------------------------------------------
+ view | four | CREATE VIEW four AS SELECT 2+2 | {"CreatedAt":0} | NO_ENGINE_SUBSTITUTION,ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES
+(1 row)
 ```
 
 ### `dolt_statistics`
@@ -1263,16 +1263,16 @@ three column are always the same, then the schema of the source table is used to
 Each row in the `dolt_workspace_$TABLENAME` corresponds to a single row update in the table.
 
 ```sql
-   Field   |      Type       | Null | Key | Default | Extra
------------+-----------------+------+-----+---------+-------
- id        | bigint unsigned | NO   | PRI |         |
- staged    | tinyint(1)      | NO   |     |         |
- diff_type | varchar(1023)   | NO   |     |         |
+      Field      |   Type    | Null | Key | Default | Extra
+-----------------+-----------+------+-----+---------+-------
+ id              | bigint    | NO   | PRI |         |
+ staged          | boolean   | NO   |     |         |
+ diff_type       | text      | NO   |     |         |
  [other cols]
 ```
 
-The `staged` column will be `1` when the changes are going to be committed on the next
-call to [`dolt_commit()`](dolt-sql-procedures.md#dolt_commit). Changes which have `staged = 0` are present in your
+The `staged` column will be `true` when the changes are going to be committed on the next
+call to [`dolt_commit()`](dolt-sql-procedures.md#dolt_commit). Changes which have `staged = false` are present in your
 workspace which means all queries in your session contain them but they will not be recorded
 in the event that [`dolt_commit()`](dolt-sql-procedures.md#dolt_commit) is executed.
 
@@ -1282,7 +1282,7 @@ There are two ways you can alter the state of your workspace using these tables.
    to staging. If there are already staged changes for that row, they will be overwritten. If changing from true to
    false, the row values will be unstaged. If there are other changes in the workspace for that row, the workspace
    change will be preserved and the staged change will be dropped.
-2. Any row which has `staged = 0` can be deleted. This will result in reverting the change to the row in the source table.
+2. Any row which has `staged = false` can be deleted. This will result in reverting the change to the row in the source table.
 
 #### Example Query
 
@@ -1290,14 +1290,14 @@ There are two ways you can alter the state of your workspace using these tables.
 postgres=> SELECT * FROM public.dolt_workspace_mytable WHERE staged=false;
  id | staged | diff_type | to_x | to_y | from_x
 ----+--------+-----------+------+------+--------
-  0 |      0 | modified  |    2 |   33 |      2
-  1 |      0 | added     |    3 |   44 |
-  2 |      0 | added     |    4 |   33 |
+  0 | f      | modified  |    2 |   33 |      2
+  1 | f      | added     |    3 |   44 |
+  2 | f      | added     |    4 |   33 |
 (3 rows)
 ```
 
 ```sql
-UPDATE dolt_workspace_mytable SET staged = TRUE WHERE to_id = 3;
+UPDATE public.dolt_workspace_mytable SET staged = TRUE WHERE to_id = 3;
 SELECT dolt_commit('-m', 'Added row id 3 in my table');
 ```
 
