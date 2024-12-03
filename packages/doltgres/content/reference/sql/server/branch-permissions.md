@@ -138,8 +138,9 @@ No entry is added to `dolt_branch_namespace_control`, as branches may not have d
 
 ### Longest Match
 
-For both `dolt_branch_control` and `dolt_branch_namespace_control`, we only consider the entry set that has the longest matching expressions.
+For both `dolt_branch_control` and `dolt_branch_namespace_control`, we only consider the entry set that has the longest matching branch expressions.
 This is so that the set contains the most specific entries to the target branch and user.
+This matching occurs _before_ the user and host are checked (the database is ignored when looking at the longest match), meaning a longer entry effectively creates a new restricted space.
 Because we [fold all of our match expressions](#pattern-matching), we can guarantee that all longer matches are a subset of shorter matches.
 For example, `ab%` is shorter than `abc%`, and consequently `abcd` is a subset of `ab%`.
 This does leave the case where matches of equivalent length may still be a superset/subset combo (such as `abc_` and `abcd`), however we treat them as having an equivalent specificity.
