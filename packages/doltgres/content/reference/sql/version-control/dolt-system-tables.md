@@ -1185,38 +1185,35 @@ theirs, and base values.
 Consider a table `mytable` with this schema:
 
 ```sql
-+-------+------+------+-----+---------+-------+
-| Field | Type | Null | Key | Default | Extra |
-+-------+------+------+-----+---------+-------+
-| a     | int  | NO   | PRI |         |       |
-| b     | int  | YES  |     |         |       |
-+-------+------+------+-----+---------+-------+
+ Field |  Type   | Null | Key | Default | Extra
+-------+---------+------+-----+---------+-------
+ x     | integer | NO   | PRI |         |
+ y     | integer | YES  |     |         |
 ```
 
 If we attempt a merge that creates conflicts in this table, I can
 examine them with the following query:
 
 ```sql
-mydb> select dolt_conflict_id, base_a, base_b, our_a, our_b, their_a, their_b from dolt_conflicts_mytable;
-+------------------------+--------+--------+-------+-------+---------+---------+
-| dolt_conflict_id       | base_a | base_b | our_a | our_b | their_a | their_b |
-+------------------------+--------+--------+-------+-------+---------+---------+
-| hWDLmYufTrm+eVjFSVzPWw | NULL   | NULL   | 3     | 3     | 3       | 1       |
-| gi2p1YbSwu8oUV/WRSpr3Q | NULL   | NULL   | 4     | 4     | 4       | 2       |
-+------------------------+--------+--------+-------+-------+---------+---------+
+postgres=> select dolt_conflict_id, base_x, base_y, our_x, our_y, their_x, their_y from public.dolt_conflicts_mytable;
+    dolt_conflict_id    | base_x | base_y | our_x | our_y | their_x | their_y
+------------------------+--------+--------+-------+-------+---------+---------
+ hWDLmYufTrm+eVjFSVzPWw |        |        | 3     | 3     | 3       | 1
+ gi2p1YbSwu8oUV/WRSpr3Q |        |        | 4     | 4     | 4       | 2
+(2 rows)
 ```
 
 To mark conflicts as resolved, delete them from the corresponding
 table. To effectively keep all `our` values, I would simply run:
 
 ```sql
-mydb> delete from dolt_conflicts_mytable;
+postgres=> delete from public.dolt_conflicts_mytable;
 ```
 
 If I wanted to keep all `their` values, I would first run this statement:
 
 ```sql
-mydb> replace into mytable (select their_a, their_b from dolt_conflicts_mytable);
+postgres=> replace into mytable (select their_x, their_y from public.dolt_conflicts_mytable);
 ```
 
 For convenience, you can also modify the `our_` columns of the
@@ -1224,7 +1221,7 @@ For convenience, you can also modify the `our_` columns of the
 replace statement can be rewritten as:
 
 ```sql
-mydb> update dolt_conflicts_mytable set our_a = their_a, our_b = their_b;
+postgres=> update public.dolt_conflicts_mytable set our_x = their_x, our_y = their_y;
 ```
 
 And of course you can use any combination of `ours`, `theirs` and
@@ -1266,17 +1263,12 @@ three column are always the same, then the schema of the source table is used to
 Each row in the `dolt_workspace_$TABLENAME` corresponds to a single row update in the table.
 
 ```sql
-+------------------+----------+
-| field            | type     |
-+------------------+----------+
-| id               | int      |
-| staged           | bool     |
-| diff_type        | varchar  |
-| to_x             | ...      |
-| to_y             | ...      |
-| from_x           | ...      |
-| from_y           | ...      |
-+------------------+----------+
+   Field   |      Type       | Null | Key | Default | Extra
+-----------+-----------------+------+-----+---------+-------
+ id        | bigint unsigned | NO   | PRI |         |
+ staged    | tinyint(1)      | NO   |     |         |
+ diff_type | varchar(1023)   | NO   |     |         |
+ [other cols]
 ```
 
 The `staged` column will be `1` when the changes are going to be committed on the next
@@ -1295,25 +1287,18 @@ There are two ways you can alter the state of your workspace using these tables.
 #### Example Query
 
 ```sql
-SELECT *
-FROM dolt_workspace_mytable
-WHERE staged=false
-```
-
-```sql
-+----+--------+-----------+-------+----------+---------+------------+
-| id | staged | diff_type | to_id | to_value | from_id | from_value |
-+----+--------+-----------+-------+----------+---------+------------+
-| 0  | 0      | modified  | 3     | 44       | 3       | 31         |
-| 1  | 0      | modified  | 4     | 68       | 4       | 1          |
-| 2  | 0      | modified  | 9     | 47       | 9       | 59         |
-+----+--------+-----------+-------+----------+---------+------------+
-3 rows in set (0.00 sec)
+postgres=> SELECT * FROM public.dolt_workspace_mytable WHERE staged=false;
+ id | staged | diff_type | to_x | to_y | from_x
+----+--------+-----------+------+------+--------
+  0 |      0 | modified  |    2 |   33 |      2
+  1 |      0 | added     |    3 |   44 |
+  2 |      0 | added     |    4 |   33 |
+(3 rows)
 ```
 
 ```sql
 UPDATE dolt_workspace_mytable SET staged = TRUE WHERE to_id = 3;
-SELECT dolt_commit('-m', 'Added row id 3 in my table')
+SELECT dolt_commit('-m', 'Added row id 3 in my table');
 ```
 
 #### Notes
@@ -1332,28 +1317,25 @@ merge that introduced them.
 
 #### Schema
 
-For a hypothetical table `a` with the following schema:
+For a hypothetical table `mytable` with the following schema:
 
 ```sql
-+-------+------------+------+-----+---------+-------+
-| Field | Type       | Null | Key | Default | Extra |
-+-------+------------+------+-----+---------+-------+
-| x     | bigint     | NO   | PRI |         |       |
-| y     | varchar(1) | YES  |     |         |       |
-+-------+------------+------+-----+---------+-------+
+ Field |  Type   | Null | Key | Default | Extra
+-------+---------+------+-----+---------+-------
+ x     | integer | NO   | PRI |         |
+ y     | integer | YES  |     |         |
 ```
 
-`dolt_constraint_violations_a` will have the following schema:
+`dolt_constraint_violations_mytable` will have the following schema:
 
 ```sql
-+----------------+-------------------------------------------------------+------+-----+---------+-------+
-| Field          | Type                                                  | Null | Key | Default | Extra |
-+----------------+-------------------------------------------------------+------+-----+---------+-------+
-| violation_type | enum('foreign key','unique index','check constraint') | NO   | PRI |         |       |
-| x              | bigint                                                | NO   | PRI |         |       |
-| y              | varchar(1)                                            | YES  |     |         |       |
-| violation_info | json                                                  | YES  |     |         |       |
-+----------------+-------------------------------------------------------+------+-----+---------+-------+
+     Field      |                               Type                               | Null | Key | Default | Extra
+----------------+------------------------------------------------------------------+------+-----+---------+-------
+ from_root_ish  | varchar(1023)                                                    | YES  |     |         |
+ violation_type | enum('foreign key','unique index','check constraint','not null') | NO   | PRI |         |
+ x              | integer                                                          | NO   | PRI |         |
+ y              | integer                                                          | YES  |     |         |
+ violation_info | json                                                             | YES  |     |         |
 ```
 
 Each row in the table represents a row in the primary table that is in violation of one or more constraint violations.
@@ -1374,13 +1356,11 @@ This only affects the staging of new tables. Tables that have already been stage
 
 #### Schema
 
-```text
-+------------+---------+------+-----+
-| Field      | Type    | Null | Key |
-+------------+---------+------+-----+
-| pattern    | text    | NO   | PRI |
-| ignored    | tinyint | NO   |     |
-+------------+---------+------+-----+
+```sql
+  Field  |  Type   | Null | Key | Default | Extra
+---------+---------+------+-----+---------+-------
+ pattern | text    | NO   | PRI |         |
+ ignored | boolean | NO   |     |         |
 ```
 
 #### Notes
@@ -1393,28 +1373,25 @@ The format of patterns is a simplified version of gitignore’s patterns:
 
 If a table name matches multiple patterns with different values for `ignored`, the most specific pattern is chosen (a pattern A is more specific than a pattern B if all names that match A also match pattern B, but not vice versa.) If no pattern is most specific, then attempting to stage that table will result in an error.
 
-Tables that match patterns in `dolt_ignore` can be force-committed by passing the `--force` flag to `SELECT dolt_add`.
+Tables that match patterns in `dolt_ignore` can be force-committed by passing the `--force` flag to `SELECT dolt_add()`.
 
 `dolt_diff` won't display ignored tables unless the additional `--ignored` flag is passed.
 
 #### Example Query
 
 ```sql
-INSERT INTO dolt_ignore VALUES ('generated_*', true), ('generated_exception', false);
+INSERT INTO public.dolt_ignore VALUES ('generated_*', true), ('generated_exception', false);
 CREATE TABLE foo (pk int);
 CREATE TABLE generated_foo (pk int);
 CREATE TABLE generated_exception (pk int);
 SELECT dolt_add('-A');
-SELECT *
-FROM dolt.status
-WHERE staged=true;
+SELECT * FROM dolt.status WHERE staged=true;
 ```
 
 ```sql
-+----------------------------+--------+-----------+
-| table_name                 | staged | status    |
-+----------------------------+--------+-----------+
-| public.foo                 | 1      | new table |
-| public.generated_exception | 1      | new table |
-+----------------------------+--------+-----------+
+postgres=> SELECT * FROM dolt.status;
+         table_name         | staged |  status
+----------------------------+--------+-----------
+ public.foo                 |      1 | new table
+ public.generated_exception |      1 | new table
 ```

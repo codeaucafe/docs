@@ -1173,7 +1173,7 @@ WHERE staged=false
 
 ```sql
 UPDATE dolt_workspace_mytable SET staged = TRUE WHERE to_id = 3;
-call dolt_commit("-m", "Added row id 3 in my table")
+CALL dolt_commit("-m", "Added row id 3 in my table");
 ```
 
 ### Notes
@@ -1228,6 +1228,7 @@ For a hypothetical table `a` with the following schema:
 +----------------+-------------------------------------------------------+------+-----+---------+-------+
 | Field          | Type                                                  | Null | Key | Default | Extra |
 +----------------+-------------------------------------------------------+------+-----+---------+-------+
+| from_root_ish  | varchar(1023)                                         | YES  |     |         |       |
 | violation_type | enum('foreign key','unique index','check constraint') | NO   | PRI |         |       |
 | x              | bigint                                                | NO   | PRI |         |       |
 | y              | varchar(1)                                            | YES  |     |         |       |
