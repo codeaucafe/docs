@@ -87,6 +87,8 @@
   - [Expressions, Functions, Operators](reference/sql/sql-support/expressions-functions-operators.md)
   - [Supported Statements](reference/sql/sql-support/supported-statements.md)
   - [MySQL Information Schema](reference/sql/sql-support/information-schema.md)
+  - [Collations and Character Sets](reference/sql/sql-support/collations-and-charsets.md)
+  - [System Variables](reference/sql/sql-support/system-variables.md)
   - [Miscellaneous](reference/sql/sql-support/miscellaneous.md)
 - [Supported Clients](reference/sql/supported-clients/README.md)
   - [Programmatic](reference/sql/supported-clients/clients.md)
