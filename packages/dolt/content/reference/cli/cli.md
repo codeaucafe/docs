@@ -531,25 +531,15 @@ When writing, the new value is written to the repository local configuration fil
 Valid configuration variables:
 
 	- core.editor - lets you edit 'commit' or 'tag' messages by launching the set editor.
-
 	- creds.add_url - sets the endpoint used to authenticate a client for 'dolt login'.
-
 	- doltlab.insecure - boolean flag used to authenticate a client against DoltLab.
-
 	- init.defaultbranch - allows overriding the default branch name e.g. when initializing a new repository.
-
 	- metrics.disabled - boolean flag disables sending metrics when true.
-
 	- user.creds - sets user keypairs for authenticating with doltremoteapi.
-
 	- user.email - sets name used in the author and committer field of commit objects.
-
 	- user.name - sets email used in the author and committer field of commit objects.
-
 	- remotes.default_host - sets default host for authenticating with doltremoteapi.
-
 	- remotes.default_port - sets default port for authenticating with doltremoteapi.
-
 	- push.autoSetupRemote - if set to "true" assume --set-upstream on default push when no upstream tracking exists for the current branch.
 
 
@@ -2103,6 +2093,12 @@ SUPPORTED CONFIG FILE FIELDS:
 `listener.read_timeout_millis`: The number of milliseconds that the server will wait for a read operation
 
 `listener.write_timeout_millis`: The number of milliseconds that the server will wait for a write operation
+
+`listener.require_secure_transport`: Boolean flag to turn on TLS/SSL transport
+
+`listener.tls_cert`: The path to the TLS certicifcate used for secure transport
+
+`listener.tls_key`: The path to the TLS key used for secure transport
 
 `remotesapi.port`: A port to listen for remote API operations on. If set to a positive integer, this server will accept connections from clients to clone, pull, etc. databases being served.
 
