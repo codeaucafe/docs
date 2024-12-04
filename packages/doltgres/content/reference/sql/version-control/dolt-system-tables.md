@@ -607,13 +607,13 @@ The `dolt.merge_status` system table tells a user if a merge is active.
 #### Schema
 
 ```sql
-      Field      |    Type    | Null | Key | Default | Extra
------------------+------------+------+-----+---------+-------
- is_merging      | tinyint(1) | NO   |     |         |
- source          | text       | YES  |     |         |
- source_commit   | text       | YES  |     |         |
- target          | text       | YES  |     |         |
- unmerged_tables | text       | YES  |     |         |
+      Field      |  Type   | Null | Key | Default | Extra
+-----------------+---------+------+-----+---------+-------
+ is_merging      | boolean | NO   |     |         |
+ source          | text    | YES  |     |         |
+ source_commit   | text    | YES  |     |         |
+ target          | text    | YES  |     |         |
+ unmerged_tables | text    | YES  |     |         |
 ```
 
 ### Example Query
@@ -641,7 +641,7 @@ Output of `SELECT * from dolt.merge_status;`:
 ```sql
  is_merging |  source   |          source_commit           |     target      | unmerged_tables
 ------------+-----------+----------------------------------+-----------------+-----------------
-          1 | right     | fbghslue1k9cfgbi00ti4r8417frgbca | refs/heads/main | t
+ t          | right     | fbghslue1k9cfgbi00ti4r8417frgbca | refs/heads/main | t
 (1 row)
 ```
 
@@ -698,12 +698,12 @@ merge base could be referenced via a foreign key constraint by an added row in t
 #### Schema
 
 ```sql
-     Field      |                       Type                        | Null | Key | Default | Extra
-----------------+---------------------------------------------------+------+-----+---------+-------
- rebase_order   | real                                              | NO   | PRI |         |
- action         | enum('pick', 'drop', 'reword', 'squash', 'fixup') | NO   |     |         |
- commit_hash    | text                                              | NO   |     |         |
- commit_message | text                                              | NO   |     |         |
+     Field      |    Type    | Null | Key | Default | Extra
+----------------+------------+------+-----+---------+-------
+ rebase_order   | real       | NO   | PRI |         |
+ action         | varchar(6) | NO   |     |         |
+ commit_hash    | text       | NO   |     |         |
+ commit_message | text       | NO   |     |         |
 ```
 
 The `action` field can take one of the following rebase actions:
@@ -1329,17 +1329,18 @@ For a hypothetical table `mytable` with the following schema:
 `dolt_constraint_violations_mytable` will have the following schema:
 
 ```sql
-     Field      |                               Type                               | Null | Key | Default | Extra
-----------------+------------------------------------------------------------------+------+-----+---------+-------
- from_root_ish  | varchar(1023)                                                    | YES  |     |         |
- violation_type | enum('foreign key','unique index','check constraint','not null') | NO   | PRI |         |
- x              | integer                                                          | NO   | PRI |         |
- y              | integer                                                          | YES  |     |         |
- violation_info | json                                                             | YES  |     |         |
+     Field      |       Type      | Null | Key | Default | Extra
+----------------+-----------------+------+-----+---------+-------
+ from_root_ish  | varchar(1023)   | YES  |     |         |
+ violation_type | varchar(16)     | NO   | PRI |         |
+ x              | integer         | NO   | PRI |         |
+ y              | integer         | YES  |     |         |
+ violation_info | json            | YES  |     |         |
 ```
 
 Each row in the table represents a row in the primary table that is in violation of one or more constraint violations.
-The `violation_info` field is a JSON payload describing the violation.
+The `violation_info` field is a JSON payload describing the violation. The `violation_type` field is one of these four strings:
+"foreign key", "unique index", "check constraint", or "not null".
 
 As with `dolt_conflicts`, delete rows from the corresponding `dolt_constraint_violations` table to signal to Doltgres that
 you have resolved any such violations before committing.

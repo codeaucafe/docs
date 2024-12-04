@@ -1225,15 +1225,15 @@ For a hypothetical table `a` with the following schema:
 `dolt_constraint_violations_a` will have the following schema:
 
 ```sql
-+----------------+-------------------------------------------------------+------+-----+---------+-------+
-| Field          | Type                                                  | Null | Key | Default | Extra |
-+----------------+-------------------------------------------------------+------+-----+---------+-------+
-| from_root_ish  | varchar(1023)                                         | YES  |     |         |       |
-| violation_type | enum('foreign key','unique index','check constraint') | NO   | PRI |         |       |
-| x              | bigint                                                | NO   | PRI |         |       |
-| y              | varchar(1)                                            | YES  |     |         |       |
-| violation_info | json                                                  | YES  |     |         |       |
-+----------------+-------------------------------------------------------+------+-----+---------+-------+
++----------------+------------------------------------------------------------------+------+-----+---------+-------+
+| Field          | Type                                                             | Null | Key | Default | Extra |
++----------------+------------------------------------------------------------------+------+-----+---------+-------+
+| from_root_ish  | varchar(1023)                                                    | YES  |     |         |       |
+| violation_type | enum('foreign key','unique index','check constraint','not null') | NO   | PRI |         |       |
+| x              | bigint                                                           | NO   | PRI |         |       |
+| y              | varchar(1)                                                       | YES  |     |         |       |
+| violation_info | json                                                             | YES  |     |         |       |
++----------------+------------------------------------------------------------------+------+-----+---------+-------+
 ```
 
 Each row in the table represents a row in the primary table that is in violation of one or more constraint violations.
