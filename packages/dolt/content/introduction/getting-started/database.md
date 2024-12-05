@@ -2,13 +2,13 @@
 title: Version Controlled Database
 ---
 
-Dolt is a MySQL compatible database server. 
+Dolt is a MySQL compatible database server.
 
 This document will walk you through step-by-step on how to get Dolt running as a MySQL compatible server on your host. You will set up a schema, insert data, and compose read queries using SQL. The document will also cover a number of unique Git-like Dolt features like commits, logs, as of queries, rollback, branches, and merges.
 
 # Navigate to the directory where you would like your data stored
 
-Dolt needs a place to store your databases. I'm going to put my databases in `~/dolt`. 
+Dolt needs a place to store your databases. I'm going to put my databases in `~/dolt`.
 
 ```bash
 % cd ~
@@ -20,7 +20,7 @@ Any databases you create will be stored in this directory. So, for this example,
 
 # Start a MySQL-compatible database server
 
-Dolt ships with a MySQL compatible database server built in. To start it you use the command `dolt sql-server`. Running this command starts the server on port 3306. 
+Dolt ships with a MySQL compatible database server built in. To start it you use the command `dolt sql-server`. Running this command starts the server on port 3306.
 
 ```bash
 dolt sql-server
@@ -60,6 +60,7 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 mysql>
 ```
+
 To ensure the client actually connected, you should see the following in the `dolt sql-server` terminal
 
 ```
@@ -325,7 +326,7 @@ mysql> show tables;
 
 Dolt makes operating databases less error prone. You can always back out changes you have in progress or rewind to a known good state. You also have the ability to undo specific commits using [`dolt_revert()`](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_revert).
 
-Note, the only unrecoverable SQL statement in Dolt is `drop database`. This deletes the database and all of it's history on disk. `drop database` works this way for SQL tool compatibility as it is common for import tools to issue a `drop database` to clear all database state before an import. Dolt implements [remotes](https://docs.dolthub.com/concepts/dolt/remotes) like in Git so you can maintain an offline copy for backup using clone, fetch, push, and pull. Maintaining a remote copy allows you to restore in the case of an errant `drop database` query.
+Note, undoing changes from a `drop database` statement requires a special SQL procedure, [`dolt_undrop()`](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_undrop).
 
 # See the data in a SQL Workbench
 
@@ -603,9 +604,10 @@ Dolt provides powerful data audit capabilities down to individual cells. When, h
 That should be enough to get you started. We covered installation, starting a SQL server, connecting with various clients, creating a database and schema, inserting and updating data on main, using branches for change isolation, rollback, diffs and logs, merge, and cell lineage. You had the grand tour. Hopefully you are starting to imagine the possibilities for your Dolt-backed applications.
 
 Want to dive even deeper? Here are some links to advanced topics:
-* [Permissions](https://docs.dolthub.com/sql-reference/server/access-management)
-* [Connecting from application code](https://docs.dolthub.com/sql-reference/supported-clients/clients)
-* [Backups](https://www.dolthub.com/blog/2021-10-08-backups/)
-* [Replication](https://www.dolthub.com/blog/2021-10-20-read-replication/)
-* [Conflicts](https://docs.dolthub.com/concepts/dolt/conflicts)
-* [Using a Remote with your Server](https://docs.dolthub.com/sql-reference/version-control/remotes#pushing-to-remote)
+
+- [Permissions](https://docs.dolthub.com/sql-reference/server/access-management)
+- [Connecting from application code](https://docs.dolthub.com/sql-reference/supported-clients/clients)
+- [Backups](https://www.dolthub.com/blog/2021-10-08-backups/)
+- [Replication](https://www.dolthub.com/blog/2021-10-20-read-replication/)
+- [Conflicts](https://docs.dolthub.com/concepts/dolt/conflicts)
+- [Using a Remote with your Server](https://docs.dolthub.com/sql-reference/version-control/remotes#pushing-to-remote)
