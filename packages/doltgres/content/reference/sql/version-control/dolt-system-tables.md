@@ -656,7 +656,7 @@ running `dolt status` from the Dolt command line.
    Field    |    Type    | Null | Key | Default | Extra
 ------------+------------+------+-----+---------+-------
  table_name | text       | NO   | PRI |         |
- staged     | tinyint(1) | NO   | PRI |         |
+ staged     | boolean    | NO   | PRI |         |
  status     | text       | NO   | PRI |         |
 ```
 
@@ -666,7 +666,7 @@ running `dolt status` from the Dolt command line.
 postgres=> SELECT * FROM dolt.status;
   table_name   | staged |  status
 ---------------+--------+-----------
- public.one_pk |      0 | new table
+ public.one_pk | f      | new table
 (1 row)
 ```
 
@@ -1393,6 +1393,6 @@ SELECT * FROM dolt.status WHERE staged=true;
 postgres=> SELECT * FROM dolt.status;
          table_name         | staged |  status
 ----------------------------+--------+-----------
- public.foo                 |      1 | new table
- public.generated_exception |      1 | new table
+ public.foo                 | t      | new table
+ public.generated_exception | t      | new table
 ```
