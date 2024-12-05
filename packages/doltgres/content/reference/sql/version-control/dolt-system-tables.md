@@ -8,38 +8,38 @@ title: Dolt System Tables
 
   - [Database Metadata](#database-metadata-system-tables)
 
-    - [dolt.branches](#doltbranches)
-    - [dolt.remote_branches](#doltremote_branches)
-    - [dolt.docs](#doltdocs)
-    <!-- TODO: Uncomment when procedures implemented - [dolt.procedures](#doltprocedures) -->
-    - [dolt.remotes](#doltremotes)
-    - [dolt.tags](#dolttags)
+    - [dolt.branches](#dolt.branches)
+    - [dolt.remote_branches](#dolt.remote_branches)
+    - [dolt.docs](#dolt.docs)
+    <!-- TODO: Uncomment when procedures implemented - [dolt.procedures](#dolt.procedures) -->
+    - [dolt.remotes](#dolt.remotes)
+    - [dolt.tags](#dolt.tags)
 
   - [Database History](#database-history-system-tables)
 
-    - [dolt.commit_ancestors](#doltcommit_ancestors)
-    - [dolt.commits](#doltcommits)
-    - [dolt.log](#doltlog)
+    - [dolt.commit_ancestors](#dolt.commit_ancestors)
+    - [dolt.commits](#dolt.commits)
+    - [dolt.log](#dolt.log)
 
   - [Database Diffs](#database-diffs)
 
-    - [dolt.diff](#doltdiff)
-    - [dolt.column_diff](#doltcolumn_diff)
+    - [dolt.diff](#dolt.diff)
+    - [dolt.column_diff](#dolt.column_diff)
 
   - [Working Set Metadata](#working-set-metadata-system-tables)
 
-    - [dolt.conflicts](#doltconflicts)
-    - [dolt.schema_conflicts](#doltschema_conflicts)
-    - [dolt.merge_status](#doltmerge_status)
-    - [dolt.status](#doltstatus)
+    - [dolt.conflicts](#dolt.conflicts)
+    - [dolt.schema_conflicts](#dolt.schema_conflicts)
+    - [dolt.merge_status](#dolt.merge_status)
+    - [dolt.status](#dolt.status)
 
   - [Constraint Validation](#constraint-violation-system-tables)
 
-    - [dolt.constraint_violations](#doltconstraint_violations)
+    - [dolt.constraint_violations](#dolt.constraint_violations)
 
   - [Rebasing](#rebasing-tables)
 
-    - [dolt.rebase](#doltrebase)
+    - [dolt.rebase](#dolt.rebase)
 
 - [User-defined Schema](#user-defined-schema)
 
@@ -656,7 +656,7 @@ running `dolt status` from the Dolt command line.
    Field    |    Type    | Null | Key | Default | Extra
 ------------+------------+------+-----+---------+-------
  table_name | text       | NO   | PRI |         |
- staged     | tinyint(1) | NO   | PRI |         |
+ staged     | boolean    | NO   | PRI |         |
  status     | text       | NO   | PRI |         |
 ```
 
@@ -666,7 +666,7 @@ running `dolt status` from the Dolt command line.
 postgres=> SELECT * FROM dolt.status;
   table_name   | staged |  status
 ---------------+--------+-----------
- public.one_pk |      0 | new table
+ public.one_pk | f      | new table
 (1 row)
 ```
 
@@ -1393,6 +1393,6 @@ SELECT * FROM dolt.status WHERE staged=true;
 postgres=> SELECT * FROM dolt.status;
          table_name         | staged |  status
 ----------------------------+--------+-----------
- public.foo                 |      1 | new table
- public.generated_exception |      1 | new table
+ public.foo                 | t      | new table
+ public.generated_exception | t      | new table
 ```
