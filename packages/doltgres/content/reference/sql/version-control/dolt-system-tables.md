@@ -8,38 +8,38 @@ title: Dolt System Tables
 
   - [Database Metadata](#database-metadata-system-tables)
 
-    - [dolt.branches](#doltbranches)
-    - [dolt.remote_branches](#doltremote_branches)
-    - [dolt.docs](#doltdocs)
-    <!-- TODO: Uncomment when procedures implemented - [dolt.procedures](#doltprocedures) -->
-    - [dolt.remotes](#doltremotes)
-    - [dolt.tags](#dolttags)
+    - [dolt.branches](#dolt.branches)
+    - [dolt.remote_branches](#dolt.remote_branches)
+    - [dolt.docs](#dolt.docs)
+    <!-- TODO: Uncomment when procedures implemented - [dolt.procedures](#dolt.procedures) -->
+    - [dolt.remotes](#dolt.remotes)
+    - [dolt.tags](#dolt.tags)
 
   - [Database History](#database-history-system-tables)
 
-    - [dolt.commit_ancestors](#doltcommit_ancestors)
-    - [dolt.commits](#doltcommits)
-    - [dolt.log](#doltlog)
+    - [dolt.commit_ancestors](#dolt.commit_ancestors)
+    - [dolt.commits](#dolt.commits)
+    - [dolt.log](#dolt.log)
 
   - [Database Diffs](#database-diffs)
 
-    - [dolt.diff](#doltdiff)
-    - [dolt.column_diff](#doltcolumn_diff)
+    - [dolt.diff](#dolt.diff)
+    - [dolt.column_diff](#dolt.column_diff)
 
   - [Working Set Metadata](#working-set-metadata-system-tables)
 
-    - [dolt.conflicts](#doltconflicts)
-    - [dolt.schema_conflicts](#doltschema_conflicts)
-    - [dolt.merge_status](#doltmerge_status)
-    - [dolt.status](#doltstatus)
+    - [dolt.conflicts](#dolt.conflicts)
+    - [dolt.schema_conflicts](#dolt.schema_conflicts)
+    - [dolt.merge_status](#dolt.merge_status)
+    - [dolt.status](#dolt.status)
 
   - [Constraint Validation](#constraint-violation-system-tables)
 
-    - [dolt.constraint_violations](#doltconstraint_violations)
+    - [dolt.constraint_violations](#dolt.constraint_violations)
 
   - [Rebasing](#rebasing-tables)
 
-    - [dolt.rebase](#doltrebase)
+    - [dolt.rebase](#dolt.rebase)
 
 - [User-defined Schema](#user-defined-schema)
 
