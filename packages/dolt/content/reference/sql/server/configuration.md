@@ -4,6 +4,10 @@ title: Configuration
 
 # config.yaml
 
+A Dolt SQL server can be configured at server start time, or by
+setting system variables in the SQL session. The simplest way to
+configure server behavior is to provide a config file with the
+`--config` flag, usually called `config.yaml`.
 Here is a complete `config.yaml` file populated with all the default values for every key. 
 
 ```yaml
