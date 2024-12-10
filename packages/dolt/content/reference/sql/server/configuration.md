@@ -1013,7 +1013,7 @@ drwxrwxrwt  7 root     wheel  224 Dec  6 14:26 ..
 drwxr-xr-x  7 timsehn  wheel  224 Dec  6 14:26 .dolt
 ```
 
-## System variables
+# System Variables
 
 Dolt defines system variables that you can set in your session via the
 `SET` syntax. Many of these can be persisted, so they remain set after
