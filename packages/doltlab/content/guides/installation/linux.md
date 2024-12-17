@@ -11,7 +11,7 @@ DoltLab is released as a single `.zip` file that contains everything you need to
 Download and unzip the latest version of DoltLab with:
 
 ```bash
-curl -LO https://doltlab-releases.s3.amazonaws.com/linux/amd64/doltlab-latest.zip
+curl -LO https://doltlab-releases.s3.us-east-1.amazonaws.com/linux/amd64/doltlab-latest.zip
 unzip doltlab-latest.zip -d doltlab
 cd doltlab
 ```

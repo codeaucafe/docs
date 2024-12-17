@@ -1,6 +1,6 @@
 # System Variables
 
-Dolt supports a subset of the character sets and collations that MySQL supports, as well as a few additional ones.
+Dolt supports a subset of system variables MySQL supports.
 System Variables are added upon request, so please [file an issue](https://github.com/dolthub/dolt/issues) if a variable you need is missing.
 Some system variables parse but make no change to the operation of Dolt (ie. a no-op). 
 This is generally done to make `mysqldump` files import into Dolt with no errors.

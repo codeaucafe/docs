@@ -1015,6 +1015,7 @@ drwxrwxrwt  7 root     wheel  224 Dec  6 14:26 ..
 drwxr-xr-x  7 timsehn  wheel  224 Dec  6 14:26 .dolt
 ```
 
+<<<<<<< HEAD
 # metrics
 
 This set of configuration values configures a [Dolt metrics HTTP endpoint](https://docs.dolthub.com/sql-reference/server/metrics). Dolt emits metrics in [Prometheus](https://prometheus.io/) format.
@@ -1362,7 +1363,7 @@ The `jwks` section of `config.yaml` is used to configure JSON web token (JWT) au
 
 This section of `config.yaml` is used to configure "Direct to Standby" or cluster replication. Refer to [the documentation for replication](https://docs.dolthub.com/sql-reference/server/replication#direct-to-standby-replication) for this section of `config.yaml`. This configuration requires multiple Dolt instances configured so it is out of scope for this article.
 
-# System variables
+# System Variables
 
 Dolt defines system variables that you can set in your session via the
 `SET` syntax. Many of these can be persisted, so they remain set after

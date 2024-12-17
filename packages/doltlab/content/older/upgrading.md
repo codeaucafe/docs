@@ -141,7 +141,7 @@ cd ../
 rm -rf doltlab
 
 # download and unzip newer DoltLab
-curl -OL https://doltlab-releases.s3.amazonaws.com/linux/amd64/doltlab-latest.zip
+curl -OL https://doltlab-releases.s3.us-east-1.amazonaws.com/linux/amd64/doltlab-latest.zip
 unzip doltlab-latest.zip -d doltlab
 
 # start DoltLab
