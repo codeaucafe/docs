@@ -1015,7 +1015,6 @@ drwxrwxrwt  7 root     wheel  224 Dec  6 14:26 ..
 drwxr-xr-x  7 timsehn  wheel  224 Dec  6 14:26 .dolt
 ```
 
-<<<<<<< HEAD
 # metrics
 
 This set of configuration values configures a [Dolt metrics HTTP endpoint](https://docs.dolthub.com/sql-reference/server/metrics). Dolt emits metrics in [Prometheus](https://prometheus.io/) format.
