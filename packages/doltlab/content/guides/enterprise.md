@@ -741,7 +741,7 @@ Once the hosts are provisioned and running, you will need to download the latest
 
 ```bash
 # download DoltLab
-curl -LO https://doltlab-releases.s3.amazonaws.com/linux/amd64/doltlab-latest.zip
+curl -LO https://doltlab-releases.s3.us-east-1.amazonaws.com/linux/amd64/doltlab-latest.zip
 
 # install unzip
 sudo apt install unzip
