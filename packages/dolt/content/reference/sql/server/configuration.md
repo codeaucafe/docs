@@ -73,7 +73,7 @@ create table t (
 )
 ```
 
-# `log_level`
+## `log_level`
 
 This configuration value is used to increase or decease the log level of your Dolt SQL server. Logs by default are printed to `STDERR` and `STDOUT`.
 
@@ -143,11 +143,11 @@ WARN[0019] error running query                           connectTime="2024-12-04
 
 I now see the bad query being run is `select * from t where bad_col=3`.
 
-# `behavior`
+## `behavior`
 
 The `behavior` section of `config.yaml` defines configuration that determines the way the SQL engine works.
 
-## `read_only`
+### `read_only`
 
 This configuration value is used to turn your SQL server into read only mode, preventing any write queries from succeeding and logging an error.
 
@@ -209,7 +209,7 @@ MySQL [config_blog]> insert into t values (1, 'second');
 ERROR 1105 (HY000): database server is set to read only mode
 ```
 
-## `autocommit`
+### `autocommit`
 
 `autocommit` is a standard SQL database setting where every SQL statement triggers a transaction `COMMIT`. Without `autocommit`, the user is responsible for managing their own concurrency by issuing `BEGIN` statements at the start of transactions and `COMMIT` or `ROLLBACK` statements at the end of transactions. Most databases (ie. MySQL, Postgres) and clients (ie. ODBC, JDBC) have `autocommit` on by default with [the notable exception of the Python client](https://www.dolthub.com/blog/2023-09-25-python-autocommit/).
 
@@ -343,7 +343,7 @@ MySQL [config_blog]> select * from t;
 3 rows in set (0.001 sec)
 ```
 
-## `disable_client_multi_statements`
+### `disable_client_multi_statements`
 
 By default, the Dolt SQL server can accept and process multiple SQL queries in a single statement. The default delimiter is a semicolon (ie.  `;`). So, you can send multiple SQL queries in the same statement as long as they are separated by a semicolon and by default Dolt will process each individually and return the results. However, some clients are not able to handle multiple result sets from a single statement. So, Dolt offers a configuration value to fail statements that contain multiple SQL queries. 
 
@@ -386,7 +386,7 @@ MySQL [config_blog]> delete from t where id=3; update t set words='first' where 
 ERROR 1105 (HY000): syntax error at position 33 near 'update'
 ```
 
-## `dolt_transaction_commit`
+### `dolt_transaction_commit`
 
 Dolt offers a setting where every transaction commit also becomes a Dolt commit. That setting can be controlled using `dolt_transaction_commit` in `config.yaml`. By default, Dolt commits are user controlled and triggered via the [`dolt_commit()` procedure](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_commit). In some cases, like when you have an existing application that is built against standard MySQL, you may want Dolt commits generated automatically. This setting enables that behavior.
 
@@ -449,7 +449,7 @@ MySQL [config_blog]> select * from dolt_log;
 
 Note, I lose control of the commit message in this mode. The commit is made by the server user, in this case `configblog`, in contrast to manual commits which are made by the client user `root`.
 
-## `event_scheduler` 
+### `event_scheduler` 
 
 Dolt supports [MySQL events](https://dev.mysql.com/doc/refman/8.4/en/create-event.html). Events are scheduled jobs created using the `CREATE EVENT` SQL statement. Event scheduling is on by default but can be disabled using this configuration setting. Note, only events on the main branch will be executed by the event scheduler. Events can be used to schedule Dolt commits at intervals if you don't have access to the application code for your application, but also don't want a commit at every SQL transaction.
 
@@ -499,11 +499,11 @@ Starting server with Config HP="localhost:3310"|T="28800000"|R="false"|L="debug"
 
 We do not see any more commits in the debug log or in the Dolt log.
 
-# `user`
+## `user`
 
 The `user` section configures the default user for the server. If this section is undefined, the default user for the server is `root` with no password.
 
-## name
+### name
 
 The name of the default user for the server to accept connections from. Additional users can be added using standard `CREATE USER` syntax.
 
@@ -550,7 +550,7 @@ WARNING: option --ssl-verify-server-cert is disabled, because of an insecure pas
 ERROR 2027 (HY000): Received malformed packet
 ```
 
-## `password` 
+### `password` 
 
 The password of the default user for the server to accept connections from.
 
@@ -599,11 +599,11 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 MySQL [(none)]>
 ```
 
-# `listener`
+## `listener`
 
 The listener section of `config.yaml` is configuration for the SQL server transport layer.
 
-## `host`
+### `host`
 
 The host defines the address of the server that Dolt is running on.
 
@@ -630,7 +630,7 @@ Starting server with Config HP="127.0.0.1:3310"|T="28800000"|R="false"|L="debug"
 
 You notice the starting server message now says `127.0.0.1` instead of `localhost`.
 
-## `port`
+### `port`
 
 The port on the server used to accept connections. The default is 3306. Be careful because that is also the MySQL and MariaDB default port so you either need to stop your MySQL server to run Dolt, or change the Dolt port to something else. 
 
@@ -656,7 +656,7 @@ $ dolt sql-server --config=config.yaml
 Starting server with Config HP="localhost:3310"|T="28800000"|R="false"|L="debug"|S="/tmp/mysql.sock"
 ```
 
-## `max_connections`
+### `max_connections`
 
 The maximum number of simultaneous connections the server will accept. Connections over the limit queue until an existing connection is terminated.
 
@@ -725,7 +725,7 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 MySQL [(none)]>
 ```
 
-## `read_timeout_millis`
+### `read_timeout_millis`
 
 This setting controls when the server will time out a connection where no packets are sent. The value is defined in milliseconds. If the server does not read a packet from the connected client for the listed number of milliseconds a timeout error is returned and the connection is killed. The option is equivalent to `net_read_timeout` in MySQL. Most MySQL clients send keep alive packets to avoid this timeout. Use this to control bad client connections.
 
@@ -773,7 +773,7 @@ ERROR 1105 (HY000): row read wait bigger than connection timeout
 
 The query fails and the connection is killed.
 
-## `write_timeout_millis`
+### `write_timeout_millis`
 
 This setting controls when the server will time out a connection where it cannot send packets. The value is defined in milliseconds. If the server does not write a packet to the connected client for the listed number of milliseconds a timeout error is returned and the connection is killed. The option is equivalent to `net_write_timeout` in MySQL. Use this to control bad client connections.
 
@@ -789,7 +789,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 We were a bit confused how to trigger this timeout and could only do it within Dolt code. Practically, we think this type of timeout is triggered very rarely in the wild.
 
-## `tls_key`
+### `tls_key`
 
 `tls_key`, `tls_cert`, and `require_secure_transport` as used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). `tls_key` is the path to the key file to use for secure transport.
 
@@ -801,7 +801,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 **Values**: A path on your filesystem to a `.pem` file.
 
-## `tls_cert`
+### `tls_cert`
 
 `tls_key`, `tls_cert`, and `require_secure_transport` as used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). `tls_cert` is the path to the ket file to use for secure transport.
 
@@ -813,7 +813,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 **Values**: A path on your filesystem to a `.pem` file.
 
-## `require_secure_transport`
+### `require_secure_transport`
 
 `tls_key`, `tls_cert`, and `require_secure_transport` as used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). Setting `require_secure_transport` enables TLS using the listed `tls_key` and `tls_cert` files.
 
@@ -875,7 +875,7 @@ TCP port:		3310
 --------------
 ```
 
-## `allow_cleartext_passwords`
+### `allow_cleartext_passwords`
 
 This is a bit of an advanced option. `allow_cleartext_passwords` only affects the `mysql_clear_password` auth plugin, which is only used for JSON Web Token (JWT) authentication. Other auth plugins protect the password (e.g. `mysql_native_password` does a hash scramble, `caching_sha2_password` requires an encrypted connection), but `mysql_clear_password` sends the plaintext password over the wire. If you are using JWT authentication you must enable `allow_cleartext_passwords` or `require_secure_transport`.
 
@@ -883,7 +883,7 @@ This is a bit of an advanced option. `allow_cleartext_passwords` only affects th
 
 **Values**: true, false, or null
 
-# max_logged_query_len
+## max_logged_query_len
 
 `max_logged_query_len` sets the maximum amount of characters Dolt will log in the server logs. We had an issue where very long queries, like seen in dumps would overflow buffers in some log monitoring utilities. This setting allows the user to truncate log lines at a maximum length to avoid such failure modes. This only effects queries so you must also set the log level to debug or above to see an effect.
 
@@ -914,7 +914,7 @@ Now, all queries are truncated to 10 characters in the logs:
 DEBU[0020] Starting query                                connectTime="2024-12-06 14:21:58.139943 -0800 PST m=+3.826578251" connectionDb=config_blog connectionID=1 query="select * f..."
 ```
 
-# `data_dir`
+## `data_dir`
 
 The `data_dir`, `config_dir`, `privilege_file` and `branch_control_file` work in conjunction to tell Dolt where to create and load various artifacts needed for the running of the database. `data dir` defaults to the current working directory. `data_dir` configures the root directory and is used by `config_dir`, `privilege_file` and `branch_control_file`.
 
@@ -926,7 +926,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 **Values**: Any filesystem path
 
-# `config_dir`
+## `config_dir`
 
 `config_dir` is a directory where Dolt will load and store configuration used by the database. Configuration includes the `privilege_file` and `branch_control_file` used to store users/grants and branch permissions configuration respectively. This defaults to the `$data_dir/doltcfg` directory. 
 
@@ -938,7 +938,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 **Values**: Any filesystem path
 
-# `privilege_file`
+## `privilege_file`
 
 The `privilege_file` is a file used to store and load users/grants configuration.
 
@@ -950,7 +950,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 **Values**: Any filesystem path
 
-# `branch_control_file`
+## `branch_control_file`
 
 The `branch_control_file` is a file used to store and load users/grants configuration.
 
@@ -1015,11 +1015,11 @@ drwxrwxrwt  7 root     wheel  224 Dec  6 14:26 ..
 drwxr-xr-x  7 timsehn  wheel  224 Dec  6 14:26 .dolt
 ```
 
-# metrics
+## metrics
 
 This set of configuration values configures a [Dolt metrics HTTP endpoint](https://docs.dolthub.com/sql-reference/server/metrics). Dolt emits metrics in [Prometheus](https://prometheus.io/) format.
 
-## host
+### host
 
 The host defines the host Dolt will use to serve the metrics endpoint.
 
@@ -1027,7 +1027,7 @@ The host defines the host Dolt will use to serve the metrics endpoint.
 
 **Values**: `localhost` or an IPv4 or IPv6 address
 
-## port 
+### port 
 
 The port defines the port Dolt will use to expose the metrics endpoint.
 
@@ -1074,7 +1074,7 @@ dss_connects 0
 
 For more information on how to scrape the metrics from this endpoint consult [our metrics documentation](https://docs.dolthub.com/sql-reference/server/metrics).
 
-## labels
+### labels
 
 Labels can be added to any Dolt metrics emitted using this optional configuration setting. This is often used to differentiate metrics coming from multiple sources to a single Prometheus collector. The label map will be applied to every metric Dolt emits.
 
@@ -1119,11 +1119,11 @@ dss_connects{process="dolt-sql-server"} 0
 # HELP dss_disconnects Count of server disconnects
 ```
 
-# remotesapi
+## remotesapi
 
 A running Dolt SQL server can serve as a [Dolt remote](https://docs.dolthub.com/concepts/dolt/git/remotes) by enabling these configuration values. With a remote endpoint enabled, you can `clone`, `push`, `pull`, and `fetch` from a running Dolt SQL Server by connecting with a user with the appropriate permissions. Additional documentation on how to push can be found in [this blog article](https://www.dolthub.com/blog/2023-12-29-sql-server-push-support/) where we announced `push` support.
   
-## port 
+### port 
 
 **Default**: `null`
 
@@ -1181,7 +1181,7 @@ Date:  Tue Dec 03 11:16:49 -0800 2024
 
 I now have a cloned copy of the database in the location I cloned to.
 
-## read_only
+### read_only
 
 If a Dolt remote endpoint is enabled by setting a valid port, the endpoint can be made read only by setting `read_only` to true. The endpoint will accept `clone`, `pull`, and `fetch` requests but not `push` requests. 
 
@@ -1236,7 +1236,7 @@ $ DOLT_REMOTE_PASSWORD= dolt push --user root origin main
 - Uploading...unknown push error; rpc error: code = PermissionDenied desc = this server only provides read-only access
 ```
 
-# system_variables
+## system_variables
 
 Dolt features a number of [custom system variables](https://docs.dolthub.com/sql-reference/version-control/dolt-sysvars) and [supports many of MySQL's system variables](https://docs.dolthub.com/sql-reference/sql-support/system-variables). These variables can be set for a running server using a map of system variable to value in this section of the configuration.
 
@@ -1288,7 +1288,7 @@ MySQL [config_blog]> show tables;
 16 rows in set (0.000 sec)
 ```
 
-# user_session_vars
+## user_session_vars
 
 If instead of setting system variables globally, you would rather set them for individual users, Dolt supports a `user_session_vars` list of maps in `config.yaml`.
 
@@ -1354,11 +1354,11 @@ MySQL [config_blog]> show tables;
 16 rows in set (0.000 sec)
 ```
 
-# jwks 
+## jwks 
 
 The `jwks` section of `config.yaml` is used to configure JSON web token (JWT) authentication. This configuration section is used to authenticate users of the Hosted Workbench to running Hosted Dolt servers. If your interested in this authentication method for your own Dolt use case, please come to [our Discord](ttps://discord.gg/gqr7K4VNKe) and let us know.
 
-# cluster
+## cluster
 
 This section of `config.yaml` is used to configure "Direct to Standby" or cluster replication. Refer to [the documentation for replication](https://docs.dolthub.com/sql-reference/server/replication#direct-to-standby-replication) for this section of `config.yaml`. This configuration requires multiple Dolt instances configured so it is out of scope for this article.
 
