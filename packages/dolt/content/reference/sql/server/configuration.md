@@ -2,11 +2,13 @@
 title: Configuration
 ---
 
+A Dolt SQL server can be configured at server start time using a [configuration file](#configyaml), or by
+setting [system variables](#system-variables) in the SQL session.
+
 # config.yaml
 
-A Dolt SQL server can be configured at server start time, or by
-setting system variables in the SQL session. The simplest way to
-configure server behavior is to provide a config file with the
+
+The simplest way to configure server behavior is to provide a config file with the
 `--config` flag, usually called `config.yaml`.
 Here is a complete `config.yaml` file populated with all the default values for every key. 
 
@@ -62,7 +64,7 @@ jwks: []
 # cluster: {}
 ```
 
-For the examples in this article, I use a database named `config_blog` with a single table defined by:
+For the examples, I use a database named `config_blog` with a single table defined by:
 
 ```sql
 create table t (
@@ -1013,7 +1015,354 @@ drwxrwxrwt  7 root     wheel  224 Dec  6 14:26 ..
 drwxr-xr-x  7 timsehn  wheel  224 Dec  6 14:26 .dolt
 ```
 
-## System variables
+# metrics
+
+This set of configuration values configures a [Dolt metrics HTTP endpoint](https://docs.dolthub.com/sql-reference/server/metrics). Dolt emits metrics in [Prometheus](https://prometheus.io/) format.
+
+## host
+
+The host defines the host Dolt will use to serve the metrics endpoint.
+
+**Default**: `null`
+
+**Values**: `localhost` or an IPv4 or IPv6 address
+
+## port 
+
+The port defines the port Dolt will use to expose the metrics endpoint.
+
+**Default**: `-1`
+
+**Values**: Any integer between 1024 to 49151
+
+**Example:**
+
+`host` and `port` must be defined together to enable a metrics endpoint. In  this example, I define `host` as `localhost` and port as `11111` in `config.yaml` and start a server.
+
+```sh
+$ grep -3 metrics config.yaml 
+
+cfg_dir: .doltcfg
+
+metrics:
+  labels: {}
+  host: localhost
+  port: 11111
+$ dolt sql-server --config config.yaml
+Starting server with Config HP="127.0.0.1:3310"|T="28800000"|R="false"|L="debug"
+INFO[0000] Server ready. Accepting connections.    
+```
+
+Then, I can access the metrics by making an HTTP request to http://localhost:11111/metrics
+
+```sh
+$ curl http://localhost:11111/metrics | HEAD -n 10
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  6041    0  6041    0     0  4776k      0 --:--:-- --:--:-- --:--:-- 5899k
+# HELP dss_concurrent_connections Number of clients concurrently connected to this instance of dolt sql server
+# TYPE dss_concurrent_connections gauge
+dss_concurrent_connections 0
+# HELP dss_concurrent_queries Number of queries concurrently being run on this instance of dolt sql server
+# TYPE dss_concurrent_queries gauge
+dss_concurrent_queries 0
+# HELP dss_connects Count of server connects
+# TYPE dss_connects counter
+dss_connects 0
+# HELP dss_disconnects Count of server disconnects
+```
+
+For more information on how to scrape the metrics from this endpoint consult [our metrics documentation](https://docs.dolthub.com/sql-reference/server/metrics).
+
+## labels
+
+Labels can be added to any Dolt metrics emitted using this optional configuration setting. This is often used to differentiate metrics coming from multiple sources to a single Prometheus collector. The label map will be applied to every metric Dolt emits.
+
+**Default**: `{}`
+
+**Values**: A map of the form `{"label": "value"}`
+
+**Example:**
+
+I add the `{"process": "dolt-sql-server"}` label value in `config.yaml` and start a Dolt SQL Server.
+
+```sh
+$ grep -3 metrics config.yaml
+
+cfg_dir: .doltcfg
+
+metrics:
+  host: localhost
+  port: 11111
+  labels: {"process": "dolt-sql-server"}
+$ dolt sql-server --config config.yaml
+Starting server with Config HP="127.0.0.1:3310"|T="28800000"|R="false"|L="debug"
+INFO[0000] Server ready. Accepting connections.        
+```
+
+Now all the metrics emitted are labeled with `process="dolt-sql-server"`.
+
+```sh
+$ curl http://localhost:11111/metrics | HEAD -n 10
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  6425    0  6425    0     0  3115k      0 --:--:-- --:--:-- --:--:-- 3137k
+# HELP dss_concurrent_connections Number of clients concurrently connected to this instance of dolt sql server
+# TYPE dss_concurrent_connections gauge
+dss_concurrent_connections{process="dolt-sql-server"} 0
+# HELP dss_concurrent_queries Number of queries concurrently being run on this instance of dolt sql server
+# TYPE dss_concurrent_queries gauge
+dss_concurrent_queries{process="dolt-sql-server"} 0
+# HELP dss_connects Count of server connects
+# TYPE dss_connects counter
+dss_connects{process="dolt-sql-server"} 0
+# HELP dss_disconnects Count of server disconnects
+```
+
+# remotesapi
+
+A running Dolt SQL server can serve as a [Dolt remote](https://docs.dolthub.com/concepts/dolt/git/remotes) by enabling these configuration values. With a remote endpoint enabled, you can `clone`, `push`, `pull`, and `fetch` from a running Dolt SQL Server by connecting with a user with the appropriate permissions. Additional documentation on how to push can be found in [this blog article](https://www.dolthub.com/blog/2023-12-29-sql-server-push-support/) where we announced `push` support.
+  
+## port 
+
+**Default**: `null`
+
+**Values**: Any integer between 1024 to 49151
+
+**Example:**
+
+```sh
+$ grep -3 remotesapi config.yaml
+  port: 11111
+  labels: {"process": "dolt-sql-server"}
+
+remotesapi:
+  port: 22222
+  read_only: null
+
+$ dolt sql-server --config config.yaml
+Starting server with Config HP="127.0.0.1:3310"|T="28800000"|R="false"|L="debug"
+INFO[0000] Server ready. Accepting connections. 
+INFO[0000] Starting http server on :22222 
+```
+
+In another shell, I can now clone the database by specifying the `DOLT_REMOTE_PASSWORD` environment variable and a `--user`. Note, cloning from [DoltHub](https://www.dolthub.com) or [DoltLab](https://www.doltlab.com) uses a different authentication method and thus, does not require a user or password.
+
+```sh
+$ DOLT_REMOTE_PASSWORD= dolt clone --user root http://localhost:22222/config_blog
+cloning http://localhost:22222/config_blog
+$ cd config_blog 
+$ dolt log
+commit im7qq2ja3nfqnc75khtuli8krla3s3fm (HEAD -> main, remotes/origin/main) 
+Author: root <root@%>
+Date:  Thu Dec 05 12:19:04 -0800 2024
+
+        Commit created using an event
+
+commit vmikac4f7s4395v0v43dtfcbhrmtmo41 
+Author: configblog <tim@dolthub.com>
+Date:  Wed Dec 04 16:51:32 -0800 2024
+
+        Transaction commit
+
+commit rgifn94i58hqov4mdv0efsjju0qpg964 
+Author: root <root@%>
+Date:  Wed Dec 04 16:48:50 -0800 2024
+
+        Manual commit
+
+commit do1tvb8g442jvggv4e3nfqp3fmqt0u5a 
+Author: timsehn <tim@dolthub.com>
+Date:  Tue Dec 03 11:16:49 -0800 2024
+
+        Inіtialіze datа rеposіtory
+
+```
+
+I now have a cloned copy of the database in the location I cloned to.
+
+## read_only
+
+If a Dolt remote endpoint is enabled by setting a valid port, the endpoint can be made read only by setting `read_only` to true. The endpoint will accept `clone`, `pull`, and `fetch` requests but not `push` requests. 
+
+**Default**: `null`
+
+**Values**: `null`, true, or false
+
+**Example:**
+
+I now set the `read_only` configuration value to true and start the Dolt SQL server.
+
+```sh
+$ grep -3 remotesapi config.yaml      
+  port: 11111
+  labels: {"process": "dolt-sql-server"}
+
+remotesapi:
+  port: 22222
+  read_only: true
+
+$ dolt sql-server --config config.yaml
+Starting server with Config HP="127.0.0.1:3310"|T="28800000"|R="false"|L="debug"
+INFO[0000] Starting http server on :22222 
+```
+
+If I make a change and attempt to push it will fail.
+
+```sh
+$ dolt sql -q "insert into t values (6, 'Can I push this');
+dquote> "
+Query OK, 1 row affected (0.00 sec)
+$ dolt sql -q "select * from t;"
++----+-----------------+
+| id | words           |
++----+-----------------+
+| 0  | first  modified |
+| 1  | second          |
+| 2  | third           |
+| 3  | fourth          |
+| 4  | dolt commit     |
+| 6  | Can I push this |
++----+-----------------+
+
+$ dolt commit -am "Added row to push"                      
+commit 0vkmfbrt3d1uljrh0ie0mdikoc9tcsss (HEAD -> main) 
+Author: timsehn <tim@dolthub.com>
+Date:  Wed Dec 11 14:07:35 -0800 2024
+
+        Added row to push
+
+$ DOLT_REMOTE_PASSWORD= dolt push --user root origin main
+- Uploading...unknown push error; rpc error: code = PermissionDenied desc = this server only provides read-only access
+```
+
+# system_variables
+
+Dolt features a number of [custom system variables](https://docs.dolthub.com/sql-reference/version-control/dolt-sysvars) and [supports many of MySQL's system variables](https://docs.dolthub.com/sql-reference/sql-support/system-variables). These variables can be set for a running server using a map of system variable to value in this section of the configuration.
+
+**Default**: `{}`
+
+**Values**: A map of system variable to value.
+
+**Example:**
+
+I will enable [the `dolt_show_system_tables` system variable](https://docs.dolthub.com/sql-reference/version-control/dolt-sysvars#dolt_show_system_tables) which changes the behavior of `show tables` to include Dolt system tables. 
+
+```
+$ grep system_variables config.yaml 
+system_variables: {"dolt_show_system_tables": 1}
+```
+
+Connecting a client to the server now has that variable set and exhibits the proper behavior:
+
+```sql
+MySQL [config_blog]> select @@dolt_show_system_tables;
++---------------------------+
+| @@dolt_show_system_tables |
++---------------------------+
+|                         1 |
++---------------------------+
+1 row in set (0.000 sec)
+
+MySQL [config_blog]> show tables;
++------------------------------+
+| Tables_in_config_blog        |
++------------------------------+
+| dolt_branches                |
+| dolt_commit_ancestors        |
+| dolt_commit_diff_t           |
+| dolt_commits                 |
+| dolt_conflicts               |
+| dolt_conflicts_t             |
+| dolt_constraint_violations   |
+| dolt_constraint_violations_t |
+| dolt_diff_t                  |
+| dolt_history_t               |
+| dolt_log                     |
+| dolt_remote_branches         |
+| dolt_remotes                 |
+| dolt_status                  |
+| dolt_workspace_t             |
+| t                            |
++------------------------------+
+16 rows in set (0.000 sec)
+```
+
+# user_session_vars
+
+If instead of setting system variables globally, you would rather set them for individual users, Dolt supports a `user_session_vars` list of maps in `config.yaml`.
+
+**Default**: `[]`
+
+**Values**: A list of user to variable map
+
+**Example:**
+
+Let's again set the `dolt_show_system_tables` variable but this time only for user `root`. I modify my `config.yaml` as such.
+
+```sh
+$ grep -3 user_session config.yaml 
+
+system_variables: {}
+
+user_session_vars:
+- name: "root"
+  vars:
+    "dolt_show_system_tables": 1
+```
+
+And then in a connected client with user `root`, the server now has that variable set and exhibits the proper behavior:
+
+```sql
+MySQL [config_blog]> select user();
++--------+
+| user() |
++--------+
+| root@% |
++--------+
+1 row in set (0.000 sec)
+
+MySQL [config_blog]> select @@dolt_show_system_tables;
++---------------------------+
+| @@dolt_show_system_tables |
++---------------------------+
+|                         1 |
++---------------------------+
+1 row in set (0.000 sec)
+
+MySQL [config_blog]> show tables;
++------------------------------+
+| Tables_in_config_blog        |
++------------------------------+
+| dolt_branches                |
+| dolt_commit_ancestors        |
+| dolt_commit_diff_t           |
+| dolt_commits                 |
+| dolt_conflicts               |
+| dolt_conflicts_t             |
+| dolt_constraint_violations   |
+| dolt_constraint_violations_t |
+| dolt_diff_t                  |
+| dolt_history_t               |
+| dolt_log                     |
+| dolt_remote_branches         |
+| dolt_remotes                 |
+| dolt_status                  |
+| dolt_workspace_t             |
+| t                            |
++------------------------------+
+16 rows in set (0.000 sec)
+```
+
+# jwks 
+
+The `jwks` section of `config.yaml` is used to configure JSON web token (JWT) authentication. This configuration section is used to authenticate users of the Hosted Workbench to running Hosted Dolt servers. If your interested in this authentication method for your own Dolt use case, please come to [our Discord](ttps://discord.gg/gqr7K4VNKe) and let us know.
+
+# cluster
+
+This section of `config.yaml` is used to configure "Direct to Standby" or cluster replication. Refer to [the documentation for replication](https://docs.dolthub.com/sql-reference/server/replication#direct-to-standby-replication) for this section of `config.yaml`. This configuration requires multiple Dolt instances configured so it is out of scope for this article.
+
+# System variables
 
 Dolt defines system variables that you can set in your session via the
 `SET` syntax. Many of these can be persisted, so they remain set after
