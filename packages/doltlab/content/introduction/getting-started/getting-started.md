@@ -55,7 +55,7 @@ No VM guests are running outdated hypervisor (qemu) binaries on this host.
 Then I downloaded and unzipped the latest DoltLab.
 
 ```sh
-$ curl -LO https://doltlab-releases.s3.amazonaws.com/linux/amd64/doltlab-latest.zip
+$ curl -LO https://doltlab-releases.s3.us-east-1.amazonaws.com/linux/amd64/doltlab-latest.zip
 $ unzip doltlab-latest.zip -d doltlab
 $ cd doltlab
 ```
