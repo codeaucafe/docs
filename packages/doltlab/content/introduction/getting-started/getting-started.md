@@ -205,6 +205,8 @@ A configured email server is required to create new users. If you try to create 
 
 So, you only have a single admin user to play with for now.
 
+> UPDATE: as of DoltLab v2.2.0, an email server is no longer required to create new users on a DoltLab instance. New users will be able to create accounts on an a DoltLab instance openly, unless [account whitelisting](../../guides/basic.md#prevent-unauthorized-user-account-creation) has been enabled by the administrator. Additionally, email server configuration is now an exclusive [DoltLab Enterprise feature](../../guides/enterprise.md#connect-doltlab-to-an-smtp-server).
+
 ## Create/Modify databases
 
 You can build whatever database you can imagine using the web user interface. The built in SQL workbench can be used to create and edit tables. You can import CSVs. You can edit a table using the spreadsheet editor. You can make branches and Pull Requests.
