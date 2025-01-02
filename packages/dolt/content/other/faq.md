@@ -87,11 +87,12 @@ us know with an issue](https://github.com/dolthub/dolt/issues) or in
 [our Discord](https://discord.gg/s8uVgc3) and we'll [fix it in 24 hours](https://www.dolthub.com/blog/2024-05-15-24-hour-bug-fixes/). 
 Our goal is to be a 100% drop-in replacement for MySQL.
 
+## Why does Dolt use so much disk space?
+
 Dolt generates a lot of garbage during some writes, especially during initial import. It's not
 unusual to get a local storage size of 20x the actual data size after an import. Running `dolt gc`
-will remove the garbage and reclaim local storage. See the [docs on `dolt
-gc`](../reference/cli/cli.md#dolt-gc) and the [`dolt_gc` stored
-procedure](../reference/sql/version-control/dolt-sql-procedures.md#dolt_gc) for details.
+will remove the garbage and reclaim local storage. See the [docs on `dolt gc`](../reference/cli/cli.md#dolt-gc) 
+and the [`dolt_gc` stored procedure](../reference/sql/version-control/dolt-sql-procedures.md#dolt_gc) for details.
 
 ## How do I squash the history of a Dolt database? I only want the latest.
 
@@ -102,7 +103,7 @@ the latest change, specify a depth of 1. The [CLI](https://docs.dolthub.com/sql-
 dolt clone --depth 1 <database>
 ```
 
-# Does Dolt collect client metrics? How can I disable it?
+## Does Dolt collect client metrics? How can I disable it?
 
 Dolt collects anonymous usage metrics and sends them over the network to DoltHub metrics servers. No
 personally identifiable information is collected. You can disable this behavior by setting the
