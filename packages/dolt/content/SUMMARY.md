@@ -150,4 +150,5 @@
   - [Transform File Uploads](products/dolthub/transform-uploads.md)
   - [Workspaces](products/dolthub/workspaces.md)
 - [DoltLab](products/doltlab/README.md)
+- [Dolt Workbench](products/workbench/README.md)
 - [DoltgreSQL](products/doltgres/README.md)
