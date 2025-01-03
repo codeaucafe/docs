@@ -20,7 +20,7 @@ Or, to install a specific version of DoltLab, run:
 
 ```bash
 export DOLTLAB_VERSION=v2.1.1
-curl -LO https://doltlab-releases.s3.amazonaws.com/linux/amd64/doltlab-${DOLTLAB_VERSION}.zip
+curl -LO https://doltlab-releases.s3.us-east-1.amazonaws.com/linux/amd64/doltlab-${DOLTLAB_VERSION}.zip
 unzip doltlab-${DOLTLAB_VERSION}.zip -d doltlab
 cd doltlab
 ```

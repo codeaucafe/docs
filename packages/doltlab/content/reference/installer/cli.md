@@ -368,27 +368,63 @@ Configuration file equivalent [port](./configuration-file.md#doltlabui-port).
 
 ## enterprise-online-api-key
 
-_String_. The api key for DoltLab Enterprise.
+_String_. The online api key for DoltLab Enterprise.
 
 Configuration file equivalent [online_api_key](./configuration-file.md#online_api_key).
 
 ## enterprise-online-license-key
 
-_String_. The license key for DoltLab Enterprise.
+_String_. The online license key for DoltLab Enterprise.
 
 Configuration file equivalent [online_license_key](./configuration-file.md#online_license_key).
 
 ## enterprise-online-product-code
 
-_String_. The product code for DoltLab Enterprise.
+_String_. The online product code for DoltLab Enterprise.
 
 Configuration file equivalent [online_product_code](./configuration-file.md#online_product_code).
 
 ## enterprise-online-shared-key
 
-_String_. The shared key for DoltLab Enterprise.
+_String_. The online shared key for DoltLab Enterprise.
 
 Configuration file equivalent [online_shared_key](./configuration-file.md#online_shared_key).
+
+## enterprise-offline-api-key
+
+_String_. The offline api key for DoltLab Enterprise.
+
+Configuration file equivalent [offline_api_key](./configuration-file.md#offline_api_key).
+
+## enterprise-offline-license-key
+
+_String_. The offline license key for DoltLab Enterprise.
+
+Configuration file equivalent [offline_license_key](./configuration-file.md#offline_license_key).
+
+## enterprise-offline-product-code
+
+_String_. The offline product code for DoltLab Enterprise.
+
+Configuration file equivalent [offline_product_code](./configuration-file.md#offline_product_code).
+
+## enterprise-offline-shared-key
+
+_String_. The offline shared key for DoltLab Enterprise.
+
+Configuration file equivalent [offline_shared_key](./configuration-file.md#offline_shared_key).
+
+## enterprise-offline-license-file
+
+_String_. The offline license file for DoltLab Enterprise.
+
+Configuration file equivalent [offline_license_file](./configuration-file.md#offline_license_file).
+
+## enterprise-offline-request-activation
+
+_Boolean_. If true, will generate an activation file that must be provided to the DoltLab team.
+
+Configuration file equivalent [request_offline_activation](./configuration-file.md#request_offline_activation).
 
 ## google-creds-file
 

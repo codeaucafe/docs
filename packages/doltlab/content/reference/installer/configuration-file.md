@@ -68,6 +68,12 @@ enterprise:
   online_shared_key: "*****"
   online_api_key: "*****"
   online_license_key: "*****"
+  offline_product_code: "*****"
+  offline_shared_key: "*****"
+  offline_api_key: "*****"
+  offline_license_key: "*****"
+  request_offline_activation: false
+  offline_license_file: "/local/path/to/license/file"
   scheme: "http"
   tls:
     cert_chain: "/path/to/cert.pem"
@@ -788,6 +794,12 @@ _Dictionary_. Enterprise configuration options. _Optional_.
 - [online_shared_key](#online_shared_key)
 - [online_api_key](#online_api_key)
 - [online_license_key](#online_license_key)
+- [offline_product_code](#offline_product_code)
+- [offline_shared_key](#offline_shared_key)
+- [offline_api_key](#offline_api_key)
+- [offline_license_key](#offline_license_key)
+- [request_offline_activation](#request_offline_activation)
+- [offline_license_file](#offline_license_file)
 - [scheme](#scheme)
 - [tls](#tls)
 - [smtp](#smtp)
@@ -843,7 +855,77 @@ enterprise:
   online_license_key: "mylicensekey"
 ```
 
-Command line equivalent [enterprise-online-license-key](./cli.md#enterprise-online-license-key).
+### offline_product_code
+
+_String_. The offline product code for your Enterprise account. _Required_ for offline Enterprise.
+
+```yaml
+# example installer_config.yaml
+enterprise:
+  offline_product_code: "myproductcode"
+```
+
+Command line equivalent [enterprise-offline-product-code](./cli.md#enterprise-offline-product-code).
+
+### offline_shared_key
+
+_String_. The offline shared key for your Enterprise account. _Required_ for offline Enterprise.
+
+```yaml
+# example installer_config.yaml
+enterprise:
+  offline_shared_key: "mysharedkey"
+```
+
+Command line equivalent [enterprise-offline-shared-key](./cli.md#enterprise-offline-shared-key).
+
+### offline_api_key
+
+_String_. The offline api key for your Enterprise account. _Required_ for offline Enterprise.
+
+```yaml
+# example installer_config.yaml
+enterprise:
+  offline_api_key: "myapikey"
+```
+
+Command line equivalent [enterprise-offline-api-key](./cli.md#enterprise-offline-api-key).
+
+### offline_license_key
+
+_String_. The offline license key for your Enterprise account. _Required_ for offline Enterprise.
+
+```yaml
+# example installer_config.yaml
+enterprise:
+  offline_license_key: "mylicensekey"
+```
+
+Command line equivalent [enterprise-offline-license-key](./cli.md#enterprise-offline-license-key).
+
+### request_offline_activation
+
+_Boolean_. If true, will generate an activation file that must be provided to the DoltLab team.. _Optional_.
+
+```yaml
+# example installer_config.yaml
+enterprise:
+  request_offline_activation: true
+```
+
+Command line equivalent [enterprise-offline-license-key](./cli.md#enterprise-offline-license-key).
+
+### offline_license_file
+
+_String_. The offline license file for your Enterprise account, provided by the DoltHub team. _Required_ for offline Enterprise.
+
+```yaml
+# example installer_config.yaml
+enterprise:
+  offline_license_file: "/path/to/license/file"
+```
+
+Command line equivalent [enterprise-offline-license-file](./cli.md#enterprise-offline-license-file).
 
 ## scheme
 
