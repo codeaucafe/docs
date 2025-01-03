@@ -1,6 +1,4 @@
----
-title: Dolt Workbench
----
+![](../../.gitbook/assets/dolt-workbench-preview.png)
 
 The [Dolt workbench](https://github.com/dolthub/dolt-workbench) is a modern, open source SQL workbench for your MySQL and PostgreSQL compatible databases. Use [Dolt](https://doltdb.com) or [Doltgres](https://github.com/dolthub/doltgresql) to unlock powerful version control features.
 
