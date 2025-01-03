@@ -6,7 +6,13 @@ title: "Enterprise Administrator Guide"
 
 This guide will cover how to run DoltLab in Enterprise mode and use exclusive features not covered in the [Basic Administrator's Guide](./basic.md).
 
-To start DoltLab in Enterprise mode, edit the `installer_config.yaml` file, supplying your Enterprise license keys:
+As of DoltLab >= v2.3.5, DoltLab Enterprise can either run in "online" mode or "offline" mode. In online mode, egress http traffic must be permitted on the DoltLab host as it relies on responses from an http server to verify the Enterprise license.
+
+In offline mode, egress access on the host is not required. Instead, the DoltLab team will provide you a license file that must be present on the Enterprise host, and will be used to verify the Enterprise license.
+
+## Configure Online Enterprise
+
+To start DoltLab in online Enterprise mode, edit the `installer_config.yaml` file, supplying your Enterprise license keys using the online fields:
 
 ```yaml
 enterprise:
@@ -33,7 +39,57 @@ Alternatively, you can supply command line flags to the [installer](../reference
 --enterprise-online-license-key="yourlicensekey"
 ```
 
-The values for these arguments will be provided to you by our DoltLab team. The following contents on this page covers how to configure various Enterprise features for your DoltLab instance.
+The values for these arguments will be provided to you by the DoltLab team. 
+
+## Configure Offline Enterprise
+
+To start DoltLab in offline Enterprise mode, edit the `installer_config.yaml` file, supplying your Enterprise license keys using the offline fields:
+
+```yaml
+enterprise:
+  offline_product_code: "yourproductcode"
+  offline_shared_key: "yoursharedkey"
+  offline_api_key: "yourapikey"
+  offline_license_key: "yourlicensekey"
+  request_offline_activation: true
+```
+
+The values for these arguments will be provided to you by the DoltLab team. Additionally, set the field `request_offline_activation` to `true`. This tells the `installer` to generate an offline activation request file. 
+
+Save these changes and run the `installer`.
+
+```bash
+./installer
+```
+
+The `installer` will generate a request file for offline activation. Provide this file to the DoltHub team.
+
+```bash
+2025-01-03T22:48:56.520Z	INFO	metrics/emitter.go:111	Successfully sent DoltLab usage metrics
+
+2025-01-03T22:48:56.520Z	INFO	cmd/main.go:601	Please provide the generated offline activation request file to the DoltHub team:	{"file": "/home/ubuntu/doltlab/12345678_offline_activation.req"}
+```
+
+Once you provide the team with the activation request, they in turn will provide you with a valid offline license file.
+
+Upload the file to the Enterprise host, then update the `installer_config.yaml` and replace the `request_offline_activation` field with the `offline_license_file` field. This field should specify the path to the license file.
+
+```yaml
+enterprise:
+  offline_product_code: "yourproductcode"
+  offline_shared_key: "yoursharedkey"
+  offline_api_key: "yourapikey"
+  offline_license_key: "yourlicensekey"
+  offline_license_file: "/path/to/your/license/file"
+```
+
+Save these changes and rerun the `installer` to regenerate DoltLab assets that allow it to run in offline Enterprise mode.
+
+```bash
+./installer
+```
+
+The following contents on this page covers how to configure various Enterprise features for your DoltLab instance.
 
 1. [Use custom Logo on DoltLab instance](#use-custom-logo-on-doltlab-instance)
 2. [Customize automated emails](#customize-automated-emails)
