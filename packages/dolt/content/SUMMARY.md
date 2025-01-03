@@ -103,28 +103,6 @@
 - [Commands](reference/cli/cli.md)
 - [Git Comparison](reference/cli/git-comparison.md)
 
-## Products
-
-- [Hosted Dolt](products/hosted/README.md)
-  - [Getting Started](products/hosted/getting-started.md)
-  - [Notable Features](products/hosted/notable-features.md)
-  - [SQL Workbench](products/hosted/sql-workbench.md)
-  - [Cloning a Hosted Database](products/hosted/cloning.md)
-  - [Using DoltHub as a Remote](products/hosted/dolthub-as-remote.md)
-  - [Infrastructure](products/hosted/infrastructure.md)
-- [DoltHub](products/dolthub/README.md)
-  - [Data Sharing](products/dolthub/data-sharing.md)
-  - [API](products/dolthub/api/README.md)
-    - [Authentication](products/dolthub/api/authentication.md)
-    - [SQL](products/dolthub/api/sql.md)
-    - [CSV](products/dolthub/api/csv.md)
-    - [Database](products/dolthub/api/database.md)
-    - [Hooks](products/dolthub/api/hooks.md)
-  - [Transform File Uploads](products/dolthub/transform-uploads.md)
-  - [Workspaces](products/dolthub/workspaces.md)
-- [DoltLab](products/doltlab/README.md)
-- [DoltgreSQL](products/doltgres/README.md)
-
 ## Architecture
 
 - [Overview](architecture/architecture.md)
@@ -151,3 +129,25 @@
 - [FAQ](other/faq.md)
 - [Roadmap](other/roadmap.md)
 - [Versioning](other/versioning.md)
+
+## Products
+
+- [Hosted Dolt](products/hosted/README.md)
+  - [Getting Started](products/hosted/getting-started.md)
+  - [Notable Features](products/hosted/notable-features.md)
+  - [SQL Workbench](products/hosted/sql-workbench.md)
+  - [Cloning a Hosted Database](products/hosted/cloning.md)
+  - [Using DoltHub as a Remote](products/hosted/dolthub-as-remote.md)
+  - [Infrastructure](products/hosted/infrastructure.md)
+- [DoltHub](products/dolthub/README.md)
+  - [Data Sharing](products/dolthub/data-sharing.md)
+  - [API](products/dolthub/api/README.md)
+    - [Authentication](products/dolthub/api/authentication.md)
+    - [SQL](products/dolthub/api/sql.md)
+    - [CSV](products/dolthub/api/csv.md)
+    - [Database](products/dolthub/api/database.md)
+    - [Hooks](products/dolthub/api/hooks.md)
+  - [Transform File Uploads](products/dolthub/transform-uploads.md)
+  - [Workspaces](products/dolthub/workspaces.md)
+- [DoltLab](products/doltlab/README.md)
+- [DoltgreSQL](products/doltgres/README.md)
