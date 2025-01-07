@@ -34,3 +34,7 @@ We added a feature to [Transform DoltHub File Uploads](./transform-uploads.md). 
 
 We added the workspaces concept to DoltHub as a staging area for changes made from the
 web. Learn what workspaces are and how to use them most effectively.
+
+- [Continuous Integration](./continuous-integration/README.md)
+
+DoltHub and DoltLab support continuous integration (CI) testing which allow you to validate changes before you commit them on your primary branch. Learn how to configure and run CI on your DoltHub and DoltLab databases.
