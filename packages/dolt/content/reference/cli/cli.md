@@ -42,6 +42,7 @@ Valid commands for dolt are
              migrate - Executes a database migration to use the latest Dolt data format.
          read-tables - Fetch table(s) at a specific commit into a new dolt repo
                   gc - Cleans up unreferenced data from the repository.
+                fsck - Verifies the contents of the database are not corrupted.
        filter-branch - Edits the commit history using the provided query.
           merge-base - Find the common ancestor of two commits.
              version - Displays the version for the Dolt binary.
@@ -52,6 +53,7 @@ Valid commands for dolt are
           query-diff - Shows table diff between two queries.
               reflog - Show history of named refs.
               rebase - Reapplies commits on top of another base tip
+                  ci - Commands for working with Dolt continuous integration configuration.
 ```
 
 ## Global Arguments
@@ -305,6 +307,7 @@ Switch branches or restore working tree tables
 
 ```bash
 dolt checkout <branch>
+dolt checkout <commit> [--] <table>...
 dolt checkout <table>...
 dolt checkout -b <new-branch> [<start-point>]
 dolt checkout --track <remote>/<branch>
@@ -318,6 +321,9 @@ Updates tables in the working set to match the staged versions. If no paths are 
 dolt checkout `<branch>`
    To prepare for working on `<branch>`, switch to it by updating the index and the tables in the working tree, and by pointing HEAD at the branch. Local modifications to the tables in the working
    tree are kept, so that they can be committed to the `<branch>`.
+
+dolt checkout `<commit>` [--] `<table>`...
+	 Specifying table names after a commit reference (branch, commit hash, tag, etc.) updates the working set to match that commit for one or more tables, but keeps the current branch. Local modifications to the tables named will be overwritten by their versions in the commit named.
 
 dolt checkout -b `<new_branch>` [`<start_point>`]
    Specifying -b causes a new branch to be created as if dolt branch were called and then checked out.
@@ -370,6 +376,114 @@ Abort the current conflict resolution process, and revert all changes from the i
 Allow empty commits to be cherry-picked. Note that use of this option only keeps commits that were initially empty. Commits which become empty, due to a previous commit, will cause cherry-pick to fail.
 
 
+
+## `dolt ci destroy`
+
+Drops all database tables used to store continuous integration configuration
+
+**Synopsis**
+
+```bash
+dolt ci destroy
+```
+
+**Description**
+
+Drops all database tables used to store continuous integration configuration and creates a Dolt commit
+
+**Arguments and options**
+
+No options for this command.
+
+## `dolt ci export`
+
+Export a Dolt continuous integration workflow by name
+
+**Synopsis**
+
+```bash
+dolt ci export <workflow name>
+```
+
+**Description**
+
+Export a Dolt continuous integration workflow by name
+
+**Arguments and options**
+
+No options for this command.
+
+## `dolt ci import`
+
+Import a Dolt continuous integration workflow file into the database
+
+**Synopsis**
+
+```bash
+dolt ci import <file>
+```
+
+**Description**
+
+Import a Dolt continuous integration workflow file into the database and create a Dolt commit
+
+**Arguments and options**
+
+No options for this command.
+
+## `dolt ci init`
+
+Creates database tables used to store continuous integration configuration
+
+**Synopsis**
+
+```bash
+dolt ci init
+```
+
+**Description**
+
+Creates database tables used to store continuous integration configuration and creates a Dolt commit
+
+**Arguments and options**
+
+No options for this command.
+
+## `dolt ci ls`
+
+List Dolt continuous integration workflows
+
+**Synopsis**
+
+```bash
+dolt ci ls
+```
+
+**Description**
+
+List Dolt continuous integration workflows
+
+**Arguments and options**
+
+No options for this command.
+
+## `dolt ci remove`
+
+Removes a Dolt continuous integration workflow by name
+
+**Synopsis**
+
+```bash
+dolt ci remove <workflow name>
+```
+
+**Description**
+
+Removes a Dolt continuous integration workflow by name and creates a Dolt commit
+
+**Arguments and options**
+
+No options for this command.
 
 ## `dolt clean`
 
@@ -507,6 +621,9 @@ Adds all tables and databases (including new tables) in the working set to the s
 `--amend`:
 Amend previous commit
 
+`-S`, `--gpg-sign`:
+Sign the commit using GPG. If no key-id is provided the key-id is taken from 'user.signingkey' the in the configuration
+
 
 
 ## `dolt config`
@@ -534,15 +651,25 @@ When writing, the new value is written to the repository local configuration fil
 Valid configuration variables:
 
 	- core.editor - lets you edit 'commit' or 'tag' messages by launching the set editor.
+
 	- creds.add_url - sets the endpoint used to authenticate a client for 'dolt login'.
+
 	- doltlab.insecure - boolean flag used to authenticate a client against DoltLab.
+
 	- init.defaultbranch - allows overriding the default branch name e.g. when initializing a new repository.
+
 	- metrics.disabled - boolean flag disables sending metrics when true.
+
 	- user.creds - sets user keypairs for authenticating with doltremoteapi.
+
 	- user.email - sets name used in the author and committer field of commit objects.
+
 	- user.name - sets email used in the author and committer field of commit objects.
+
 	- remotes.default_host - sets default host for authenticating with doltremoteapi.
+
 	- remotes.default_port - sets default port for authenticating with doltremoteapi.
+
 	- push.autoSetupRemote - if set to "true" assume --set-upstream on default push when no upstream tracking exists for the current branch.
 
 
@@ -850,8 +977,11 @@ filters columns based on values in the diff.  See `dolt diff --help` for details
 `--limit`:
 limits to the first N diffs.
 
-`-c`, `--cached`:
+`--staged`:
 Show only the staged data changes.
+
+`-c`, `--cached`:
+Synonym for --staged
 
 `-sk`, `--skinny`:
 Shows only primary key columns and any columns with data changes.
@@ -1057,6 +1187,27 @@ Queries to run, separated by semicolons. If not provided, queries are read from 
 
 
 
+## `dolt fsck`
+
+Verifies the contents of the database are not corrupted.
+
+**Synopsis**
+
+```bash
+dolt fsck [--quiet]
+```
+
+**Description**
+
+Verifies the contents of the database are not corrupted.
+
+**Arguments and options**
+
+`--quiet`:
+Don't show progress. Just print final report.
+
+
+
 ## `dolt gc`
 
 Cleans up unreferenced data from the repository.
@@ -1064,19 +1215,30 @@ Cleans up unreferenced data from the repository.
 **Synopsis**
 
 ```bash
-dolt gc [--shallow]
+dolt gc [--shallow|--full]
 ```
 
 **Description**
 
 Searches the repository for data that is no longer referenced and no longer needed.
 
+Dolt GC is generational. When a GC is run, everything reachable from any commit on any branch
+is put into the old generation. Data which is only reachable from uncommited branch HEADs is kept in
+the new generation. By default, Dolt GC will only visit data in the new generation, and so will never
+collect data from deleted branches which has previously made its way to the old generation from being
+copied during a prior garbage collection.
+
 If the `--shallow` flag is supplied, a faster but less thorough garbage collection will be performed.
+
+If the `--full` flag is supplied, a more thorough garbage collection, fully collecting the old gen and new gen, will be performed.
 
 **Arguments and options**
 
 `-s`, `--shallow`:
 perform a fast, but incomplete garbage collection pass
+
+`-f`, `--full`:
+perform a full garbage collection, including the old generation
 
 
 
@@ -1171,6 +1333,9 @@ Shows refs next to commits. Valid options are short, full, no, and auto
 
 `--not`:
 Excludes commits from revision.
+
+`--show-signature`:
+Shows the signature of each commit.
 
 `--oneline`:
 Shows logs in a compact format.
@@ -2029,7 +2194,6 @@ This is an example yaml configuration file showing all supported items and their
 	behavior:
 	  read_only: false
 	  autocommit: true
-	  persistence_behavior: load
 	  disable_client_multi_statements: false
 	  dolt_transaction_commit: false
 	  event_scheduler: "ON"
@@ -2048,9 +2212,6 @@ This is an example yaml configuration file showing all supported items and their
 	  tls_cert: null
 	  require_secure_transport: null
 	  allow_cleartext_passwords: null
-	
-	performance:
-	  query_parallelism: null
 	
 	data_dir: .
 	
@@ -2170,9 +2331,6 @@ Deprecated, no effect in current versions of Dolt
 
 `--max-connections`:
 Set the number of connections handled by the server. Defaults to `100`.
-
-`--persistence-behavior`:
-Indicate whether to `load` or `ignore` persisted global variables. Defaults to `load`.
 
 `--privilege-file`:
 Path to a file to load and store users and grants. Defaults to `$doltcfg-dir/privileges.db`. Will be created as needed.
@@ -2611,6 +2769,4 @@ display the feature version of this repository.
 
 `-v`, `--verbose`:
 display verbose details, including the storage format of this repository.
-
-
 
