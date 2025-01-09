@@ -167,11 +167,11 @@ Once we push the `master` branch, DoltHub will run our workflow for the first ti
 
 Dolt CI Jobs are visible on from the "Jobs" tab.
 
-![Running Workflow Job](../images/first_workflow_running.png)
+![Running Workflow Job](../../../.gitbook/assets/first_workflow_running.png)
 
 Here you can see the workflow job we defined in our yaml file "validate tables" is now running. Notice that for the time being, all Dolt CI Jobs will say they were created by the database owner, regardless of the person responsible for the `push` event. This will be fixed at a later date.
 
-![Succeeded Workflow Job](../images/first_workflow_succeeded.png)
+![Succeeded Workflow Job](../../../.gitbook/assets/first_workflow_succeeded.png)
 
 If the Dolt CI Job is successful, meaning the saved query succeeded and the expected number of rows were found, the Job will have status "Succeeded". If the Job failed, the status would be "Failed" and we would see a relevant failure message on the Job's detail page.
 
@@ -214,11 +214,11 @@ To https://doltremoteapi.dolthub.com/dolthub/options
 
 Now with our workflow configuration updated and pushed to DoltHub, we can go check the status of our new Workflow Job.
 
-![Failed Workflow Job](../images/workflow_failed.png)
+![Failed Workflow Job](../../../.gitbook/assets/workflow_failed.png)
 
 As expected, the Workflow Job that ran on `push` now failed. And if we click "View details" we can see that it's because we did not add the saved query to the database.
 
-![Failed Workflow Job Reason](../images/workflow_failed_reason.png)
+![Failed Workflow Job Reason](../../../.gitbook/assets/workflow_failed_reason.png)
 
 Ok, so let's fix the step we just added by adding the saved query "option_chain exists" to the database and pushing the changes.
 
@@ -253,7 +253,7 @@ To https://doltremoteapi.dolthub.com/dolthub/options
 
 And after that latest Workflow Job completes, we can see that our "validate tables" Job is passing again!
 
-![Failed Workflow Fixed](../images/workflow_fail_fixed.png)
+![Failed Workflow Fixed](../../../.gitbook/assets/workflow_fail_fixed.png)
 
 # Getting fancier
 
@@ -403,14 +403,14 @@ To https://doltremoteapi.dolthub.com/dolthub/options
 
 Our updated workflow defined for this database will kick-off each of the Workflow Jobs, as seen in the image below.
 
-![Fancier Workflows Running](../images/fancier_workflows_running.png)
+![Fancier Workflows Running](../../../.gitbook/assets/fancier_workflows_running.png)
 
 But, we'd expect the "check data" Workflow Job to fail. And, it does.
 
-![Fancier Workflows Failed](../images/fancier_workflows_fail_expected.png)
+![Fancier Workflows Failed](../../../.gitbook/assets/fancier_workflows_fail_expected.png)
 
 If we click "View details", we can see the failure resulted from expecting > 0 rows, but got 0.
 
-![Fancier Workflows Failed Details](../images/fancier_workflows_fail_expected_details.png)
+![Fancier Workflows Failed Details](../../../.gitbook/assets/fancier_workflows_fail_expected_details.png)
 
 
