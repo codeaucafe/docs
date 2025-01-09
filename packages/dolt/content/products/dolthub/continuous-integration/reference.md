@@ -80,21 +80,30 @@ _String_. The case-insensitive name of a step, must be unique. Required.
 
 # jobs.steps.saved_query_name
 
+_String_. The name of the [saved query](../../../reference/sql/version-control/saved-queries.md) that should be executed during the workflow run. Required.
 
 # jobs.steps.expected_rows
 
-- ==
-- \!=
-- &gt;
-- &gt;=
-- &lt;
-- <=
+_String_. The number of expected rows resulting from the execution of the named saved query. Optional.
+
+This should be in the format: `<comparator> <number>`, for example, `!= 15`. Valid comparators are:
+
+- == for equals
+- \!= for not equals
+- &gt; for greater than
+- &gt;= for greater than or equal to
+- &lt; for less than
+- <= for less than or equal to
 
 # jobs.steps.expected_columns
 
-- ==
-- \!=
-- &gt;
-- &gt;=
-- &lt;
-- <=
+_String_. The number of expected columns resulting from the execution of the named saved query. Optional.
+
+This should be in the format: `<comparator> <number>`, for example, `!= 15`. Valid comparators are:
+
+- == for equals
+- \!= for not equals
+- &gt; for greater than
+- &gt;= for greater than or equal to
+- &lt; for less than
+- <= for less than or equal to
