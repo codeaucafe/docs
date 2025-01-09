@@ -2,13 +2,13 @@
 title: Getting Started with DoltHub/DoltLab CI
 ---
 
-CI for DoltHub and DoltLab requires [Dolt v1.46.0](https://github.com/dolthub/dolt/releases/tag/v1.46.0). This release contains the `dolt ci` command you will use to configure CI to run.
+CI for DoltHub and DoltLab requires [Dolt v1.45.3](https://github.com/dolthub/dolt/releases/tag/v1.45.3). This release contains the `dolt ci` command you will use to configure CI to run.
 
 To start, let's ensure we have the correct Dolt version installed locally.
 
 ```bash
 % dolt version
-dolt version 1.46.0
+dolt version 1.45.3
 ```
 
 Now, let's clone a database that's hosted on DoltHub that we want to run CI tests on. 

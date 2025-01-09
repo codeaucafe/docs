@@ -12,13 +12,13 @@ The following sections will introduce you to how CI works with Dolt, DoltHub and
 
 # CI starts with Dolt
 
-CI configuration for a DoltHub or DoltLab database is stored in the database itself. At the time of this writing, in order to add CI configuration to a DoltHub or DoltLab database, you will need to have a local Dolt client version >= [v1.46.0]() and will have to clone a copy of the the database. In order to configure CI on the database, you will use Dolt's CI CLI commands.
+CI configuration for a DoltHub or DoltLab database is stored in the database itself. At the time of this writing, in order to add CI configuration to a DoltHub or DoltLab database, you will need to have a local Dolt client version >= [v1.45.3](https://github.com/dolthub/dolt/releases/tag/v1.45.3) and will have to clone a copy of the the database. In order to configure CI on the database, you will use Dolt's CI CLI commands.
 
 ## Dolt CI Commands
 
 The primary interface for creating and editing CI configuration in a Dolt database is via the `dolt ci` CLI command. These commands aim to simplify CI configuration in Dolt, so that users do not need to manually interact with the underlying CI tables directly.
 
-The `dolt ci` commands as of Dolt v1.46.0 are:
+The `dolt ci` commands as of Dolt v1.45.3 are:
 
 - [dolt ci init](../../../reference/cli/cli.md#dolt-ci-init). This command creates internal database tables used to store continuous integration configuration.
 - [dolt ci destroy](../../../reference/cli/cli.md#dolt-ci-destroy). This command drops all database tables used to store continuous integration configuration.
