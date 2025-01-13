@@ -5,7 +5,7 @@ title: Docker
 # Docker
 
 You can get a Dolt Docker container using our [official Docker images](https://hub.docker.com/u/dolthub).
-Both images support `linux/amd64` and `linux/arm64` platforms and updated on every release of [Dolt](https://doltdb.com).
+Both images support `linux/amd64` and `linux/arm64` platforms and are updated on every release of [Dolt](https://doltdb.com).
 Older versions are also available, and tagged with the Dolt version they contain. The source of the Dockerfiles can be found [here](https://github.com/dolthub/dolt/tree/main/docker)
 
 ## Docker Image for Dolt CLI
@@ -31,11 +31,9 @@ dolt version 1.4.2
 ## Docker Image for Dolt SQL-Server
 
 [The Dolt sql-server Docker image](https://hub.docker.com/r/dolthub/dolt-sql-server) creates a container 
-with dolt installed and starts a Dolt SQL server when running the container. It is similar to MySQL's Docker image. 
+with Dolt installed and starts a Dolt SQL server when running the container. It is similar to MySQL's Docker image. 
 Running this image without any arguments is equivalent to running `dolt sql-server --host 0.0.0.0 --port 3306` 
-command locally, which is the default settings for the server in the container. The persisted host
-and port allows user to connect to the server from inside the container and from the local host system through
-port-mapping.
+command locally, which is the default settings for the server in the container.
 
 To check out supported options for `dolt sql-server`, you can run the image with `--help` flag.
 
@@ -45,18 +43,21 @@ To check out supported options for `dolt sql-server`, you can run the image with
 
 ### Connect to the server in the container from the host system
 
-To be able to connect to the server running in the container, we need to set up a port to connect to locally that
-maps to the port in the container. The host is set to `0.0.0.0` for accepting connections to any available network
-interface.
+From the host system, to connect to a server running in a container, we need to map a port on the host system to the port our sql-server is running on in the container. 
+
+We also need a user account that has permission to connect to the server
+from the host system's address. By default, as of Dolt version 1.46.0, the `root` superuser is limited to connections from localhost. This is a security feature to prevent unauthorized access to the server. If you don't want to log in to the container and then connect to your sql-server, you can set the `DOLT_ROOT_HOST` and `DOLT_ROOT_PASSWORD` environment variables to control how the `root` superuser is initialized. When the Dolt sql-server container is started, it will ensure the `root` superuser is configured according to those environment variables.  
+
+In our example below, we're using `DOLT_ROOT_HOST` to override the host of the `root` superuser account to `%` in order to allow any host to connect to our server and log in as `root`. We're also using `DOLT_ROOT_PASSWORD` to override the default, empty password to specify a password for the `root` account. This is strongly advised for security when allowing the `root` account to connect from any host.
 
 ```bash
-> docker run -p 3307:3306 dolthub/dolt-sql-server:latest
+> docker run -e DOLT_ROOT_PASSWORD=secret2 -e DOLT_ROOT_HOST=% -p 3307:3306 dolthub/dolt-sql-server:latest
 ```
 
-If we run the command above with -d or switch to a separate window we can connect with MySQL (empty password by default):
+If we run the command above with -d or switch to a separate window we can connect with MySQL:
 
 ```bash
-> mysql --host 0.0.0.0 -P 3307 -u root
+> mysql --host 0.0.0.0 -P 3307 -u root -p secret2
 ```
 
 ### Define configuration for the server
@@ -106,7 +107,7 @@ Here is how I set up my directories to be mounted. I have three directories to m
 ```bash
 shared > ls
 databases	dolt		server
-shared > docker run -p 3307:3306 -v $PWD/server:/etc/dolt/servercfg.d -v $PWD/dolt:/etc/dolt/doltcfg.d -v $PWD/databases:/var/lib/dolt dolthub/dolt-sql-server:latest 
+shared > docker run -e DOLT_ROOT_HOST='%' -p 3307:3306 -v $PWD/server:/etc/dolt/servercfg.d -v $PWD/dolt:/etc/dolt/doltcfg.d -v $PWD/databases:/var/lib/dolt dolthub/dolt-sql-server:latest 
 2022-10-27 18:07:51+00:00 [Note] [Entrypoint]: Entrypoint script for Dolt Server 1.5.0 starting.
 2022-10-27 18:07:51+00:00 [Note] [Entrypoint]: Checking for config provided in /etc/dolt/doltcfg.d
 2022-10-27 18:07:51+00:00 [Note] [Entrypoint]: /etc/dolt/doltcfg.d/config.json file is found
