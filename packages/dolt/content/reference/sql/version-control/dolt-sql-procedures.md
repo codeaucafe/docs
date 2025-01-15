@@ -757,7 +757,7 @@ CALL DOLT_FETCH('origin');
 
 ### Options
 
-No options for this procedure.
+`--prune`, `-p`: After fetching, remove any remote-tracking references that don't exist on the remote.
 
 ### Output Schema
 
@@ -940,6 +940,8 @@ CALL DOLT_PULL('feature-branch', '--force');
 commit history
 
 `--force`: Ignores any foreign key warnings and proceeds with the commit.
+
+`--prune`, `-p`: After fetching, remove any remote-tracking references that don't exist on the remote.
 
 When merging a branch, your session state must be clean. `COMMIT`
 or`ROLLBACK` any changes, then `DOLT_COMMIT()` to create a new dolt
