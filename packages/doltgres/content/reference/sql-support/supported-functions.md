@@ -19,36 +19,81 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-math.html#FUNCTIONS-MATH-FUNC-TABLE).
 
-| Function     | Supported | Notes and limitations |
+| Function     | Supported | Notes and limitations |✅
 |:-------------|:----------|:----------------------|
-| abs          | ❌         |                       |
-| cbrt         | ❌         |                       |
-| ceil         | ❌         |                       |
+| abs          | ✅         |                       |
+| cbrt         | ✅         |                       |
+| ceil         | ✅         |                       |
 | ceiling      | ❌         |                       |
-| degrees      | ❌         |                       |
-| div          | ❌         |                       |
+| degrees      | ✅         |                       |
+| div          | ✅         |                       |
 | erf          | ❌         |                       |
 | erfc         | ❌         |                       |
-| exp          | ❌         |                       |
-| factorial    | ❌         |                       |
-| floor        | ❌         |                       |
-| gcd          | ❌         |                       |
-| lcm          | ❌         |                       |
-| ln           | ❌         |                       |
-| log          | ❌         |                       |
-| log10        | ❌         |                       |
-| min_scale    | ❌         |                       |
-| mod          | ❌         |                       |
-| pi           | ❌         |                       |
-| power        | ❌         |                       |
-| radians      | ❌         |                       |
-| round        | ❌         |                       |
-| scale        | ❌         |                       |
-| sign         | ❌         |                       |
-| sqrt         | ❌         |                       |
-| trim_scale   | ❌         |                       |
-| trunc        | ❌         |                       |
-| width_bucket | ❌         |                       |
+| exp          | ✅         |                       |
+| factorial    | ✅         |                       |
+| floor        | ✅         |                       |
+| gcd          | ✅         |                       |
+| lcm          | ✅         |                       |
+| ln           | ✅         |                       |
+| log          | ✅         |                       |
+| log10        | ✅         |                       |
+| min_scale    | ✅         |                       |
+| mod          | ✅         |                       |
+| pi           | ✅         |                       |
+| power        | ✅         |                       |
+| radians      | ✅         |                       |
+| round        | ✅         |                       |
+| scale        | ✅         |                       |
+| sign         | ✅         |                       |
+| sqrt         | ✅         |                       |
+| trim_scale   | ✅         |                       |
+| trunc        | ✅         |                       |
+| width_bucket | ✅         |                       |
+
+## Random Functions
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/15/functions-math.html#FUNCTIONS-MATH-RANDOM-TABLE).
+
+| Function | Supported | Notes and limitations |
+|:---------|:----------|:----------------------|
+| random   | ✅         |                       |
+| setseed  | ❌         |                       |
+
+## Trigonometric Functions
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/15/functions-math.html#FUNCTIONS-MATH-TRIG-TABLE).
+
+| Function | Supported | Notes and limitations |
+|:---------|:----------|:----------------------|
+| acos     | ✅         |                       |
+| acosd    | ✅         |                       |
+| asin     | ✅         |                       |
+| asind    | ✅         |                       |
+| atan     | ✅         |                       |
+| atand    | ✅         |                       |
+| atan2    | ✅         |                       |
+| atan2d   | ✅         |                       |
+| cos      | ✅         |                       |
+| cosd     | ✅         |                       |
+| cot      | ✅         |                       |
+| cotd     | ✅         |                       |
+| sin      | ✅         |                       |
+| sind     | ✅         |                       |
+| tan      | ✅         |                       |
+| tand     | ✅         |                       |
+
+## Hyperbolic Functions
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/15/functions-math.html#FUNCTIONS-MATH-HYP-TABLE).
+
+| Function | Supported | Notes and limitations |
+|:---------|:----------|:----------------------|
+| sinh     | ✅         |                       |
+| cosh     | ✅         |                       |
+| tanh     | ✅         |                       |
+| asinh    | ✅         |                       |
+| acosh    | ✅         |                       |
+| atanh    | ✅         |                       |
 
 ## SQL String Functions
 
@@ -56,22 +101,22 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function         | Supported | Notes and limitations |
 |:-----------------|:----------|:----------------------|
-| btrim            | ❌         |                       |
-| bit_length       | ❌         |                       |
-| char_length      | ❌         |                       |
-| lower            | ❌         |                       |
-| lpad             | ❌         |                       |
-| ltrim            | ❌         |                       |
+| btrim            | ✅         |                       |
+| bit_length       | ✅         |                       |
+| char_length      | ✅         |                       |
+| lower            | ✅         |                       |
+| lpad             | ✅         |                       |
+| ltrim            | ✅         |                       |
 | normalize        | ❌         |                       |
-| octet_length     | ❌         |                       |
+| octet_length     | ✅         |                       |
 | overlay          | ❌         |                       |
 | position         | ❌         |                       |
-| rpad             | ❌         |                       |
-| rtrim            | ❌         |                       |
+| rpad             | ✅         |                       |
+| rtrim            | ✅         |                       |
 | substring        | ❌         |                       |
 | trim             | ❌         |                       |
 | unicode_assigned | ❌         |                       |
-| upper            | ❌         |                       |
+| upper            | ✅         |                       |
 
 ## Other String Functions
 
@@ -79,18 +124,18 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function              | Supported | Notes and limitations |
 |:----------------------|:----------|:----------------------|
-| ascii                 | ❌         |                       |
-| chr                   | ❌         |                       |
+| ascii                 | ✅         |                       |
+| chr                   | ✅         |                       |
 | concat                | ❌         |                       |
 | concat_ws             | ❌         |                       |
 | format                | ❌         |                       |
-| initcap               | ❌         |                       |
-| left                  | ❌         |                       |
-| length                | ❌         |                       |
-| md5                   | ❌         |                       |
+| initcap               | ✅         |                       |
+| left                  | ✅         |                       |
+| length                | ✅         |                       |
+| md5                   | ✅         |                       |
 | parse_ident           | ❌         |                       |
 | pg_client_encoding    | ❌         |                       |
-| quote_ident           | ❌         |                       |
+| quote_ident           | ✅         |                       |
 | quote_literal         | ❌         |                       |
 | quote_nullable        | ❌         |                       |
 | regexp_count          | ❌         |                       |
@@ -102,21 +147,21 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | regexp_split_to_array | ❌         |                       |
 | regexp_split_to_table | ❌         |                       |
 | regexp_substr         | ❌         |                       |
-| repeat                | ❌         |                       |
-| replace               | ❌         |                       |
-| reverse               | ❌         |                       |
-| right                 | ❌         |                       |
-| split_part            | ❌         |                       |
+| repeat                | ✅         |                       |
+| replace               | ✅         |                       |
+| reverse               | ✅         |                       |
+| right                 | ✅         |                       |
+| split_part            | ✅         |                       |
 | starts_with           | ❌         |                       |
 | string_to_array       | ❌         |                       |
 | string_to_table       | ❌         |                       |
-| strpos                | ❌         |                       |
-| substr                | ❌         |                       |
+| strpos                | ✅         |                       |
+| substr                | ✅         |                       |
 | to_ascii              | ❌         |                       |
 | to_bin                | ❌         |                       |
-| to_hex                | ❌         |                       |
+| to_hex                | ✅         |                       |
 | to_oct                | ❌         |                       |
-| translate             | ❌         |                       |
+| translate             | ✅         |                       |
 | unistr                | ❌         |                       |
 
 ## SQL Binary String Functions
@@ -188,7 +233,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function     | Supported | Notes and limitations |
 |:-------------|:----------|:----------------------|
-| to_char      | ❌         |                       |
+| to_char      | ✅         |                       |
 | to_date      | ❌         |                       |
 | to_number    | ❌         |                       |
 | to_timestamp | ❌         |                       |
@@ -406,8 +451,8 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function | Supported | Notes and limitations |
 |:---------|:----------|:----------------------|
-| nextval  | ❌         |                       |
-| setval   | ❌         |                       |
+| nextval  | ✅         |                       |
+| setval   | ✅         |                       |
 | currval  | ❌         |                       |
 | lastval  | ❌         |                       |
 
@@ -723,11 +768,11 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | pg_get_function_arguments          | ❌         |                         |
 | pg_get_function_identity_arguments | 🟠        | Parses, not implemented |
 | pg_get_function_result             | ❌         |                         |
-| pg_get_indexdef                    | ❌         |                         |
+| pg_get_indexdef                    | 🟠        | Parses, not implemented |
 | pg_get_keywords                    | ❌         |                         |
 | pg_get_partkeydef                  | 🟠        | Parses, not implemented |
 | pg_get_ruledef                     | ❌         |                         |
-| pg_get_serial_sequence             | ❌         |                         |
+| pg_get_serial_sequence             | ✅         |                         |
 | pg_get_statisticsobjdef            | ❌         |                         |
 | pg_get_triggerdef                  | 🟠        | Parses, not implemented |
 | pg_get_userbyid                    | 🟠        | Parses, not implemented |
@@ -842,10 +887,10 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-admin.html#FUNCTIONS-ADMIN-SET-TABLE).
 
-| Function         | Supported | Notes and limitations |
-|:-----------------|:----------|:----------------------|
-| current_setting  | ❌         |                       |
-| set_config       | ❌         |                       |
+| Function         | Supported | Notes and limitations                                           |
+|:-----------------|:----------|:----------------------------------------------------------------|
+| current_setting  | ✅         |                                                                 |
+| set_config       | 🟠        | setting config for the current transaction is not supported yet |
 
 ## Server Signaling Functions
 
@@ -881,13 +926,13 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-admin.html#FUNCTIONS-RECOVERY-INFO-TABLE).
 
-| Function                      | Supported | Notes and limitations |
-|:------------------------------|:----------|:----------------------|
-| pg_is_in_recovery             | ❌         |                       |
-| pg_last_wal_receive_lsn       | ❌         |                       |
-| pg_last_wal_replay_lsn        | ❌         |                       |
-| pg_last_xact_replay_timestamp | ❌         |                       |
-| pg_get_wal_resource_managers  | ❌         |                       |
+| Function                      | Supported | Notes and limitations    |
+|:------------------------------|:----------|:-------------------------|
+| pg_is_in_recovery             | 🟠        | Parses, not implemented  |
+| pg_last_wal_receive_lsn       | ❌         |                          |
+| pg_last_wal_replay_lsn        | ❌         |                          |
+| pg_last_xact_replay_timestamp | ❌         |                          |
+| pg_get_wal_resource_managers  | ❌         |                          |
 
 ## Recovery Control Functions
 
@@ -951,7 +996,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | pg_column_toast_chunk_id | ❌         |                         |
 | pg_database_size         | ❌         |                         |
 | pg_indexes_size          | 🟠        | Parses, not implemented |
-| pg_relation_size         | ❌         |                         |
+| pg_relation_size         | 🟠        | Parses, not implemented |
 | pg_size_bytes            | ❌         |                         |
 | pg_size_pretty           | ❌         |                         |
 | pg_table_size            | 🟠        | Parses, not implemented |
