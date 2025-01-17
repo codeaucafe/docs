@@ -19,7 +19,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-math.html#FUNCTIONS-MATH-FUNC-TABLE).
 
-| Function     | Supported | Notes and limitations |✅
+| Function     | Supported | Notes and limitations |
 |:-------------|:----------|:----------------------|
 | abs          | ✅         |                       |
 | cbrt         | ✅         |                       |
