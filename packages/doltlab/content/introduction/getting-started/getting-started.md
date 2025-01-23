@@ -289,7 +289,7 @@ DoltLab Enterprise sends emails for password resets, pull request and issue stat
 
 ## HTTPS
 
-Your DoltLab is currently set up to only use HTTP which is fairly insecure. If it's running on your internal network and you have other threat mitigations, this may be OK. But having it sit on the public internet on AWS without HTTPS is probably not what you want. [Learn how to set up HTTPS on your DoltLab here](../../guides/basic.md#doltlab-https-natively).
+Your DoltLab is currently set up to only use HTTP which is fairly insecure. If it's running on your internal network and you have other threat mitigations, this may be OK. But having it sit on the public internet on AWS without HTTPS is probably not what you want. Native HTTPS support is available in DoltLab Enterprise. [Learn how to set up HTTPS on your DoltLab here](../../guides/enterprise.md#serve-doltlab-over-https-natively).
 
 ## Custom URL
 
