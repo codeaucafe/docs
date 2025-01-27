@@ -23,6 +23,7 @@ This guide will cover how to perform common DoltLab administrator configuration 
 15. [Serve DoltLab behind an AWS Network Load Balancer](#serve-doltlab-behind-an-aws-network-load-balancer)
 16. [Update database passwords](#update-application-database-passwords)
 17. [Run DoltLab with no egress access](#run-doltlab-with-no-egress-access)
+18. [Reset password attempts for a user](#reset-password-attempts-for-a-user)
 
 # File issues and view release notes
 
@@ -774,3 +775,19 @@ You can now return to the `doltlab` directory and start your DoltLab instance.
 $ cd ../doltlab
 $ ./start.sh
 ```
+
+# Reset password attempts for a user
+
+In the event a user has exceeded the maximumum number of password attempts, 3, the DoltLab admin can reset the user's password attempts by using the `doltlabdb/shell-db.sh` script.
+
+Once connected to the database, run the following SQL statements to reset the user's password attempts:
+
+```sql
+-- first get the user's id
+SELECT * FROM users WHERE name = 'username';
+
+-- then reset the user's password attempts
+DELETE FROM password_attempts WHERE user_id_fk = 'user_id';
+```
+
+This will reset the user's password attempts to 0 and allow them to attempt to login again.
