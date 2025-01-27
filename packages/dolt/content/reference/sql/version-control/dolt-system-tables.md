@@ -77,6 +77,7 @@ or deleted with the [`DOLT_BRANCH()` stored procedure](dolt-sql-procedures.md#do
 | latest_commit_message  | TEXT     |
 | remote                 | TEXT     |
 | branch                 | TEXT     |
+| dirty                  | BOOLEAN  |
 +------------------------+----------+
 ```
 
@@ -85,6 +86,10 @@ or deleted with the [`DOLT_BRANCH()` stored procedure](dolt-sql-procedures.md#do
 Get all the branches.
 
 {% embed url="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_branches%3B" %}
+
+`remote` and `branch` show the remote host and branch that each branch is tracking.
+
+`dirty` is `TRUE` when there are uncommitted changed on the branch.
 
 To find the current active branch use [`select active_branch()`](./dolt-sql-functions.md#active_branch).
 
@@ -95,8 +100,8 @@ branches on a remote you have fetched, see
 ## `dolt_remote_branches`
 
 `dolt_remote_branches` contains information about branches on remotes
-you have fetched. It has the same schema as `dolt_branches`, but
-contains only branches found on remotes, not any local branches.
+you have fetched. It has a similar schema as `dolt_branches`, but the `remote`, `branch`, and `dirty` columns
+don't make sense in this context and are not included. Only remote branches are included in this table.
 
 ### Schema
 

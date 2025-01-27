@@ -101,6 +101,7 @@ or deleted with the [`DOLT_BRANCH()` stored procedure](dolt-sql-procedures.md#do
  latest_commit_message  | text     | YES  |     |         |
  remote                 | text     | YES  |     |         |
  branch                 | text     | YES  |     |         |
+ dirty                  | boolean  | YES  |     |         |
 ```
 
 #### Example Query
@@ -109,12 +110,16 @@ Get all the branches.
 
 ```sql
 postgres=> SELECT * FROM dolt.branches;
-   name    |               hash               | latest_committer | latest_committer_email | latest_commit_date  | latest_commit_message | remote | branch
------------+----------------------------------+------------------+------------------------+---------------------+-----------------------+--------+--------
- main      | 83cg0dnk3tav4v04mb4vd8joqrdsvahc | postgres         | postgres@127.0.0.1     | 2024-11-14 00:11:39 | add table             |        |
- newbranch | rj8d14954ldsjp6p78jtnpvnsmtq00ki | postgres         | postgres@127.0.0.1     | 2024-11-14 00:03:34 | CREATE DATABASE       |        |
+   name    |               hash               | latest_committer | latest_committer_email | latest_commit_date  | latest_commit_message | remote | branch | dirty
+-----------+----------------------------------+------------------+------------------------+---------------------+-----------------------+--------+--------+-------
+ main      | 83cg0dnk3tav4v04mb4vd8joqrdsvahc | postgres         | postgres@127.0.0.1     | 2024-11-14 00:11:39 | add table             |        |        | false
+ newbranch | rj8d14954ldsjp6p78jtnpvnsmtq00ki | postgres         | postgres@127.0.0.1     | 2024-11-14 00:03:34 | CREATE DATABASE       |        |        | false
 (2 rows)
 ```
+
+`remote` and `branch` show the remote host and branch that each branch is tracking.
+
+`dirty` is `TRUE` when there are uncommitted changed on the branch.
 
 To find the current active branch use [`select active_branch()`](./dolt-sql-functions.md#active_branch).
 
@@ -133,8 +138,8 @@ branches on a remote you have fetched, see
 ### `dolt.remote_branches`
 
 `dolt.remote_branches` (also usable as `dolt_remote_branches`) contains information about branches on remotes
-you have fetched. It has the same schema as `dolt.branches`, but
-contains only branches found on remotes, not any local branches.
+you have fetched. It has a similar schema as `dolt_branches`, but the `remote`, `branch`, and `dirty` columns
+don't make sense in this context and are not included. Only remote branches are included in this table.
 
 #### Schema
 
