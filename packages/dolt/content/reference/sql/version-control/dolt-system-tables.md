@@ -1241,8 +1241,51 @@ For a hypothetical table `a` with the following schema:
 +----------------+------------------------------------------------------------------+------+-----+---------+-------+
 ```
 
-Each row in the table represents a row in the primary table that is in violation of one or more constraint violations.
-The `violation_info` field is a JSON payload describing the violation.
+Each row in the table represents a row in the primary table that is in violation of one or more
+constraint violations.  The `violation_info` field is a JSON payload describing the violation. The
+payload varies depending on the type of constraint violation recorded.
+
+For **foreign key violations**:
+
+```json
+{
+	"ForeignKey": "key_name",
+	"Table": "myTable",
+	"Columns": ["col1", "col2"],
+	"Index": "myIdx",
+	"OnDelete": "RESTRICT",
+	"OnUpdate": "RESTRICT",
+	"ReferencedColumns": ["col3", "col4"],
+	"ReferencedIndex": "myIdx2",
+	"ReferencedTable": "refTable"
+}
+```
+
+For **unique constraints**:
+
+```json
+{
+    "Name": "constraint_name",
+    "Columns": ["col1", "col2"]
+}
+```
+
+For **not null constraints**:
+
+```json
+{
+    "Columns": ["col1", "col2"]
+}
+```
+
+For **check constraints**:
+
+```json
+{
+    "Name": "constraint_name",
+    "Expression": "(col1 > 0)"
+}
+```
 
 As with `dolt_conflicts`, delete rows from the corresponding `dolt_constraint_violations` table to signal to dolt that
 you have resolved any such violations before committing.
