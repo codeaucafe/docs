@@ -30,7 +30,7 @@ title: "Expressions, Functions, and Operators"
 | :--------------------- | :-------- | :---------------------------------------------------------------------------------------------------------------------- |
 | Tables and views       | ✅        |                                                                                                                         |
 | Table and view aliases | ✅        |                                                                                                                         |
-| Joins                  | ✅        | `LEFT OUTER`, `RIGHT OUTER`, `INNER`, `NATURAL`, `CROSS JOINS`, and `FULL OUTER` joins are supported. |
+| Joins                  | ✅        | `LEFT OUTER`, `RIGHT OUTER`, `INNER`, `NATURAL`, `CROSS JOIN`, and `FULL OUTER` joins are supported. |
 | Subqueries             | ✅        |                                                                                                                         |
 | `UNION`                | ✅        |                                                                                                                         |
 
