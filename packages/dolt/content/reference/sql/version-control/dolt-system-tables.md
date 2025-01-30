@@ -464,7 +464,7 @@ Consider the following example table `city`:
 
 To find who set the current values, we can query the `dolt_blame_city` table:
 
-{% embed url="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_blame_city%3B" %}
+{% embed url="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=select+*+from+dolt_blame_city+limit+20%3B" %}
 
 ## `dolt_commit_ancestors`
 
@@ -1242,22 +1242,22 @@ For a hypothetical table `a` with the following schema:
 ```
 
 Each row in the table represents a row in the primary table that is in violation of one or more
-constraint violations.  The `violation_info` field is a JSON payload describing the violation. The
+constraint violations. The `violation_info` field is a JSON payload describing the violation. The
 payload varies depending on the type of constraint violation recorded.
 
 For **foreign key violations**:
 
 ```json
 {
-	"ForeignKey": "key_name",
-	"Table": "myTable",
-	"Columns": ["col1", "col2"],
-	"Index": "myIdx",
-	"OnDelete": "RESTRICT",
-	"OnUpdate": "RESTRICT",
-	"ReferencedColumns": ["col3", "col4"],
-	"ReferencedIndex": "myIdx2",
-	"ReferencedTable": "refTable"
+  "ForeignKey": "key_name",
+  "Table": "myTable",
+  "Columns": ["col1", "col2"],
+  "Index": "myIdx",
+  "OnDelete": "RESTRICT",
+  "OnUpdate": "RESTRICT",
+  "ReferencedColumns": ["col3", "col4"],
+  "ReferencedIndex": "myIdx2",
+  "ReferencedTable": "refTable"
 }
 ```
 
@@ -1265,8 +1265,8 @@ For **unique constraints**:
 
 ```json
 {
-    "Name": "constraint_name",
-    "Columns": ["col1", "col2"]
+  "Name": "constraint_name",
+  "Columns": ["col1", "col2"]
 }
 ```
 
@@ -1274,7 +1274,7 @@ For **not null constraints**:
 
 ```json
 {
-    "Columns": ["col1", "col2"]
+  "Columns": ["col1", "col2"]
 }
 ```
 
@@ -1282,8 +1282,8 @@ For **check constraints**:
 
 ```json
 {
-    "Name": "constraint_name",
-    "Expression": "(col1 > 0)"
+  "Name": "constraint_name",
+  "Expression": "(col1 > 0)"
 }
 ```
 
