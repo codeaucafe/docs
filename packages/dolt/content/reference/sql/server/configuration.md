@@ -22,10 +22,6 @@ behavior:
   dolt_transaction_commit: false
   event_scheduler: "ON"
 
-user:
-  name: ""
-  password: ""
-
 listener:
   host: localhost
   port: 3306
@@ -498,106 +494,6 @@ Starting server with Config HP="localhost:3310"|T="28800000"|R="false"|L="debug"
 ```
 
 We do not see any more commits in the debug log or in the Dolt log.
-
-## `user`
-
-The `user` section configures the default user for the server. If this section is undefined, the default user for the server is `root` with no password.
-
-### name
-
-The name of the default user for the server to accept connections from. Additional users can be added using standard `CREATE USER` syntax.
-
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
-
-> The username that connections should use for authentication
-
-**Default**: ""
-
-**Values**: Any string less than or equal to 32 characters
-
-**Example**:
-
-I add a user name to the config.yaml and start the server.
-
-```sh
-$ emacs config.yaml                   
-$ grep name config.yaml
-  name: "user"
-$ dolt sql-server --config=config.yaml
-Starting server with Config HP="localhost:3310"|T="28800000"|R="false"|L="debug"|S="/tmp/mysql.sock"
-```
-
-Then in another shell I connect with that user.
-
-```sh
-$ mysql -h 127.0.0.1 -P 3310 -u user 
-WARNING: option --ssl-verify-server-cert is disabled, because of an insecure passwordless login.
-Welcome to the MariaDB monitor.  Commands end with ; or \g.
-Your MySQL connection id is 3
-Server version: 8.0.33 Dolt
-
-Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-```
-
-Note, I can no longer log in using the user named `root`.
-
-```sh
-$ mysql -h 127.0.0.1 -P 3310 -u root
-WARNING: option --ssl-verify-server-cert is disabled, because of an insecure passwordless login.
-ERROR 2027 (HY000): Received malformed packet
-```
-
-### `password` 
-
-The password of the default user for the server to accept connections from.
-
-From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
-
-> The password that connections should use for authentication.
-
-**Default**: ""
-
-**Values**: Any string less than or equal to 32 characters
-
-**Example**:
-
-Continuing the above example from `user`, I will now add a password for the default user.
-
-```sh
-$ emacs config.yaml                   
-$ grep password config.yaml     
-  password: "password"
-  allow_cleartext_passwords: null
-$ dolt sql-server --config=config.yaml
-Starting server with Config HP="localhost:3310"|T="28800000"|R="false"|L="debug"|S="/tmp/mysql.sock"
-```
-
-Now, I cannot connect with no password.
-
-```sh
-$ mysql -h 127.0.0.1 -P 3310 -u user                        
-WARNING: option --ssl-verify-server-cert is disabled, because of an insecure passwordless login.
-ERROR 1045 (28000): Access denied for user 'user'
-```
-
-In order to connect to a server with a plain text password, I must pass the `--skip-ssl` option to the MySQL client. I can connect using `127.0.0.1` or `localhost`.
-
-```sh
-$ mysql -h 127.0.0.1 -P 3310 -u root --skip-ssl
-WARNING: option --ssl-verify-server-cert is disabled, because of an insecure passwordless login.
-Welcome to the MariaDB monitor.  Commands end with ; or \g.
-Your MySQL connection id is 1
-Server version: 8.0.33 Dolt
-
-Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-MySQL [(none)]>
-```
 
 ## `listener`
 

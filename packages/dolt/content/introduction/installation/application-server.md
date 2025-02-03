@@ -89,7 +89,7 @@ WantedBy=multi-user.target
 [Service]
 User=dolt
 Group=dolt
-ExecStart=/usr/local/bin/dolt sql-server -u root
+ExecStart=/usr/local/bin/dolt sql-server
 WorkingDirectory=/var/lib/doltdb/databases/my_db
 KillSignal=SIGTERM
 SendSIGKILL=no
@@ -121,14 +121,10 @@ the server with the `-P` argument.
 
 # Users and passwords
 
-With the above settings, dolt runs with a single user `root` and an
-empty password. Dolt currently supports a single user and password. To
-change the name and password of the SQL user, provide a config file as
-described in the [`sql-server`](../../reference/cli/cli.md#dolt-sql-server)
-docs.
-
-Other configuration such as logging behavior, timeouts, etc. are
-available via this method as well.
+By default, when starting `dolt sql-server, Dolt will automatically initialize the default 
+`root@localhost` superuser, which is accessible only from the localhost and without a password. 
+To change this account or add any additional accounts, you can use the standard `CREATE USER`, 
+`ALTER USER`, and `GRANT` SQL statements. 
 
 # Other Linux distributions
 

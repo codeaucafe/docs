@@ -27,8 +27,6 @@ $ dolt init
 Create a config file named `config.yml` and put this in it:
 ```
 log_level: debug
-user:
-  name: dolt
 listener:
   host: "0.0.0.0"
   port: $PORT
@@ -41,7 +39,7 @@ I wrote a quick Python script using methods from `pytest.py` to send queries and
 ```python
 from pytest import *
 # Create a new connection
-dc = DoltConnection(port=3000, database="test_db", user="dolt", auto_commit=1)
+dc = DoltConnection(port=3000, database="test_db", user="root", auto_commit=1)
 dc.connect()
 try:
     actual_rows, num_rows = dc.query("create table t(a int)", False)
@@ -53,7 +51,7 @@ except BaseException as e:
 In one terminal, start the dolt sql-server:
 
 ```bash
-$ dolt sql-server --host 0.0.0.0 --port=3000 --user dolt --config ./config.yml
+$ dolt sql-server --host 0.0.0.0 --port=3000 --config ./config.yml
 ```
 
 In another, run the python script.
@@ -121,15 +119,13 @@ This test basically creates a config file (with the read-only flag set to true),
     let PORT="$$ % (65536-1024) + 1024"
     cat >config.yml <<EOF
 log_level: debug
-user:
-  name: dolt
 listener:
   host: "0.0.0.0"
   port: $PORT
 behavior:
   read_only: true
 EOF
-    dolt sql-server --host 0.0.0.0 --port=$PORT --user dolt --config ./config.yml &
+    dolt sql-server --host 0.0.0.0 --port=$PORT --config ./config.yml &
     SERVER_PID=$!
     wait_for_connection $PORT 5000
     # No tables at the start

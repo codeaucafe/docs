@@ -24,28 +24,25 @@ By default, privileges will be stored in `.doltcfg/privileges.db` file, but you 
 By default, privileges will be stored in `.doltcfg/privileges.db` file, you may add the `privilege_file: PATH` line to your [YAML config](configuration.md).
 `"PATH"` represents the path to the privileges file, generally named `privileges.db`.
 
-### User and Password Arguments
+### `root@localhost` Superuser
 
-Before the introduction of users and privileges, Dolt supported only a single user with an accompanying password.
-This was done using the `--user` and `--password` arguments ([see the docs for their defaults](../../cli/cli.md#dolt-sql-server), also available using YAML configuration), whereby a server would only allow connections that supplied that singular user and password combination.
-Although Dolt now supports users in a similar fashion to MySQL, we still retain the user and password arguments.
-In MySQL, the default super account (generally called the root user) is created during installation and configuration.
-Rather than creating this super account during [`init`](../../cli/cli.md#dolt-init), we instead handle the super account creation when starting a server via the arguments.
+By default, when you start a `dolt sql-server`, if the privileges database has not yet been initialized (i.e. the `.doltcfg/privileges.db` file doesn't exist yet), a `root@localhost` superuser will automatically be created and persisted in the privileges database. This superuser is scoped to `localhost` and does not have a password. You can delete or modify this 
+user account, just like any other user account.
 
-This leads to an interaction with the [privilege file](#privilege-file) that should be noted.
-A privilege file is only created when there is a modification to any of the grant tables.
-As soon as any statement that modifies the grant tables (`CREATE USER`, `GRANT`, `REVOKE`, etc.) executes, the users and all privileges will save to the privilege file.
-Superusers, including those created through `--user`, will not be persisted.
-This **includes** the super account as defined by the user and password arguments, therefore it is recommended that the super account is deleted after all users are set up, or it is given a strong password.
-On subsequent server starts, if the [privilege file](#privilege-file) _contains any data_, the user and password arguments are fully ignored.
-This behavior was chosen so that server should always have at least one user that a client may log into, otherwise the server would be completely inaccessible.
 
 ## Editing Users
 
-Dolt comes with a client built-in, which is the [`sql`](../../cli/cli.md#dolt-sql) command.
+Dolt comes with a built-in client - the [`dolt sql`](../../cli/cli.md#dolt-sql) command. From within a Dolt database 
+directory, you can always access the database as a superuser by using `dolt sql`, even if you have lost the superuser password. 
 
-Importantly, as described in the [previous section](#user-and-password-arguments), if a non-empty privilege file is provided, then the `--user` and `--password` arguments (also available via a [YAML configuration file](./configuration.md)) _only_ function as login credentials.
-Otherwise, the arguments handle both the creation of a super account **and** login credentials.
+From any SQL shell where you are logged in with superuser access, you can use the standard SQL statements to create users
+and grant privileges. For example, the following statements create a new `user1` user, accessible from any host, with the
+password 'pass1', and with broad permission on all databases in the server (but without the ability to `GRANT` 
+privileges to other users):   
+```sql
+CREATE USER user1@'%' IDENTIFIED BY 'pass1';
+GRANT ALL ON *.* to user1@'%';
+```
 
 ## Updates and Persistence
 
