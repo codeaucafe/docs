@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url":  "https://www.dolthub.com/api/v1alpha1"
+      "url": "https://www.dolthub.com/api/v1alpha1"
     }
   ],
   "paths": {
@@ -23,7 +23,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "example":"dolthub"
+              "example": "dolthub"
             }
           },
           {
@@ -33,17 +33,47 @@
             "required": true,
             "schema": {
               "type": "string",
-              "example":"museum-collections"
+              "example": "museum-collections"
             }
           },
           {
-            "name":"pageToken",
-            "in":"query",
-            "description":"The pageToken to get the next page of results",
-            "required":false,
-            "schema":{
+            "name": "pageToken",
+            "in": "query",
+            "description": "The pageToken to get the next page of results",
+            "required": false,
+            "schema": {
               "type": "string",
               "example": "AWE2Nm9uMWQ23FSQ7oRTbCXYTLLvNDhNs5hIFebQFI66FW-SYXGSlh3XcUQ8zmtLQ00QgD0X5FZr5ZTAhvT2FfRrGog7OuUno9wdTIXFQpkkX0opYoJL6Vrn2emlXkMBTiZYMqChyhR92_Yxd58B0w5nMrfXFf8v7xfAkN46hw"
+            }
+          },
+          {
+            "name": "filterByState",
+            "in": "query",
+            "description": "Filter pulls by state, can be Open, Closed, or Merged.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Open"
+            }
+          },
+          {
+            "name": "filterByReviewStatus",
+            "in": "query",
+            "description": "Filter pulls by review status, can be Approved, AssignedReviewer, Rejected or Reviewed",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "Approved"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Search by pull request title or author name.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "test"
             }
           }
         ],
@@ -58,68 +88,67 @@
                     "status": {
                       "type": "string",
                       "description": "Status of the request",
-                      "example":"Success"
-
+                      "example": "Success"
                     },
                     "database_owner": {
                       "type": "string",
                       "description": "Owner of the database",
-                      "example":"dolthub"
+                      "example": "dolthub"
                     },
                     "database_name": {
                       "type": "string",
                       "description": "Database name",
-                      "example":"museum-collections"
+                      "example": "museum-collections"
                     },
-                     "pulls":{
-                        "type":"array",
-                        "description":"List of pull requests",
-                        "items":{
-                          "type":"object",
-                          "properties":{
-                            "pull_id": {
-                              "type": "string",
-                              "description": "Pull request ID",
-                              "example":"1"
-                            },
-                            "title:": {
-                              "type": "string",
-                              "description": "Title of the pull request",
-                              "example":"Added new data"
-                            },
-                            "description:": {
-                              "type": "string",
-                              "description": "Description of the pull request",
-                              "example":"Added missing museums, sourced from museums.com"
-                            },
-                            "state":{
-                              "type": "string",
-                              "description": "State of the pull request",
-                              "example":"merged"
-                            },
-                            "created_at":{
-                              "type": "string",
-                              "description": "Time at which the pull request was created",
-                              "example":"2023-07-01T18:00:00Z"
-                            },
-                            "creator":{
-                              "type": "string",
-                              "description": "Creator of the pull request",
-                              "example":"liuliu"
-                            }
+                    "pulls": {
+                      "type": "array",
+                      "description": "List of pull requests",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "pull_id": {
+                            "type": "string",
+                            "description": "Pull request ID",
+                            "example": "1"
+                          },
+                          "title:": {
+                            "type": "string",
+                            "description": "Title of the pull request",
+                            "example": "Added new data"
+                          },
+                          "description:": {
+                            "type": "string",
+                            "description": "Description of the pull request",
+                            "example": "Added missing museums, sourced from museums.com"
+                          },
+                          "state": {
+                            "type": "string",
+                            "description": "State of the pull request",
+                            "example": "merged"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "description": "Time at which the pull request was created",
+                            "example": "2023-07-01T18:00:00Z"
+                          },
+                          "creator": {
+                            "type": "string",
+                            "description": "Creator of the pull request",
+                            "example": "liuliu"
                           }
                         }
-                     },
-                     "next_page_token":{
-                        "type": "string",
-                        "description": "page token for the next page of results",
-                        "example":"AWE2Nm9uMWQ23FSQ7oRTbCXYTLLvNDhNs5hIFebQFI66FW-SYXGSlh3XcUQ8zmtLQ00QgD0X5FZr5ZTAhvT2FfRrGog7OuUno9wdTIXFQpkkX0opYoJL6Vrn2emlXkMBTiZYMqChyhR92_Yxd58B0w5nMrfXFf8v7xfAkN46hw"
-                     }
+                      }
+                    },
+                    "next_page_token": {
+                      "type": "string",
+                      "description": "page token for the next page of results",
+                      "example": "AWE2Nm9uMWQ23FSQ7oRTbCXYTLLvNDhNs5hIFebQFI66FW-SYXGSlh3XcUQ8zmtLQ00QgD0X5FZr5ZTAhvT2FfRrGog7OuUno9wdTIXFQpkkX0opYoJL6Vrn2emlXkMBTiZYMqChyhR92_Yxd58B0w5nMrfXFf8v7xfAkN46hw"
+                    }
                   }
                 }
               }
             }
-          }, 
+          },
           "400": {
             "description": "Bad request. The request was invalid or could not be processed.",
             "content": {
@@ -131,9 +160,9 @@
                       "type": "string",
                       "example": "Error"
                     },
-                    "message":{
-                      "type":"string",
-                      "example":"Error getting pull request list."
+                    "message": {
+                      "type": "string",
+                      "example": "Error getting pull request list."
                     },
                     "database_owner": {
                       "type": "string",
