@@ -62,7 +62,7 @@ Dolt subcommands are in transition to using the flags listed below as global fla
 Not all subcommands use these flags. If your command accepts these flags without error, then they are supported.
 
 ```bash
-dolt <--data-dir=<path>> subcommand <subcommand arguments>
+dolt [global flags] subcommand [subcommand arguments]
 ```
 
 Specific dolt options:
@@ -384,7 +384,7 @@ Drops all database tables used to store continuous integration configuration
 **Synopsis**
 
 ```bash
-dolt ci destroy
+dolt ci destroy 
 ```
 
 **Description**
@@ -438,7 +438,7 @@ Creates database tables used to store continuous integration configuration
 **Synopsis**
 
 ```bash
-dolt ci init
+dolt ci init 
 ```
 
 **Description**
@@ -456,7 +456,7 @@ List Dolt continuous integration workflows
 **Synopsis**
 
 ```bash
-dolt ci ls
+dolt ci ls 
 ```
 
 **Description**
@@ -1585,6 +1585,9 @@ Use an auto-generated commit message when creating a merge commit. The default f
 `--user`:
 User name to use when authenticating with the remote. Gets password from the environment variable `DOLT_REMOTE_PASSWORD`.
 
+`-p`, `--prune`:
+After fetching, remove any remote-tracking references that don't exist on the remote.
+
 `--silent`:
 Suppress progress information.
 
@@ -2180,7 +2183,7 @@ Start a MySQL-compatible server.
 
 ```bash
 dolt sql-server --config <file>
-dolt sql-server [-H <host>] [-P <port>] [-u <user>] [-p <password>] [-t <timeout>] [-l <loglevel>] [--data-dir <directory>] [-r]
+dolt sql-server [-H <host>] [-P <port>] [-t <timeout>] [-l <loglevel>] [--data-dir <directory>] [-r]
 ```
 
 **Description**
@@ -2198,31 +2201,16 @@ This is an example yaml configuration file showing all supported items and their
 	  dolt_transaction_commit: false
 	  event_scheduler: "ON"
 	
-	user:
-	  name: ""
-	  password: ""
-	
 	listener:
 	  host: localhost
 	  port: 3306
 	  max_connections: 100
 	  read_timeout_millis: 28800000
 	  write_timeout_millis: 28800000
-	  tls_key: null
-	  tls_cert: null
-	  require_secure_transport: null
-	  allow_cleartext_passwords: null
 	
 	data_dir: .
 	
 	cfg_dir: .doltcfg
-	
-	metrics:
-	  labels: {}
-	  host: null
-	  port: -1
-	
-	remotesapi: {}
 	
 	privilege_file: .doltcfg/privileges.db
 	
@@ -2231,6 +2219,10 @@ This is an example yaml configuration file showing all supported items and their
 	user_session_vars: []
 	
 	jwks: []
+	
+	metrics:
+	  labels: {}
+	  port: -1
 
 
 
@@ -2242,7 +2234,7 @@ SUPPORTED CONFIG FILE FIELDS:
 
 `log_level`: Level of logging provided. Options are: `trace`, `debug`, `info`, `warning`, `error`, and `fatal`.
 
-`privilege_file`: "Path to a file to load and store users and grants. Defaults to `$doltcfg-dir/privileges.db`. Will be created as needed.
+`privilege_file`: "Path to a file to load and store users and grants. Defaults to `$doltcfg-dir/privileges.db`. Will be created automatically if it doesn't exist.
 
 `branch_control_file`: Path to a file to load and store branch control permissions. Defaults to `$doltcfg-dir/branch_control.db`. Will be created as needed.
 
@@ -2253,10 +2245,6 @@ SUPPORTED CONFIG FILE FIELDS:
 `behavior.autocommit`: If true every statement is committed automatically. Defaults to true. @@autocommit can also be specified in each session.
 
 `behavior.dolt_transaction_commit`: If true all SQL transaction commits will automatically create a Dolt commit, with a generated commit message. This is useful when a system working with Dolt wants to create versioned data, but doesn't want to directly use Dolt features such as dolt_commit(). 
-
-`user.name`: The username that connections should use for authentication
-
-`user.password`: The password that connections should use for authentication.
 
 `listener.host`: The host address that the server will run on.  This may be `localhost` or an IPv4 or IPv6 address
 
@@ -2298,10 +2286,13 @@ Defines the host address that the server will run on. Defaults to `localhost`.
 Defines the port that the server will run on. Defaults to `3306`.
 
 `-u`, `--user`:
-Defines the server user. Defaults to ``. This should be explicit if desired.
+This option is no longer supported. Instead, you can create users using CREATE USER and GRANT SQL statements.
+
+`--skip-root-user-initialization`:
+Skips the automatic creation of a default root super user on the first launch of a SQL server.
 
 `-p`, `--password`:
-Defines the server password. Defaults to ``.
+This option is no longer supported. Instead, you can create users using CREATE USER and GRANT SQL statements.
 
 `-t`, `--timeout`:
 Defines the timeout, in seconds, used for connections

@@ -15,10 +15,6 @@ log_level: info
 behavior:
   read_only: false
 
-user:
-  name: root
-  password: password
-
 listener:
   host: localhost
   port: 5432

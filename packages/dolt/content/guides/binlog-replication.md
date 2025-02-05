@@ -47,7 +47,7 @@ To warm the replica with the state of the source database before starting replic
 
 **Export databases**: With the server running, use [the `mysqldump` utility](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html) to export the data from all databases on your source MySQL server. Make sure to use the `--single-transaction` flag as well as the `--all-databases` flag (if you want all databases exported). The `--single-transaction` flag is important for safely exporting data while the database is running, and ensures that exported table data is consistent. Note that `--single-transaction` only works with InnoDB databases (the default engine for MySQL since 5.5.5). For example: `mysqldump -uroot --single-transaction --protocol TCP --port 54322 --all-databases > mysql_dump.sql`
 
-**Load databases**: Transfer the dump file from the previous step to the new Dolt replica server, start the Dolt sql-server (e.g. `dolt sql-server -uroot --port 11223`), and load the data into the replica server by running `mysql -uroot --protocol TCP --port 111223 < myDumpFile`. See the [Dolt Data Import Guide](https://docs.dolthub.com/guides/import#mysql-databases) for more details. 
+**Load databases**: Transfer the dump file from the previous step to the new Dolt replica server, start the Dolt sql-server (e.g. `dolt sql-server --port 11223`), and load the data into the replica server by running `mysql -uroot --protocol TCP --port 111223 < myDumpFile`. See the [Dolt Data Import Guide](https://docs.dolthub.com/guides/import#mysql-databases) for more details. 
 
 {% hint style="info" %}
 #### Note
@@ -56,7 +56,7 @@ To warm the replica with the state of the source database before starting replic
 {% endhint %}
 
 ### Starting Replication
-After warming the replica (if necessary), start the Dolt sql-server if you haven’t already, so we can configure it as a replica: `dolt sql-server -uroot --port 11223`
+After warming the replica (if necessary), start the Dolt sql-server if you haven’t already, so we can configure it as a replica: `dolt sql-server --port 11223`
 
 Make sure the Dolt replica server has a unique `server_id` configured. This can be any positive integer, as long as it is unique between the primary server and any other configured replicas. For example: `SET @@PERSIST.server_id=123;`
 

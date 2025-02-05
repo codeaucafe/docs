@@ -188,13 +188,13 @@ As explained in the [default state section](#default-state), we automatically ad
 For these examples, we remove that default row.
 This allows us to demonstrate the desired functionality a bit more easily.
 
-By supplying the argument `--user=root`, we add a password-less user named `root` that has every global privilege.
-This makes it very easy to get your database set up, and we will be taking advantage of this user in these examples.
-We also, however, want a user that does _not_ have every privilege, and is more representative of a standard user.
-We name that user `testuser` in the examples.
+We create the `testuser@localhost` user that does _not_ have every privilege, and is representative of a standard user with broad access.
 Although it appears that we grant them every global privilege, this is not the case, as they are still missing the `GRANT OPTION` privilege.
 This means that they are not considered an admin, however we do not have to worry about assigning privileges to allow for basic table operations.
 [You may read more about this behavior in an earlier section.](#editing-the-system-tables)
+
+We also create a `root@localhost` that has all privileges, including the `GRANT OPTION` privilege. Normally, this `root@localhost` user is 
+initialized the first time we run `dolt sql-server`, but in this case, since we are creating users with `dolt sql` before we launch `dolt sql-server` the privileges database has already been initialized, so running `dolt sql-server` will **not** automatically create the `root@locahost` superuser. 
 
 ```
 $ mkdir example
@@ -207,13 +207,13 @@ Successfully initialized dolt data repository.
 $ dolt sql -q "DELETE FROM dolt_branch_control;"
 Query OK, 0 rows affected (0.00 sec)
 
-$ dolt sql -q "CREATE USER testuser@localhost;"
+$ dolt sql -q "CREATE USER testuser@localhost; GRANT ALL ON *.* TO testuser@localhost;"
 Query OK, 0 rows affected (0.00 sec)
 
-$ dolt sql -q "GRANT ALL ON *.* TO testuser@localhost;"
+$ dolt sql -q "CREATE USER root@localhost; GRANT ALL ON *.* TO root@localhost WITH GRANT OPTION;"
 Query OK, 0 rows affected (0.00 sec)
 
-$ dolt sql-server --user=root
+$ dolt sql-server
 Starting server with Config HP="localhost:3306"|T="28800000"|R="false"|L="info"
 ```
 

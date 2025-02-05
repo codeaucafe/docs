@@ -46,10 +46,6 @@ log_level: debug
 behavior:
   read_only: false
 
-user:
-  name: "doltgres"
-  password: "password"
-
 listener:
   host: localhost
   port: 5432
