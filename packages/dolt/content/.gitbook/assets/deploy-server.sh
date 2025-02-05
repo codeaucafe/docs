@@ -71,9 +71,6 @@ log_level: info
 behavior:
   read_only: false
   autocommit: true
-user:
-  name: root
-  password: ""
 listener:
   host: localhost
   port: 3306

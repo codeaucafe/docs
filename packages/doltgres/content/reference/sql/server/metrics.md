@@ -6,10 +6,6 @@ Doltgres's SQL server can optionally expose metrics through a [Prometheus](https
 ```
 log_level: info
 
-user:
-  name: root
-  password: ""
-
 listener:
   host: localhost
   port: 11227
