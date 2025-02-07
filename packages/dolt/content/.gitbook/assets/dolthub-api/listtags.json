@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "DoltHub API - List releases",
-    "description": "API to get release list on a database.",
+    "title": "DoltHub API - List tags",
+    "description": "API to get tag list on a database.",
     "version": "1.0.0"
   },
   "servers": [
@@ -11,10 +11,10 @@
     }
   ],
   "paths": {
-    "/{owner}/{database}/releases": {
+    "/{owner}/{database}/tags": {
       "get": {
-        "summary": "List Releases",
-        "description": "This API endpoint allows you to list all releases in your database.",
+        "summary": "List Tags",
+        "description": "This API endpoint allows you to list all tags in your database.",
         "parameters": [
           {
             "name": "owner",
@@ -35,21 +35,11 @@
               "type": "string",
               "example":"museum-collections"
             }
-          },
-          {
-            "name": "next_page_token",
-            "in": "query",
-            "description": "The next page token.",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example":"1234567890"
-            }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Success",
+      "responses": {
+        "200": {
+          "description": "Success",
           "content": {
             "application/json": {
               "schema": {
@@ -70,46 +60,27 @@
                     "description": "Database name",
                     "example":"museum-collections"
                   },
-                  "next_page_token":{
-                    "type":"string",
-                    "description":"Next page token",
-                    "example":"1234567890"
-                  },
-                  "releases":{
+                  "tags":{
                     "type":"array",
-                    "description":"List of releases",
+                    "description":"List of tags",
                     "items":{
                       "type":"object",
                       "properties":{
-                        "release_title": {
-                          "type": "string",
-                          "description": "Title of the release",
-                          "example":"my-release-v1"
-                        },
-                        "release_tag": {
+                        "tag_name": {
                           "type": "string",
                           "description": "Name of the tag",
                           "example":"v1"
                         },
-                        "release_commit_sha": {
-                          "type": "string",
-                          "description": "Commit SHA of the release",
-                          "example":"1234567890"
-                        },
-                        "release_description":{
+                        "tag_description":{
                           "type":"string",
-                          "description": "Description of the release",
+                          "description": "Description of the tag",
                           "example":"First version of the database"
                         },
-                        "release_created_at":{
+                        "tagged_at":{
                           "type":"string",
-                          "description": "Date of the release",
+                          "description": "Date of the tag",
                           "example":"2023-03-31T18:00:00Z"
-                        },
-                        "release_updated_at":{
-                          "type":"string",
-                          "description": "Updated at of the release",
-                          "example":"2023-03-31T18:00:00Z"
+                        
                         }
                       }
                     }
@@ -132,7 +103,7 @@
                   },
                   "message":{
                     "type":"string",
-                    "example":"Error creating a release."
+                    "example":"Error creating a tag."
                   },
                   "database_owner": {
                     "type": "string",

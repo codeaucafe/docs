@@ -267,11 +267,11 @@ headers = {
 [listbranches.json](../../../.gitbook/assets/dolthub-api/listbranches.json)
 {% endswagger %}
 
-## Create a release
+## Create a tag
 
-Here's an example of how to create a new release in the database `museum-collections` under the organization `dolthub` using an [authorization token](authentication.md).
+Here's an example of how to create a new tag in the database `museum-collections` under the organization `dolthub` using an [authorization token](authentication.md).
 
-Creating a release requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.
+Creating a tag requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.
 
 ```python
 headers = {
@@ -279,7 +279,40 @@ headers = {
 }
 ```
 
-{% swagger src="../../../.gitbook/assets/dolthub-api/createRelease.json" path="/{owner}/{database}/releases" method="post" %}
+{% swagger src="../../../.gitbook/assets/dolthub-api/createTag.json" path="/{owner}/{database}/tags" method="post" %}
+[createTag.json](../../../.gitbook/assets/dolthub-api/createTag.json)
+{% endswagger %}
+
+## List tags
+
+Here's an example of how to list tags in the database `museum-collections` under the organization `dolthub` using an [authorization token](authentication.md).
+
+Listing tags requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.
+
+```python
+headers = {
+    'authorization': '[api token you created]'
+}
+```
+
+{% swagger src="../../../.gitbook/assets/dolthub-api/listtags.json" path="/{owner}/{database}/tags" method="get" %}
+[listtags.json](../../../.gitbook/assets/dolthub-api/listtags.json)
+{% endswagger %}
+
+
+## Create a release
+
+Here's an example of how to create a new release in the database `museum-collections` under the organization `dolthub` using an [authorization token](authentication.md).
+
+Creating a release requires authentication, so you must include this authorization header in your request. See the [Authentication](authentication.md) section for more details.  
+
+```python
+headers = {
+    'authorization': '[api token you created]'
+}
+```
+
+{% swagger src="../../../.gitbook/assets/dolthub-api/createRelease.json" path="/{owner}/{database}/releases" method="post" %  }
 [createRelease.json](../../../.gitbook/assets/dolthub-api/createRelease.json)
 {% endswagger %}
 

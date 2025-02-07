@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Create a release",
-    "description": "API to create a new release",
+    "title": "Create a tag",
+    "description": "API to create a new tag",
     "version": "1.0.0"
   },
   "servers": [
@@ -11,10 +11,10 @@
     }
   ],
   "paths": {
-    "/{owner}/{database}/releases": {
+    "/{owner}/{database}/tags": {
       "post": {
-        "summary": "Create Release",
-        "description": "This API endpoint allows you to create a new release in your database.",
+        "summary": "Create Tag",
+        "description": "This API endpoint allows you to create a new tag in your database.",
         "parameters": [
           {
             "name": "owner",
@@ -38,41 +38,36 @@
           }
         ],
         "requestBody": {
-          "description": "The release information.",
+          "description": "The tag information.",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "title": {
-                    "type": "string",
-                    "description": "The title of the release.",
-                    "example":"my-release-v1"
-                  },
-                  "commitSha": {
-                    "type": "string",
-                    "description": "The commit SHA or branch name of the release.",
-                    "example":"1234567890"
-                  },
-                  "tag": {
+                  "tagName": {
                     "type": "string",
                     "description": "The name of the tag.",
                     "example":"v1"
                   },
-                  "description": {
+                  "tagMessage": {
                     "type": "string",
                     "description": "The description of the tag.",
                     "example":"First version of the database"
                   },
-                  "createTagIfNotExists": {
-                    "type": "boolean",
-                    "description": "Whether to create a tag if it doesn't exist.",
-                    "example":true
+                  "revisionType": {
+                    "type": "string",
+                    "description": "The type of revision, can be either 'branch', 'ref' or 'commit'.",
+                    "example":"branch"
+                  },
+                  "revisionName": {
+                    "type": "string",
+                    "description": "The name of revision. If revisionType is 'branch', this is the name of the base branch. If revisionType is 'commit', this is the commit hash.",
+                    "example":"main"
                   }             
               },
               "required": [
-                "title","tag","commitSha"
+                "revisionType","revisionName","tagName","tagMessage"
               ]
             }
           }
@@ -101,35 +96,25 @@
                     "description": "Database name",
                     "example":"museum-collections"
                   },
-                  "release_tag": {
+                  "tag_name": {
                     "type": "string",
                     "description": "Name of the tag",
                     "example":"v1"
                   },
-                  "release_description":{
+                  "tag_description":{
                     "type":"string",
-                    "description": "Description of the release",
+                    "description": "Description of the tag",
                     "example":"First version of the database"
                   },
-                  "release_commit_sha": {
+                  "revision_type": {
                     "type": "string",
-                    "description": "Commit SHA of the release",
-                    "example":"1234567890"
+                    "description": "Type of the revision",
+                    "example":"branch"
                   },
-                  "release_title": {
+                  "revision_name": {
                     "type": "string",
-                    "description": "Title of the release",
-                    "example":"my-release-v1"
-                  },
-                  "release_created_at": {
-                    "type": "string",
-                    "description": "Created at of the release",
-                    "example":"2021-01-01T00:00:00Z"
-                  },
-                  "release_updated_at": {
-                    "type": "string",
-                    "description": "Updated at of the release",
-                    "example":"2021-01-01T00:00:00Z"
+                    "description": "Name of the revision",
+                    "example":"main"
                   }
                 }
               }
@@ -149,7 +134,7 @@
                   },
                   "message":{
                     "type":"string",
-                    "example":"Error creating a release."
+                    "example":"Error creating a tag."
                   },
                   "database_owner": {
                     "type": "string",
@@ -161,25 +146,25 @@
                     "description": "Database name",
                     "example":"museum-collections"
                   },
-                  "release_tag": {
+                  "tag_name": {
                     "type": "string",
                     "description": "Name of the tag",
                     "example":"v1"
                   },
-                  "release_description":{
+                  "tag_description":{
                     "type":"string",
-                    "description": "Description of the release",
+                    "description": "Description of the tag",
                     "example":"First version of the database"
                   },
-                  "release_commit_sha": {
+                  "revision_type": {
                     "type": "string",
-                    "description": "Commit SHA of the release",
-                    "example":"1234567890"
+                    "description": "Type of the revision",
+                    "example":"branch"
                   },
-                  "release_title": {
+                  "revision_name": {
                     "type": "string",
-                    "description": "Title of the release",
-                    "example":"my-release-v1"
+                    "description": "Name of the revision",
+                    "example":"main"
                   }
                 }
               }
