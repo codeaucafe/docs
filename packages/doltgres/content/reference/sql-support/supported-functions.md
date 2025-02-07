@@ -6,6 +6,44 @@ Doltgres currently supports a subset of [Postgres functions](https://www.postgre
 for the built-in data types. If you need any Postgres function that is not available in Doltgres yet,
 you can [open a GitHub issue](https://github.com/dolthub/doltgresql/issues) to let us know what you need.
 
+## Logical Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-logical.html).
+
+| Function | Supported | Notes and limitations |
+|:---------|:----------|:----------------------|
+| AND      | ✅         |                       |
+| OR       | ✅         |                       |
+| NOT      | ✅         |                       |
+
+## Comparison Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-comparison.html#FUNCTIONS-COMPARISON-OP-TABLE).
+
+| Function                               | Supported | Notes and limitations |
+|:---------------------------------------|:----------|:----------------------|
+| **datatype** < **datatype**  | ✅         |                       |
+| **datatype** > **datatype**  | ✅         |                       |
+| **datatype** <= **datatype** | ✅         |                       |
+| **datatype** >= **datatype** | ✅         |                       |
+| **datatype** = **datatype**  | ✅         |                       |
+| **datatype** <> **datatype** | ✅         |                       |
+| **datatype** != **datatype** | ✅         |                       |
+
+## Comparison Predicates
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-comparison.html#FUNCTIONS-COMPARISON-PRED-TABLE).
+
+| Function                                                     | Supported | Notes and limitations |
+|:-------------------------------------------------------------|:----------|:----------------------|
+| **datatype** [NOT] BETWEEN **datatype** AND **datatype**     | ❌         |                       |
+| **datatype** BETWEEN SYMMETRIC **datatype** AND **datatype** | ❌         |                       |
+| **datatype** IS [NOT] DISTINCT FROM **datatype**             | ❌         |                       |
+| **datatype** IS [NOT] NULL                                   | ❌         |                       |
+| **datatype** IS [NOT] TRUE                                   | ❌         |                       |
+| **datatype** IS [NOT] FALSE                                  | ❌         |                       |
+| **datatype** IS [NOT] UNKNOWN                                | ❌         |                       |
+
 ## Comparison Functions
 
 See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-comparison.html#FUNCTIONS-COMPARISON-FUNC-TABLE).
@@ -14,6 +52,30 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 |:--------------|:----------|:----------------------|
 | num_nonnulls  | ❌         |                       |
 | num_nulls     | ❌         |                       |
+
+## Mathematical Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-math.html#FUNCTIONS-MATH-OP-TABLE).
+
+| Function                               | Supported | Notes and limitations |
+|:---------------------------------------|:----------|:----------------------|
+| **numeric_type** + **numeric_type**    | ✅         |                       |
+| + **numeric_type**                     | ✅         |                       |
+| **numeric_type** - **numeric_type**    | ✅         |                       |
+| - **numeric_type**                     | ✅         |                       |
+| **numeric_type** * **numeric_type**    | ✅         |                       |
+| **numeric_type** / **numeric_type**    | ✅         |                       |
+| **numeric_type** % **numeric_type**    | ✅         |                       |
+| **numeric_type** ^ **numeric_type**    | ✅         |                       |
+| \|/ **double_precision**               | ❌         |                       |
+| \|\|/ **double_precision**             | ❌         |                       |
+| @ **numeric_type**                     | ❌         |                       |
+| **integral_type** & **integral_type**  | ❌         |                       |
+| **integral_type** \| **integral_type** | ❌         |                       |
+| **integral_type** # **integral_type**  | ❌         |                       |
+| ~ **integral_type**                    | ❌         |                       |
+| **integral_type** << **integer**       | ❌         |                       |
+| **integral_type** >> **integer**       | ❌         |                       |
 
 ## Mathematical Functions
 
@@ -52,7 +114,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 ## Random Functions
 
-See detailed list in the [Postgres docs](https://www.postgresql.org/docs/15/functions-math.html#FUNCTIONS-MATH-RANDOM-TABLE).
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-math.html#FUNCTIONS-MATH-RANDOM-TABLE).
 
 | Function | Supported | Notes and limitations |
 |:---------|:----------|:----------------------|
@@ -61,7 +123,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/15/func
 
 ## Trigonometric Functions
 
-See detailed list in the [Postgres docs](https://www.postgresql.org/docs/15/functions-math.html#FUNCTIONS-MATH-TRIG-TABLE).
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-math.html#FUNCTIONS-MATH-TRIG-TABLE).
 
 | Function | Supported | Notes and limitations |
 |:---------|:----------|:----------------------|
@@ -84,7 +146,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/15/func
 
 ## Hyperbolic Functions
 
-See detailed list in the [Postgres docs](https://www.postgresql.org/docs/15/functions-math.html#FUNCTIONS-MATH-HYP-TABLE).
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-math.html#FUNCTIONS-MATH-HYP-TABLE).
 
 | Function | Supported | Notes and limitations |
 |:---------|:----------|:----------------------|
@@ -95,28 +157,32 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/15/func
 | acosh    | ✅         |                       |
 | atanh    | ✅         |                       |
 
-## SQL String Functions
+## SQL String Functions and Operators
 
 See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-string.html#FUNCTIONS-STRING-SQL).
 
-| Function         | Supported | Notes and limitations |
-|:-----------------|:----------|:----------------------|
-| btrim            | ✅         |                       |
-| bit_length       | ✅         |                       |
-| char_length      | ✅         |                       |
-| lower            | ✅         |                       |
-| lpad             | ✅         |                       |
-| ltrim            | ✅         |                       |
-| normalize        | ❌         |                       |
-| octet_length     | ✅         |                       |
-| overlay          | ❌         |                       |
-| position         | ❌         |                       |
-| rpad             | ✅         |                       |
-| rtrim            | ✅         |                       |
-| substring        | ❌         |                       |
-| trim             | ❌         |                       |
-| unicode_assigned | ❌         |                       |
-| upper            | ✅         |                       |
+| Function                           | Supported | Notes and limitations |
+|:-----------------------------------|:----------|:----------------------|
+| **text** \|\| **text**             | ❌         |                       |
+| **anynonarray** \|\| **text**      | ❌         |                       |
+| **text** \|\| **anynonarray**      | ❌         |                       |
+| **text** IS [NOT][form] NORMALIZED | ❌         |                       |
+| btrim                              | ✅         |                       |
+| bit_length                         | ✅         |                       |
+| char_length                        | ✅         |                       |
+| lower                              | ✅         |                       |
+| lpad                               | ✅         |                       |
+| ltrim                              | ✅         |                       |
+| normalize                          | ❌         |                       |
+| octet_length                       | ✅         |                       |
+| overlay                            | ❌         |                       |
+| position                           | ❌         |                       |
+| rpad                               | ✅         |                       |
+| rtrim                              | ✅         |                       |
+| substring                          | ❌         |                       |
+| trim                               | ❌         |                       |
+| unicode_assigned                   | ❌         |                       |
+| upper                              | ✅         |                       |
 
 ## Other String Functions
 
@@ -124,6 +190,7 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 | Function              | Supported | Notes and limitations |
 |:----------------------|:----------|:----------------------|
+| **text** ^@ **text**  | ❌         |                       |
 | ascii                 | ✅         |                       |
 | chr                   | ✅         |                       |
 | concat                | ❌         |                       |
@@ -168,17 +235,18 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 
 See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-binarystring.html#FUNCTIONS-BINARYSTRING-SQL).
 
-| Function     | Supported | Notes and limitations |
-|:-------------|:----------|:----------------------|
-| bit_length   | ❌         |                       |
-| btrim        | ❌         |                       |
-| ltrim        | ❌         |                       |
-| octet_length | ❌         |                       |
-| overlay      | ❌         |                       |
-| position     | ❌         |                       |
-| rtrim        | ❌         |                       |
-| substring    | ❌         |                       |
-| trim         | ❌         |                       |
+| Function                 | Supported | Notes and limitations |
+|:-------------------------|:----------|:----------------------|
+| **bytea** \|\| **bytea** | ❌         |                       |
+| bit_length               | ❌         |                       |
+| btrim                    | ❌         |                       |
+| ltrim                    | ❌         |                       |
+| octet_length             | ❌         |                       |
+| overlay                  | ❌         |                       |
+| position                 | ❌         |                       |
+| rtrim                    | ❌         |                       |
+| substring                | ❌         |                       |
+| trim                     | ❌         |                       |
 
 ## Other Binary String Functions
 
@@ -211,6 +279,20 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | encode       | ❌         |                       |
 | decode       | ❌         |                       |
 
+## Bit String Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-bitstring.html#FUNCTIONS-BIT-STRING-OP-TABLE).
+
+| Function               | Supported | Notes and limitations |
+|:-----------------------|:----------|:----------------------|
+| **bit** \|\| **bit**   | ❌         |                       |
+| **bit** & **bit**      | ❌         |                       |
+| **bit** \| **bit**     | ❌         |                       |
+| **bit** # **bit**      | ❌         |                       |
+| ~ **bit**              | ❌         |                       |
+| **bit** << **integer** | ❌         |                       |
+| **bit** >> **integer** | ❌         |                       |
+
 ## Bit String Functions
 
 See detailed list in the [Postgres docs](https://postgresql.org/docs/current/functions-bitstring.html#FUNCTIONS-BIT-STRING-TABLE).
@@ -227,6 +309,26 @@ See detailed list in the [Postgres docs](https://postgresql.org/docs/current/fun
 | get_bit      | ❌         |                       |
 | set_bit      | ❌         |                       |
 
+## Pattern Matching
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-matching.html).
+
+| Function                                                  | Supported | Notes and limitations |
+|:----------------------------------------------------------|:----------|:----------------------|
+| [NOT] LIKE **pattern** [ESCAPE **escape-character**       | ❌         |                       |
+| [NOT] SIMILAR TO **pattern** [ESCAPE **escape-character** | ❌         |                       |
+
+## Regular Expression Match Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-POSIX-TABLE).
+
+| Function              | Supported | Notes and limitations |
+|:----------------------|:----------|:----------------------|
+| **text** ~ **text**   | ❌         |                       |
+| **text** ~* **text**  | ❌         |                       |
+| **text** !~ **text**  | ❌         |                       |
+| **text** !~* **text** | ❌         |                       |
+
 ## Formatting Functions
 
 See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-formatting.html#FUNCTIONS-FORMATTING-TABLE).
@@ -237,6 +339,30 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | to_date      | ❌         |                       |
 | to_number    | ❌         |                       |
 | to_timestamp | ❌         |                       |
+
+## Date/Time Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-datetime.html#OPERATORS-DATETIME-TABLE).
+
+| Function                            | Supported | Notes and limitations |
+|:------------------------------------|:----------|:----------------------|
+| **date** + **integer**              | ❌         |                       |
+| **date** + **interval**             | ❌         |                       |
+| **date** + **time**                 | ❌         |                       |
+| **interval** + **interval**         | ❌         |                       |
+| **timestamp** + **interval**        | ❌         |                       |
+| **time** + **interval**             | ❌         |                       |
+| - **interval**                      | ❌         |                       |
+| **date** - **date**                 | ❌         |                       |
+| **date** - **integer**              | ❌         |                       |
+| **date** - **interval**             | ❌         |                       |
+| **time** - **time**                 | ❌         |                       |
+| **time** - **interval**             | ❌         |                       |
+| **timestamp** - **interval**        | ❌         |                       |
+| **interval** - **interval**         | ❌         |                       |
+| **timestamp** - **timestamp**       | ❌         |                       |
+| **interval** * **double_precision** | ❌         |                       |
+| **interval** / **double_precision** | ❌         |                       |
 
 ## Date/Time Functions
 
@@ -283,6 +409,49 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | enum_last   | ❌         |                       |
 | enum_range  | ❌         |                       |
 
+## Geometric Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-geometry.html#FUNCTIONS-GEOMETRY-OP-TABLE).
+
+| Function                                   | Supported | Notes and limitations |
+|:-------------------------------------------|:----------|:----------------------|
+| **geometric_type** + **point**             | ❌         |                       |
+| **path** + **path**                        | ❌         |                       |
+| **geometric_type** - **point**             | ❌         |                       |
+| **geometric_type** * **point**             | ❌         |                       |
+| **geometric_type** / **point**             | ❌         |                       |
+| @-@ **geometric_type**                     | ❌         |                       |
+| @@ **geometric_type**                      | ❌         |                       |
+| **geometric_type** # **geometric_type**    | ❌         |                       |
+| **box** # **box**                          | ❌         |                       |
+| **geometric_type** ## **geometric_type**   | ❌         |                       |
+| **geometric_type** <-> **geometric_type**  | ❌         |                       |
+| **geometric_type** @> **geometric_type**   | ❌         |                       |
+| **geometric_type** <@ **geometric_type**   | ❌         |                       |
+| **geometric_type** && **geometric_type**   | ❌         |                       |
+| **geometric_type** << **geometric_type**   | ❌         |                       |
+| **geometric_type** >> **geometric_type**   | ❌         |                       |
+| **geometric_type** &< **geometric_type**   | ❌         |                       |
+| **geometric_type** &> **geometric_type**   | ❌         |                       |
+| **geometric_type** >>\| **geometric_type** | ❌         |                       |
+| **geometric_type** \|>> **geometric_type** | ❌         |                       |
+| **geometric_type** &>\| **geometric_type** | ❌         |                       |
+| **geometric_type** \|&> **geometric_type** | ❌         |                       |
+| **box** <^ **box**                         | ❌         |                       |
+| **box** >^ **box**                         | ❌         |                       |
+| **geometric_type** ?# **geometric_type**   | ❌         |                       |
+| ?- **line**                                | ❌         |                       |
+| ?- **lseg**                                | ❌         |                       |
+| **point** ?- **point**                     | ❌         |                       |
+| ?\| **line**                               | ❌         |                       |
+| ?\| **lseg**                               | ❌         |                       |
+| **point** ?\| **point**                    | ❌         |                       |
+| **line** ?-\| **line**                     | ❌         |                       |
+| **lseg** ?-\| **lseg**                     | ❌         |                       |
+| **line** ?\|\| **line**                    | ❌         |                       |
+| **lseg** ?\|\| **lseg**                    | ❌         |                       |
+| **geometric_type** ~= **geometric_type**   | ❌         |                       |
+
 ## Geometric Functions
 
 See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-geometry.html#FUNCTIONS-GEOMETRY-FUNC-TABLE).
@@ -319,6 +488,25 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | point     | ❌         |                       |
 | polygon   | ❌         |                       |
 
+## IP Address Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-net.html#CIDR-INET-OPERATORS-TABLE).
+
+| Function              | Supported | Notes and limitations |
+|:----------------------|:----------|:----------------------|
+| **inet** << **inet**  | ❌         |                       |
+| **inet** <<= **inet** | ❌         |                       |
+| **inet** >> **inet**  | ❌         |                       |
+| **inet** >>= **inet** | ❌         |                       |
+| **inet** && **inet**  | ❌         |                       |
+| ~ **inet**            | ❌         |                       |
+| **inet** & **inet**   | ❌         |                       |
+| **inet** \| **inet**  | ❌         |                       |
+| **inet** + **bigint** | ❌         |                       |
+| **bigint** + **inet** | ❌         |                       |
+| **inet** - **bigint** | ❌         |                       |
+| **inet** - **inet**   | ❌         |                       |
+
 ## IP Address Functions
 
 See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-net.html#CIDR-INET-FUNCTIONS-TABLE).
@@ -346,6 +534,23 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 |:-----------------|:----------|:----------------------|
 | trunc            | ❌         |                       |
 | macaddr8_set7bit | ❌         |                       |
+
+## Text Search Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-textsearch.html#TEXTSEARCH-OPERATORS-TABLE).
+
+| Function                       | Supported | Notes and limitations |
+|:-------------------------------|:----------|:----------------------|
+| **tsvector** @@ **tsquery**    | ❌         |                       |
+| **tsquery** @@ **tsvector**    | ❌         |                       |
+| **text** @@ **tsquery**        | ❌         |                       |
+| **tsvector** \|\| **tsvector** | ❌         |                       |
+| **tsquery** && **tsquery**     | ❌         |                       |
+| **tsquery** \|\| **tsquery**   | ❌         |                       |
+| !! **tsquery**                 | ❌         |                       |
+| **tsquery** <-> **tsquery**    | ❌         |                       |
+| **tsquery** @> **tsquery**     | ❌         |                       |
+| **tsquery** <@ **tsquery**     | ❌         |                       |
 
 ## Text Search Functions
 
@@ -434,6 +639,117 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | database_to_xmlschema         | ❌         |                       |
 | database_to_xml_and_xmlschema | ❌         |                       |
 
+## json and jsonb Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-OP-TABLE).
+
+| Function                  | Supported | Notes and limitations |
+|:--------------------------|:----------|:----------------------|
+| **json** -> **integer**   | ❌         |                       |
+| **jsonb** -> **integer**  | ❌         |                       |
+| **json** -> **text**      | ❌         |                       |
+| **jsonb** -> **text**     | ❌         |                       |
+| **json** ->> **integer**  | ❌         |                       |
+| **jsonb** ->> **integer** | ❌         |                       |
+| **json** ->> **text**     | ❌         |                       |
+| **jsonb** ->> **text**    | ❌         |                       |
+| **json** #> **text[]**    | ❌         |                       |
+| **jsonb** #> **text[]**   | ❌         |                       |
+| **json** #>> **text[]**   | ❌         |                       |
+| **jsonb** #>> **text[]**  | ❌         |                       |
+
+## Additional jsonb Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE).
+
+| Function                  | Supported | Notes and limitations |
+|:--------------------------|:----------|:----------------------|
+| **jsonb** @> **jsonb**    | ❌         |                       |
+| **jsonb** <@ **jsonb**    | ❌         |                       |
+| **jsonb** ? **text**      | ❌         |                       |
+| **jsonb** ?\| **text[]**  | ❌         |                       |
+| **jsonb** ?& **text[]**   | ❌         |                       |
+| **jsonb** \|\|  **jsonb** | ❌         |                       |
+| **jsonb** - **text**      | ❌         |                       |
+| **jsonb** - **text[]**    | ❌         |                       |
+| **jsonb** - **integer**   | ❌         |                       |
+| **jsonb** #- **text[]**   | ❌         |                       |
+| **jsonb** @? **jsonpath** | ❌         |                       |
+| **jsonb** @@ **jsonpath** | ❌         |                       |
+
+## JSON Creation Functions
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-CREATION-TABLE).
+
+| Function           | Supported | Notes and limitations |
+|:-------------------|:----------|:----------------------|
+| to_json            | ❌         |                       |
+| to_jsonb           | ❌         |                       |
+| array_to_json      | ❌         |                       |
+| json_array         | ❌         |                       |
+| row_to_json        | ❌         |                       |
+| json_build_array   | ❌         |                       |
+| jsonb_build_array  | ❌         |                       |
+| json_build_object  | ❌         |                       |
+| jsonb_build_object | ❌         |                       |
+| json_object        | ❌         |                       |
+| jsonb_object       | ❌         |                       |
+| json               | ❌         |                       |
+| json_scalar        | ❌         |                       |
+| json_serialize     | ❌         |                       |
+
+## JSON Processing Functions
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING-TABLE).
+
+| Function                    | Supported | Notes and limitations |
+|:----------------------------|:----------|:----------------------|
+| json_array_elements         | ❌         |                       |
+| jsonb_array_elements        | ❌         |                       |
+| json_array_elements_text    | ❌         |                       |
+| jsonb_array_elements_text   | ❌         |                       |
+| json_array_length           | ❌         |                       |
+| jsonb_array_length          | ❌         |                       |
+| json_each                   | ❌         |                       |
+| jsonb_each                  | ❌         |                       |
+| json_each_text              | ❌         |                       |
+| jsonb_each_text             | ❌         |                       |
+| json_extract_path           | ❌         |                       |
+| jsonb_extract_path          | ❌         |                       |
+| json_extract_path_text      | ❌         |                       |
+| jsonb_extract_path_text     | ❌         |                       |
+| json_object_keys            | ❌         |                       |
+| jsonb_object_keys           | ❌         |                       |
+| json_populate_record        | ❌         |                       |
+| jsonb_populate_record       | ❌         |                       |
+| json_                       | ❌         |                       |
+| jsonb_populate_record_valid | ❌         |                       |
+| json_populate_recordset     | ❌         |                       |
+| jsonb_populate_recordset    | ❌         |                       |
+| json_to_record              | ❌         |                       |
+| jsonb_to_record             | ❌         |                       |
+| json_to_recordset           | ❌         |                       |
+| jsonb_to_recordset          | ❌         |                       |
+| json_                       | ❌         |                       |
+| jsonb_set                   | ❌         |                       |
+| jsonb_set_lax               | ❌         |                       |
+| jsonb_insert                | ❌         |                       |
+| json_strip_nulls            | ❌         |                       |
+| jsonb_strip_nulls           | ❌         |                       |
+| jsonb_path_exists           | ❌         |                       |
+| jsonb_path_match            | ❌         |                       |
+| jsonb_path_query            | ❌         |                       |
+| jsonb_path_query_array      | ❌         |                       |
+| jsonb_path_query_first      | ❌         |                       |
+| jsonb_path_exists_tz        | ❌         |                       |
+| jsonb_path_match_tz         | ❌         |                       |
+| jsonb_path_query_tz         | ❌         |                       |
+| jsonb_path_query_array_tz   | ❌         |                       |
+| jsonb_path_query_first_tz   | ❌         |                       |
+| jsonb_pretty                | ❌         |                       |
+| json_typeof                 | ❌         |                       |
+| jsonb_typeof                | ❌         |                       |
+
 ## SQL/JSON Query Functions
 
 See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-SQLJSON-QUERYING).
@@ -468,6 +784,19 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | greatest | ❌         |                       |
 | least    | ❌         |                       |
 
+## Array Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-array.html#ARRAY-OPERATORS-TABLE).
+
+| Function                                           | Supported | Notes and limitations |
+|:---------------------------------------------------|:----------|:----------------------|
+| **anyarray** @> **anyarray**                       | ❌         |                       |
+| **anyarray** <@ **anyarray**                       | ❌         |                       |
+| **anyarray** && **anyarray**                       | ❌         |                       |
+| **anycompatiblearray** \|\| **anycompatiblearray** | ❌         |                       |
+| **anycompatible** \|\| **anycompatiblearray**      | ❌         |                       |
+| **anycompatiblearray** \|\| **anycompatible**      | ❌         |                       |
+
 ## Array Functions
 
 See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-array.html#ARRAY-FUNCTIONS-TABLE).
@@ -493,6 +822,60 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | cardinality     | ❌         |                                 |
 | trim_array      | ❌         |                                 |
 | unnest          | 🟠        | works with array lengths of 0-1 |
+
+## Range Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-range.html#RANGE-OPERATORS-TABLE).
+
+| Function                       | Supported | Notes and limitations |
+|:-------------------------------|:----------|:----------------------|
+| **anyrange** @> **anyrange**   | ❌         |                       |
+| **anyrange** @> **anyelement** | ❌         |                       |
+| **anyrange** <@ **anyrange**   | ❌         |                       |
+| **anyelement** <@ **anyrange** | ❌         |                       |
+| **anyrange** && **anyrange**   | ❌         |                       |
+| **anyrange** << **anyrange**   | ❌         |                       |
+| **anyrange** >> **anyrange**   | ❌         |                       |
+| **anyrange** &< **anyrange**   | ❌         |                       |
+| **anyrange** &> **anyrange**   | ❌         |                       |
+| **anyrange** -\|- **anyrange** | ❌         |                       |
+| **anyrange** + **anyrange**    | ❌         |                       |
+| **anyrange** * **anyrange**    | ❌         |                       |
+| **anyrange** - **anyrange**    | ❌         |                       |
+
+## Multirange Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-range.html#MULTIRANGE-OPERATORS-TABLE).
+
+| Function                               | Supported | Notes and limitations |
+|:---------------------------------------|:----------|:----------------------|
+| **anymultirange** @> **anymultirange** | ❌         |                       |
+| **anymultirange** @> **anyrange**      | ❌         |                       |
+| **anymultirange** @> **anyelement**    | ❌         |                       |
+| **anyrange** @> **anymultirange**      | ❌         |                       |
+| **anymultirange** <@ **anymultirange** | ❌         |                       |
+| **anymultirange** <@ **anyrange**      | ❌         |                       |
+| **anyrange** <@ **anymultirange**      | ❌         |                       |
+| **anyelement** <@ **anymultirange**    | ❌         |                       |
+| **anymultirange** && **anymultirange** | ❌         |                       |
+| **anymultirange** && **anyrange**      | ❌         |                       |
+| **anyrange** && **anymultirange**      | ❌         |                       |
+| **anymultirange** << **anymultirange** | ❌         |                       |
+| **anymultirange** << **anyrange**      | ❌         |                       |
+| **anyrange** << **anymultirange**      | ❌         |                       |
+| **anymultirange** >> **anymultirange** | ❌         |                       |
+| **anymultirange** >> **anyrange**      | ❌         |                       |
+| **anyrange** >> **anymultirange**      | ❌         |                       |
+| **anymultirange** &< **anymultirange** | ❌         |                       |
+| **anymultirange** &< **anyrange**      | ❌         |                       |
+| **anyrange** &< **anymultirange**      | ❌         |                       |
+| **anymultirange** &> **anymultirange** | ❌         |                       |
+| **anymultirange** &> **anyrange**      | ❌         |                       |
+| **anyrange** &> **anymultirange**      | ❌         |                       |
+| **anymultirange** -\|- **anyrange**    | ❌         |                       |
+| **anymultirange** + **anyrange**       | ❌         |                       |
+| **anymultirange** * **anyrange**       | ❌         |                       |
+| **anymultirange** - **anyrange**       | ❌         |                       |
 
 ## Range Functions
 
@@ -720,6 +1103,16 @@ See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current
 | has_type_privilege                 | ❌         |                       |
 | pg_has_role                        | ❌         |                       |
 | row_security_active                | ❌         |                       |
+
+## _aclitem_ Operators
+
+See detailed list in the [Postgres docs](https://www.postgresql.org/docs/current/functions-info.html#FUNCTIONS-ACLITEM-OP-TABLE).
+
+| Function                     | Supported | Notes and limitations |
+|:-----------------------------|:----------|:----------------------|
+| **aclitem** = **aclitem**    | ❌         |                       |
+| **aclitem[]** @> **aclitem** | ❌         |                       |
+| **aclitem[]** ~ **aclitem**  | ❌         |                       |
 
 ## _aclitem_ Functions
 

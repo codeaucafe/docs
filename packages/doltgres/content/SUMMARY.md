@@ -62,6 +62,7 @@
   - [System Tables](reference/sql/version-control/dolt-system-tables.md)
   - [System Variables](reference/sql/version-control/dolt-sysvars.md)
 - [SQL Language Support](reference/sql-support/README.md)
+  - [Supported Functions and Operators](reference/sql-support/supported-functions.md)
   - [Supported Types](reference/sql-support/supported-types.md)
   - [Supported SQL Commands](reference/sql-support/supported-commands.md)
   - [System Catalog Schema](reference/sql-support/system-catalog-schema.md)
