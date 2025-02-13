@@ -20,9 +20,11 @@ Dolt consumes CPU, Memory, and Disk. Consuming more of any of these resources th
 
 To see queries being run against the server, query results, and query latency set your Dolt log level to `DEBUG` or `TRACE`. This can be done by starting the server like so `dolt sql-server --loglevel=debug` or by setting `log_level: debug` in your `config.yaml`. Your logs should be visible in the shell you started `dolt sql-server` in.
 
-## EXPLAIN for complex queries
+## EXPLAIN PLAN for complex queries
 
-Dolt supports the SQL `EXPLAIN` operation in order for you to see the plan for complex queries. Rearranging your query to perform fewer `JOIN`s or make better use of indexes can help speed up complex queries.
+Dolt supports the SQL `EXPLAIN PLAN` operation in order for you to see the plan for complex queries. Rearranging your query to perform fewer `JOIN`s or make better use of indexes can help speed up complex queries.
+
+Note: `EXPLAIN` currently returns MySQL-consistent but otherwise no-op output. Use `EXPLAIN PLAN` for Dolt formatted plans.
 
 ## Compare to MySQL
 
