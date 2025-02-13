@@ -24,6 +24,8 @@ To see queries being run against the server, query results, and query latency se
 
 Dolt supports the SQL `EXPLAIN PLAN` operation in order for you to see the plan for complex queries. Rearranging your query to perform fewer `JOIN`s or make better use of indexes can help speed up complex queries.
 
+Note: `EXPLAIN` currently returns MySQL-consistent but otherwise no-op output. Use `EXPLAIN PLAN` for Dolt formatted plans.
+
 ## Compare to MySQL
 
 Dolt strives to be 100% MySQL compatible. If you run a query that works in MySQL but does not work in Dolt, it is a Dolt bug and you should [submit an issue](#submitting-issues). You can dump your Dolt database using [`dolt dump`](../../cli/cli.md#dolt-dump) and import the resulting file into MySQL using `mysql < dump.sql`. The test the query you think should work using any MySQL client.
