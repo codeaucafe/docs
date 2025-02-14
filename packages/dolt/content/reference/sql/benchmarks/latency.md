@@ -5,15 +5,21 @@ title: Latency
 # Latency and Throughput
 
 Our approach to SQL performance benchmarking is to use `sysbench`, an
-industry standard benchmarking tool.
+industry standard benchmarking tool. We also benchmark Dolt using 
+[TPC-C](https://www.tpc.org/tpcc/), an industry standard transactional 
+throughput metric.
 
 ## Performance Roadmap
 
-Dolt is slower than MySQL. The goal is to get Dolt to match 
-MySQL latency for common operations. Dolt is currently 2X slower 
-than MySQL, approximately 1.5X on writes and 2.5X on reads. The 
-`multiple` column represents this relationship with regard to a 
-particular benchmark.
+Dolt is slightly slower than MySQL on the `sysbench` test suite. 
+The goal is to get Dolt to match MySQL latency for common operations. 
+Dolt is currently 10% slower than MySQL, approximately 10% faster 
+on writes and 33% slower on reads. The `multiple` column represents this 
+relationship with regard to a particular benchmark.
+
+Dolt gets about 40% of the transactional throughput on TPC-C than MySQL, 
+40 transactions per second versus about 100 for MySQL. Most applications
+are not sensitive to transactional throughput beyond a handful per second.
 
 It's important recognize that these are industry standard tests, and
 are OLTP oriented. Performance results may vary but Dolt is 
@@ -64,5 +70,6 @@ The Dolt version is `1.49.1`.
 
 | Overall Mean Multiple | 1.55 |
 |-----------------------|------|
+
 <!-- END___DOLT___LATENCY_RESULTS_TABLE -->
 <br/>
