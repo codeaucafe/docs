@@ -228,7 +228,7 @@ For table data, a map of primary key to data columns is stored in a Prolly Tree.
 
 # Prolly Trees In Practice
 
-This all looks good on paper. How do Prolly Trees work in practice? On a standard suite of `sysbench` performance tests, Dolt is approximately [2X slower than MySQL](https://docs.dolthub.com/sql-reference/benchmarks/latency). 
+This all looks good on paper. How do Prolly Trees work in practice? On a standard suite of `sysbench` performance tests, Dolt is approximately [10% slower than MySQL](https://docs.dolthub.com/sql-reference/benchmarks/latency). 
 
 Upon profiling, we find most of the performance difference to be unrelated to Prolly Trees. The performance difference comes from:
 
