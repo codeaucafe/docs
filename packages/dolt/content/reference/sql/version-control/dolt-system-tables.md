@@ -12,6 +12,7 @@ title: Dolt System Tables
   - [dolt_procedures](#dolt_procedures)
   - [dolt_query_catalog](#dolt_query_catalog)
   - [dolt_remotes](#dolt_remotes)
+  - [dolt_backups](#dolt_backups)
   - [dolt_schemas](#dolt_schemas)
   - [dolt_tags](#dolt_tags)
   - [dolt_statistics](#dolt_statistics)
@@ -297,6 +298,37 @@ WHERE name = 'origin';
 +--------+-----------------------------------------+--------------------------------------+--------+
 | origin | file:///go/github.com/dolthub/dolt/rem1 | [refs/heads/*:refs/remotes/origin/*] | map[]  |
 +--------+-----------------------------------------+--------------------------------------+--------+
+```
+
+## `dolt_backups`
+
+`dolt_backups` returns the backup contents of the `repo_state.json`, similar to running `dolt backup -v` from the command line.
+
+The `dolt_backups` table is currently read-only. Use the [`dolt_backup()` procedure](./dolt-sql-procedures.md#dolt_backup) to add, update, or delete backups.
+
+### Schema
+
+```text
++-------------+------+------+-----+---------+-------+
+| Field       | Type | Null | Key | Default | Extra |
++-------------+------+------+-----+---------+-------+
+| name        | text | NO   | PRI |         |       |
+| url         | text | NO   |     |         |       |
++-------------+------+------+-----+---------+-------+
+```
+
+### Example Query
+
+```sql SELECT * FROM dolt_backups;```
+
+```text
++-------------+----------------------------------------+
+| name        | url                                    |
++-------------+----------------------------------------+
+| backup-west | aws://[ddb-westtable:s3bucket-west]/db |
+| backup-east | aws://[ddb-easttable:s3bucket-east]/db |
+| backup-local| file:///path/to/local/backup           |
++-------------+----------------------------------------+
 ```
 
 ## `dolt_schemas`
