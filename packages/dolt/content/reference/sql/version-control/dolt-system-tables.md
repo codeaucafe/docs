@@ -302,10 +302,9 @@ WHERE name = 'origin';
 
 ## `dolt_backups`
 
-`dolt_backups` returns the backup subcontents of the `repo_state.json`, similar to running `dolt backup -v` from the command line.
+`dolt_backups` returns the backup contents of the `repo_state.json`, similar to running `dolt backup -v` from the command line.
 
-The `dolt_backups` table is currently read only. Use [`dolt_backup()` procedure](./dolt-sql-procedures.md#dolt_backup)
-to add, update or delete backups.
+The `dolt_backups` table is currently read-only. Use the [`dolt_backup()` procedure](./dolt-sql-procedures.md#dolt_backup) to add, update, or delete backups.
 
 ### Schema
 
