@@ -24,6 +24,7 @@ This guide will cover how to perform common DoltLab administrator configuration 
 16. [Update database passwords](#update-application-database-passwords)
 17. [Run DoltLab with no egress access](#run-doltlab-with-no-egress-access)
 18. [Reset password attempts for a user](#reset-password-attempts-for-a-user)
+19. [Troubleshoot common issues](#troubleshoot-common-issues)
 
 # File issues and view release notes
 
@@ -791,3 +792,44 @@ DELETE FROM password_attempts WHERE user_id_fk = 'user_id';
 ```
 
 This will reset the user's password attempts to 0 and allow them to attempt to login again.
+
+# Troubleshoot common issues
+
+## DoltLab UI displaying an error after starting the instance
+
+If you started your DoltLab instance, but the UI is displaying an error, it is often the case that `doltlabapi` has crashed during startup. To verify that this, check the logs for `doltlabapi` by running:.
+
+```bash
+docker logs doltlab_doltlabapi_1
+```
+
+If you see an error similar to `could not open database connection`, this means that `doltlabapi` was unable to connect to the application database `doltlabdb`.
+
+To troubleshoot this issue, check that the `doltlabdb` container is running by running:
+
+```bash
+docker ps
+```
+
+If you do not see the `doltlabdb` container running, then it too has crashed on startup. Investigate the logs for the `doltlabdb` container by running:
+
+```bash
+docker logs doltlab_doltlabdb_1
+```
+
+If the `doltlabdb` container is running, it is likely that case that the current database connection credentials used by `doltlabapi` are not the same as those used by the `doltlabdb` container.
+
+It is important to remember that the first time a DoltLab instance is started, the `doltlabdb` container is initialized with `admin_password` and `dolthubapi_password` values from the `installer_config.yaml` file. These values are persisted to disk, and will be expected for all successful database connections.
+
+If you have changed the database passwords in `installer_config.yaml` after the initial startup, you will need either:
+
+- Connect to the `doltlabdb` [container and update the credentials manually](#update-application-database-passwords).
+- Delete the persistent Docker volume storing the `doltlabdb` container's data. To do this, make sure your DoltLab instance is stopped, then run:
+
+```bash
+docker volume rm doltlab_doltlabdb-dolt-data
+```
+
+After deleting the volume, start your DoltLab instance again. DoltLab will recreate the volume and it will be initialized with the new credentials you provided in `installer_config.yaml`.
+
+For all other issues not covered in this section, please reach out to our support team on [Discord](https://discord.gg/dolthub).
