@@ -94,6 +94,8 @@ unusual to get a local storage size of 20x the actual data size after an import.
 will remove the garbage and reclaim local storage. See the [docs on `dolt gc`](../reference/cli/cli.md#dolt-gc) 
 and the [`dolt_gc` stored procedure](../reference/sql/version-control/dolt-sql-procedures.md#dolt_gc) for details.
 
+If you are concerned about the growth of a Dolt database at steady state while running the SQL server, there is [an experimental feature](../reference/sql/server/garbage-collection.md#automated-gc) to automatically run `dolt_gc()` as the database grows.
+
 ## How do I squash the history of a Dolt database? I only want the latest.
 
 You can perform a shallow [clone](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_clone) of a database by using the `--depth` flag. If you only want

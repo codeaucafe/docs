@@ -42,7 +42,7 @@ Dolt operational issues usually manifest as slow SQL queries. In rare occasions,
 
 Dolt creates disk garbage on write. This can sometimes become a substantial portion of the disk Dolt is consuming. Dolt ships with a garbage collection function. Running the garbage collection function can free disk.
 
-To run garbage collection online, run [`call dolt_gc()`](../version-control/dolt-sql-procedures.md#dolt_gc). We are working on having this procedure run periodically in the background.
+To run garbage collection online, run [`call dolt_gc()`](../version-control/dolt-sql-procedures.md#dolt_gc). There is [an experimental feature](./garbage-collection.md#automated-gc) you can enable to run this periodically in the background as the database grows.
 
 To run garbage collection offline, stop your `dolt sql-server`, navigate to the Dolt directory where your database is stored and run `dolt gc`. Once the operation is complete, restart your server using `dolt sql-server`. 
 

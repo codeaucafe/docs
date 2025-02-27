@@ -21,6 +21,12 @@ behavior:
   disable_client_multi_statements: false
   dolt_transaction_commit: false
   event_scheduler: "ON"
+  auto_gc_behavior:
+    enabled: false
+
+user:
+  name: root
+  password: ""
 
 listener:
   host: localhost
