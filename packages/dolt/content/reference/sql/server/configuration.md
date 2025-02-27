@@ -599,7 +599,7 @@ mysql> call dolt_gc();
 ERROR 1105 (HY000): no changes since last gc
 ```
 
-Automatic garbage collection in Dolt is currently experimental. It's scheduling and pacing of the GC process itself is not yet configurable, and enabling it may have material performance impact on the running server.
+Automatic garbage collection in Dolt is currently experimental. Its scheduling and pacing of the GC process itself is not yet configurable, and enabling it may have material performance impact on the running server.
 
 ## `listener`
 
