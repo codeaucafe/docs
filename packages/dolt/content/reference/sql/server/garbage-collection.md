@@ -40,5 +40,16 @@ NOTE: Performing GC on [a cluster replica](../server/replication.md) which is in
 
 # Automated GC
 
-We eventually want to support automated garbage collection during events that generate a
-lot of garbage, such as file imports. It will need to be interruptable.
+As of Dolt 1.50.0, a running Dolt SQL server supports an experimental mode with automatic garbage collection. It is enabled by adding the following configuration stanza to the [configuration](./configuration.md):
+
+```yaml
+behavior:
+  auto_gc_behavior:
+    enable: true
+```
+
+When automatic GC is enabled, the Dolt SQL server will periodically run a garbage collection on a database as it grows. This garbage collection does not disrupt inflight queries or connections, and is able to run successfully on standby replicas inside a Dolt cluster. When running with auto GC enabled, `call dolt_gc()` can still be used. Manually initiated GCs will have the new, less disruptive behavior as well.
+
+The scheduling and pacing of the automated GC work is still a work in progress, which is why the feature remains experimental for now.
+
+For the time being, this feature is only available from the SQL server. We will eventually add support for automatic GC during offilne database operations such as bulk imports.
