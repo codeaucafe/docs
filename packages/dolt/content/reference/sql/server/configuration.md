@@ -578,7 +578,8 @@ mysql> CREATE PROCEDURE insertn(n INT)
     ->     INSERT INTO vals VALUES (rand()*65536, rand()*65536, rand()*65536, rand()*65536, rand()*65536, rand()*65536);
     ->     UNTIL @i > n END REPEAT;
     -> END //
-ERROR 1105 (HY000): stored procedure "insertn" already exists
+Query OK, 0 rows affected (0,01 sec)
+
 mysql> DELIMITER ;
 mysql> CALL insertn(8192);
 Query OK, 1 row affected (3,52 sec)
