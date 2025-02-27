@@ -2201,7 +2201,7 @@ This is an example yaml configuration file showing all supported items and their
 	  dolt_transaction_commit: false
 	  event_scheduler: "ON"
 	  auto_gc_behavior:
-	    enabled: false
+	    enable: false
 	
 	listener:
 	  host: localhost
@@ -2248,7 +2248,7 @@ SUPPORTED CONFIG FILE FIELDS:
 
 `behavior.dolt_transaction_commit`: If true all SQL transaction commits will automatically create a Dolt commit, with a generated commit message. This is useful when a system working with Dolt wants to create versioned data, but doesn't want to directly use Dolt features such as dolt_commit().
 
-`behavior.auto_gc_behavior.enabled`: If true, the running server will periodically run a garbage collection against databases as they grow. When this is true, running a GC does not disrupt inflight queries or client connections to the server.
+`behavior.auto_gc_behavior.enable`: If true, the running server will periodically run a garbage collection against databases as they grow. When this is true, running a GC does not disrupt inflight queries or client connections to the server.
 
 `listener.host`: The host address that the server will run on.  This may be `localhost` or an IPv4 or IPv6 address
 

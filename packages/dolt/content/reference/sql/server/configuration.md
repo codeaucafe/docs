@@ -22,7 +22,7 @@ behavior:
   dolt_transaction_commit: false
   event_scheduler: "ON"
   auto_gc_behavior:
-    enabled: false
+    enable: false
 
 user:
   name: root
@@ -500,6 +500,105 @@ Starting server with Config HP="localhost:3310"|T="28800000"|R="false"|L="debug"
 ```
 
 We do not see any more commits in the debug log or in the Dolt log.
+
+### `auto_gc_behavior`
+
+The `auto_gc_behavior` subsection of `behavior` controls the configuration of [automatic garbage collection](./garbage-collection.md#automatic-gc).
+
+#### `enable`
+
+**Default**: false
+
+**Values**: false, true
+
+**Example**:
+
+When automatic GC is disabled, Dolt never performs a garbage collection of a database without being explicitly asked to. In this mode, the only way to run GC is to run the SQL query `call dolt_gc()`. When automatic GC is disabled, running garbage collection on the server forcefully terminates inflight connections and terminally invalidates the requesting connection:
+
+```sql
+MySQL [auto_gc_test]> call dolt_gc();
++--------+
+| status |
++--------+
+|      0 |
++--------+
+1 row in set (0,04 sec)
+
+MySQL [auto_gc_test]> select 1;
+ERROR 1105 (HY000): this connection was established when this server performed an online garbage collection. this connection can no longer be used. please reconnect.
+```
+
+When running with `auto_gc_behavior: enable: true`, the server will periodically run a garbage collection of a growing database in the background. The impact of running a garabage collection on the server will also be different. It will no longer terminate in flight connections and it will no longer leave the calling conection in an invalid state.
+
+```sh
+% cat config.yaml
+behavior: { auto_gc_behavior: { enable: true } }
+% dolt sql-server --config=config.yaml >/dev/null &
+```
+
+Here we see the impact of running GC is different:
+
+```sql
+> call dolt_gc();
++--------+
+| status |
++--------+
+|      0 |
++--------+
+1 row in set (0,04 sec)
+
+> select 1;
++---+
+| 1 |
++---+
+| 1 |
++---+
+1 row in set (0,01 sec)
+```
+
+We can cause an automatic GC by inserting some data.
+
+```sql
+mysql> CREATE TABLE vals (
+    ->        i1 int, i2 int, i3 int, i4 int, i5 int, i6 int,
+    ->        KEY(i1, i2, i3, i4, i5, i6),
+    ->        KEY(i1, i3, i4, i5, i6, i2),
+    ->        KEY(i1, i4, i5, i6, i2, i3),
+    ->        KEY(i1, i5, i6, i2, i3, i4),
+    ->        KEY(i1, i6, i2, i3, i4, i5)
+    -> );
+Query OK, 0 rows affected, 4 warnings (0,01 sec)
+
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE insertn(n INT)
+    -> BEGIN
+    ->   SET @i = 0;
+    ->   REPEAT
+    ->     SET @i = @i + 1;
+    ->     INSERT INTO vals VALUES (rand()*65536, rand()*65536, rand()*65536, rand()*65536, rand()*65536, rand()*65536);
+    ->     UNTIL @i > n END REPEAT;
+    -> END //
+ERROR 1105 (HY000): stored procedure "insertn" already exists
+mysql> DELIMITER ;
+mysql> CALL insertn(8192);
+Query OK, 1 row affected (3,52 sec)
+
+```
+
+We will see a log line from the server like:
+
+```
+INFO[0257] sqle/auto_gc: Successfully completed auto GC of database auto_gc_test in 3.508769959s
+```
+
+and if we run a GC manually we can see that there is nothing to collect:
+
+```sql
+mysql> call dolt_gc();
+ERROR 1105 (HY000): no changes since last gc
+```
+
+Automatic garbage collection in Dolt is currently experimental. It's scheduling and pacing of the GC process itself is not yet configurable, and enabling it may have material performance impact on the running server.
 
 ## `listener`
 
