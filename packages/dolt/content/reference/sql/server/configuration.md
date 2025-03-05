@@ -161,7 +161,7 @@ In this example, I set the log format to `json` and start a server. As you can s
 
 ```sh
 $ grep log_format config.yaml        
-log_level: json
+log_format: json
 $ dolt sql-server --config=config.yaml
 'Starting server with Config HP="localhost:3306"|T="28800000"|R="false"|L="debug"|S="/tmp/mysql.sock"
 {"level":"debug","msg":"Loading events","time":"2025-03-05T09:38:03-08:00"}
