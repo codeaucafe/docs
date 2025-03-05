@@ -14,6 +14,7 @@ Here is a complete `config.yaml` file populated with all the default values for 
 
 ```yaml
 log_level: info
+log_format: text
 
 behavior:
   read_only: false
@@ -144,6 +145,35 @@ WARN[0019] error running query                           connectTime="2024-12-04
 ```
 
 I now see the bad query being run is `select * from t where bad_col=3`.
+
+## `log_format`
+
+This configuration value is used to change the log format. Current supported options are text and json. Text is the default.
+
+**Default**: `text`
+
+**Values**:
+
+1. `text`: Default log format emits logs as text strings
+2. `json`: Emits logs in json format for easier parsing
+
+**Example**:
+
+In this example, I set the log format to `json` and start a server. As you can see the logs are emitted in json format.
+
+```sh
+$ grep log_format config.yaml        
+log_format: json
+$ dolt sql-server --config=config.yaml
+'Starting server with Config HP="localhost:3306"|T="28800000"|R="false"|L="debug"|S="/tmp/mysql.sock"
+{"level":"debug","msg":"Loading events","time":"2025-03-05T09:38:03-08:00"}
+{"level":"debug","msg":"privileges.db already exists, not creating root superuser","time":"2025-03-05T09:38:03-08:00"}
+{"level":"warning","msg":"unix socket set up failed: file already in use: /tmp/mysql.sock","time":"2025-03-05T09:38:03-08:00"}
+{"level":"info","msg":"Server ready. Accepting connections.","time":"2025-03-05T09:38:03-08:00"}
+{"level":"warning","msg":"secure_file_priv is set to \"\", which is insecure.","time":"2025-03-05T09:38:03-08:00"}
+{"level":"warning","msg":"Any user with GRANT FILE privileges will be able to read any file which the sql-server process can read.","time":"2025-03-05T09:38:03-08:00"}
+{"level":"warning","msg":"Please consider restarting the server with secure_file_priv set to a safe (or non-existent) directory.","time":"2025-03-05T09:38:03-08:00"}
+```
 
 ## `behavior`
 
