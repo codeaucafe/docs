@@ -981,8 +981,26 @@ Consider a table `mytable` with this schema:
 +-------+------+------+-----+---------+-------+
 ```
 
-If we attempt a merge that creates conflicts in this table, I can
-examine them with the following query:
+If we attempt a merge that creates conflicts in this table, the dynamically generated table will show the details
+of the conflict:
+
+```sql
+mydb> select * from dolt_conflicts_mytable;
++----------------------------------+--------+--------+-------+-------+---------------+---------+---------+-----------------+------------------------+
+| from_root_ish                    | base_a | base_b | our_a | our_b | our_diff_type | their_a | their_b | their_diff_type | dolt_conflict_id       |
++----------------------------------+--------+--------+-------+-------+---------------+---------+---------+-----------------+------------------------+
+| gip4h957r8k07c9414lkp3sqe7rh9an6 | NULL   | NULL   | 3     | 3     | added         | 3       | 1       | added           | hWDLmYufTrm+eVjFSVzPWw |
+| gip4h957r8k07c9414lkp3sqe7rh9an6 | NULL   | NULL   | 4     | 4     | added         | 4       | 2       | added           | gi2p1YbSwu8oUV/WRSpr3Q |
++----------------------------------+--------+--------+-------+-------+---------------+---------+---------+-----------------+------------------------+
+```
+
+The table has a single row for every row that conflicts in the table. Each column is listed three times, once for the
+base, once for the `ours` value, and once for the `theirs` value. Additionally, the `our_diff_type` and `their_diff_type` columns
+indicate whether the row was "added", "modified", or "removed" in the corresponding branch. The `dolt_conflict_id` column is unique
+for each row, and can be used to identify the specific conflict when writing automated conflict resolution applications. Finally, the
+first column, `from_root_ish` is the ID of the database root at the time of the merge. User code generally ignores this column.
+
+To simplify, you can query for just the columns you are interested in:
 
 ```sql
 mydb> select dolt_conflict_id, base_a, base_b, our_a, our_b, their_a, their_b from dolt_conflicts_mytable;
