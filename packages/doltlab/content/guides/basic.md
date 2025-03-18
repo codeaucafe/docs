@@ -23,8 +23,9 @@ This guide will cover how to perform common DoltLab administrator configuration 
 15. [Serve DoltLab behind an AWS Network Load Balancer](#serve-doltlab-behind-an-aws-network-load-balancer)
 16. [Update database passwords](#update-application-database-passwords)
 17. [Run DoltLab with no egress access](#run-doltlab-with-no-egress-access)
-18. [Reset password attempts for a user](#reset-password-attempts-for-a-user)
-19. [Troubleshoot common issues](#troubleshoot-common-issues)
+18. [Reset a user's password](#reset-a-users-password)
+19. [Reset password attempts for a user](#reset-password-attempts-for-a-user)
+20. [Troubleshoot common issues](#troubleshoot-common-issues)
 
 # File issues and view release notes
 
@@ -776,6 +777,18 @@ You can now return to the `doltlab` directory and start your DoltLab instance.
 $ cd ../doltlab
 $ ./start.sh
 ```
+
+# Reset a user's password
+
+As of [DoltLab v2.2.0](https://www.dolthub.com/blog/2024-07-11-announcing-doltlab-v220/), if a user of your DoltLab instance has forgotten their password, the DoltLab admin must reset that user's password on their behalf.
+
+To do so, using the default user `admin` account on your DoltLab instance, navigate to Profile > Settings > Reset user passwords.
+
+![Reset user passwords](../.gitbook/assets/doltlab_admin_settings_example.png)
+
+After completing the form, the selected user will be able to login with their new password.
+
+Starting with DoltLab >= v2.3.7, resetting a user's password will also reset the user's password attempts. If you're instance is < v2.3.7, follow the steps in the next section to reset the user's password attempts also, if this too is required.
 
 # Reset password attempts for a user
 
