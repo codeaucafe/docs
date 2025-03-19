@@ -21,6 +21,7 @@ This guide will cover how to perform common DoltLab administrator configuration 
 15. [Serve DoltLab over HTTPS natively](#serve-doltlab-over-https-natively)
 16. [Improve DoltLab performance](#improve-doltlab-performance)
 17. [Serve DoltLab behind an AWS Network Load Balancer](#serve-doltlab-behind-an-aws-network-load-balancer)
+18. [Enable DoltLab Enterprise features](#enable-doltlab-enterprise-features)
 
 # Backup and restore volumes
 
@@ -1076,3 +1077,7 @@ Next, edit the inbound rules for the security group attached to the NLB you crea
 On the NLB page you should now see the DNS name of your NLB which can be used to connect to your DoltLab instance.
 
 Restart your DoltLab instance supplying this DNS name as the `HOST_IP`, and your DoltLab instance will now be running exclusively through the NLB.
+
+# Enable DoltLab Enterprise Features
+
+DoltLab Enterprise is available in versions >= v2.0.0. If your version of DoltLab is >= v2.1.0, please use the [current DoltLab Enterprise guide](../guides/enterprise.md). Otherwise, please see [this blog post](https://www.dolthub.com/blog/2023-10-30-announcing-doltlab-enterprise/) for instructions on configuring the available DoltLab Enterprise features.
