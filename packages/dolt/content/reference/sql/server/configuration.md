@@ -32,7 +32,9 @@ user:
 listener:
   host: localhost
   port: 3306
-  max_connections: 100
+  max_connections: 1000
+  back_log: 50
+  max_connections_timeout_millis: 60000
   read_timeout_millis: 28800000
   write_timeout_millis: 28800000
   tls_key: null
@@ -690,15 +692,16 @@ Starting server with Config HP="localhost:3310"|T="28800000"|R="false"|L="debug"
 
 ### `max_connections`
 
-The maximum number of simultaneous connections the server will accept. Connections over the limit queue until an existing connection is terminated.
+The maximum number of simultaneous connections the server will accept. Connections over the limit queue until 
+an existing connection is terminated. Setting this to `0` will allow for unlimited connections.
 
 From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
 
 > The number of simultaneous connections that the server will accept
 
-**Default**: 100
+**Default**: 1000
 
-**Values**: Any integer between 1 and 100,000.
+**Values**: Any integer between 0 and 100,000.
 
 **Example**:
 
@@ -727,7 +730,7 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 MySQL [(none)]>
 ```
 
-If I connect with another client, it just hangs:
+If I connect with another client, it will hang for 1 minute before giving up (see [`max_connections_timeout_millis`](#max_connections_timeout_millis))
 
 ```sh
 $ mysql -h 127.0.0.1 -P 3310 -u root
@@ -756,6 +759,55 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 MySQL [(none)]>
 ```
+
+### `back_log`
+
+This setting controls the number of client connections that can be blocked waiting. If the queue is full, new connection attempts will be refused until a slot becomes available. If
+set to `0`, new connections will be immediately rejected if `max_connections` has been reached. `back_log` is only meaningful if `max_connections` is set to a non-zero value.
+
+From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+
+> The number of simultaneous connections that the server will allow to block waiting for a connection before new connections result in immediate rejection.
+
+**Default**: 50
+
+**Values**: Any integer between 0 and the max 32-bit integer (2,147,483,647).
+
+**Example**:
+
+I want to ensure that we take no more than 42 conncurrent active connections and allow 5 connections to wait (block) for one of those to close. Of those blocked connections,
+they will wait for a maximum of 7 seconds before being closed by the server:
+
+```sh
+$ cat config.yaml
+listener:
+  max_connections: 42
+  back_log: 5
+  max_connections_timeout_millis: 7000
+$ dolt sql-server --config=config.yaml
+Starting server with Config HP="127.0.0.1:3310"|T="28800000"|R="false"|L="debug"
+```
+
+42 clients will immediately connect and be able to perform queries. The next 5 connections will block
+(assuming no connections drop). Additional connections will be immediately closed. Any blocked connection which
+waits for 7 seconds will be closed. To test, see the [`max_connections`](#max_connections) examples.
+
+### `max_connections_timeout_millis`
+
+This setting controls the maximum amount of time, in milliseconds, that a client connection attempt will block waiting for a connection. This configuration
+is only meaningful if `back_log` is a non-zero value.
+
+From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
+
+> The maximum amount of time that a connection will block waiting for a connection before being rejected.
+
+**Default**: 60000
+
+**Values**: Any integer between 1 and the max 64-bit integer (9,223,372,036,854,775,807).
+
+**Examples**:
+
+See [`back_log`](#back_log)
 
 ### `read_timeout_millis`
 
