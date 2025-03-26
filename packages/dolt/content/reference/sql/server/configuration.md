@@ -789,7 +789,7 @@ Starting server with Config HP="127.0.0.1:3310"|T="28800000"|R="false"|L="debug"
 ```
 
 42 clients will immediately connect and be able to perform queries. The next 5 connections will block
-(assumeing no connections drop). Additional connections will be immediately closed. Any blocked connection which
+(assuming no connections drop). Additional connections will be immediately closed. Any blocked connection which
 waits for 7 seconds will be closed. To test, see the [`max_connections`](#max_connections) examples.
 
 ### `max_connections_timeout_millis`
