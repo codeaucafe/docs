@@ -32,7 +32,7 @@ user:
 listener:
   host: localhost
   port: 3306
-  max_connections: 100
+  max_connections: 1000
   back_log: 50
   max_connections_timeout_millis: 60000
   read_timeout_millis: 28800000
