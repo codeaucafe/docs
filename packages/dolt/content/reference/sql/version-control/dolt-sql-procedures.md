@@ -30,8 +30,11 @@ title: Dolt SQL Procedures
 - [Statistics Updates](#statistics-updates)
   - [dolt_stats_restart()](#dolt_stats_restart)
   - [dolt_stats_stop()](#dolt_stats_stop)
-  - [dolt_stats_status()](#dolt_stats_status)
-  - [dolt_stats_drop()](#dolt_stats_drop)
+  - [dolt_stats_once()](#dolt_stats_once)
+  - [dolt_stats_wait()](#dolt_stats_wait)
+  - [dolt_stats_flush()](#dolt_stats_flush)
+  - [dolt_stats_gc()](#dolt_stats_gc)
+  - [dolt_stats_info()](#dolt_stats_info)
 - [Access Control](#access-control)
 # Dolt SQL Procedures
 
@@ -1648,25 +1651,25 @@ Clear the work queue and stop the thread
 
 Delete the stats cache from memory and the filesystem. Also clearing working queue and stop the update thread.
 
-## `dolt_stats_once`:
+## `dolt_stats_once()`:
 
 This command cillect statistics once. It should be used when no background thread is running
 (ex: in `dolt sql` and when we do not wish to run a background thread).
 
-## `dolt_stats_wait`:
+## `dolt_stats_wait()`:
 
 Block on a full queue cycle. In practice it takes at least one cycle for stats to reflect the contents
 of the database stats in the blocking session.
 
-## `dolt_stats_gc`:
+## `dolt_stats_gc()`:
 
 Blocks waiting for a GC signal. Garbage collection finalizes in the same cadence as new statistic updates.
 
-## `dolt_stats_flush`:
+## `dolt_stats_flush()`:
 
 Block waiting on a flush signl. Flushes occur after new statistic updates.
 
-## `dolt_stats_info`:
+## `dolt_stats_info()`:
 
 Print the current state of the stats provider (optional `'-short'` flag).
 
