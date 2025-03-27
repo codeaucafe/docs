@@ -88,7 +88,7 @@ SELECT * from information_schema.tables;
 +-------------+------------+-------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-Statistics are persisted in database's chunk store in a `refs/stats` ref stored separately from the commit graph. Each database has its own statistics store. The contents of the `refs/stats` reflect a single point-in-time for a single branch and are un-versioned. The contents of this ref in the current database can be inspected with the `dolt_statistics` system table. 
+`call dolt_stats_once()` is a convenience function for collecting all database/branch statistics when the background thread is disabled.
 
 ```sql
 create table horses (id int primary key, name varchar(10), key(name));
@@ -115,10 +115,20 @@ select `index`, `position`, row_count, distinct_count, columns, upper_bound, upp
 
 Statistics automatically update for servers by default. Stats are stored in a database in `.dolt/stats` separate from user data. This folder can safely be deleted offline.
 
-Stats throughput can be lowered with the `dolt_stats_job_interval` variable, which indicates the milliseconds of delay between processing steps. The higher the delay and more branches in a database, the longer it will take for statistic updates to materialize.
+Stats throughput can be lowered by raising the the `dolt_stats_job_interval` variable, which indicates the milliseconds of delay between processing steps. The higher the delay and more branches in a database, the longer it will take for statistic updates to materialize.
 
-Stats can be disabled with the `dolt_stats_enabled` variable.
+Stats can be disabled with the `dolt_stats_enabled=0` variable.
 
+Stats caching disabled with the `dolt_stats_memory_only=1` variable.
+
+### Stats Garbage Collection
+
+The stats in-memory cache accumulates new histograms proportionally to the write rate and stats update rate. Periodically, an
+update cycle will swap the currently actice histogram buckets to a new in-memory map and clear the old set.
+
+Stats garbage collection can be disabled with the `dolt_stats_gc_enabled=0` variable.
+
+Garbage collectoin freuency can be tuned with the `dolt_stats_gc_interval` variable (default 1 hour).
 
 ### Stats Controller Functions
 
