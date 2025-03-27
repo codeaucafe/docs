@@ -30,6 +30,7 @@ title: Dolt SQL Procedures
 - [Statistics Updates](#statistics-updates)
   - [dolt_stats_restart()](#dolt_stats_restart)
   - [dolt_stats_stop()](#dolt_stats_stop)
+  - [dolt_stats_purge()](#dolt_stats_purge)
   - [dolt_stats_once()](#dolt_stats_once)
   - [dolt_stats_wait()](#dolt_stats_wait)
   - [dolt_stats_flush()](#dolt_stats_flush)
