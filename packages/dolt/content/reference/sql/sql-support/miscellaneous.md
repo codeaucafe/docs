@@ -115,7 +115,7 @@ select `index`, `position`, row_count, distinct_count, columns, upper_bound, upp
 
 Statistics automatically update for servers by default. Stats are stored in a database in `.dolt/stats` separate from user data. This folder can safely be deleted offline.
 
-Stats throughput can be lowered by raising the the `dolt_stats_job_interval` variable, which indicates the milliseconds of delay between processing steps. The higher the delay and more branches in a database, the longer it will take for statistic updates to materialize.
+Stats throughput can be lowered by raising the the `dolt_stats_job_interval` variable, which indicates the milliseconds of delay between processing steps. The higher the delay and more branches in a database, the longer it will take for statistic updates to materialize. High delays reduce the fraction of runtime resources diverted to managing background statistics.
 
 Stats can be disabled with the `dolt_stats_enabled=0` variable.
 
