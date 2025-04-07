@@ -88,8 +88,6 @@ SELECT * from information_schema.tables;
 +-------------+------------+-------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-`call dolt_stats_once()` is a convenience function for collecting all database/branch statistics when the background thread is disabled.
-
 ```sql
 create table horses (id int primary key, name varchar(10), key(name));
 insert into horses select x, 'Steve' from (with recursive inputs(x) as (select 1 union select x+1 from inputs where x < 1000) select * from inputs) dt;
@@ -110,6 +108,35 @@ select `index`, `position`, row_count, distinct_count, columns, upper_bound, upp
 | name    | 9        | 178       | 1              | ["name"] | ["Steve"]   | 178             | ["Steve"] |
 +---------+----------+-----------+----------------+----------+-------------+-----------------+-----------+
 ```
+
+### Disable
+
+Some workloads, like batch imports, perform strictly better without the overhead of statistics collection. In these cases, we can explicitly stop or purge (stop + delete) statistics on a running server:
+
+```sql
+call dolt_stats_stop();
+call dolt_stats_purge();
+```
+
+A stopped-stats server can be restarted, or have a single collection cycle performed by an operator:
+
+```sql
+call dolt_stats_starts();
+call dolt_stats_once();
+```
+
+An environment variable can disable statistics on server reboots:
+
+```sql
+— on version 1.51.0 or higher
+SET @@PERSIST.dolt_stats_enabled = 0;
+
+— up to 1.50.x
+SET @@PERSIST.dolt_stats_auto_refresh_enabled = 0;
+```
+
+A rebooted server with stats turned off has no reversal mechanism at the moment. All stats operations are no-ops
+if a server starts with the above variables set.
 
 ### Auto-Refresh
 
