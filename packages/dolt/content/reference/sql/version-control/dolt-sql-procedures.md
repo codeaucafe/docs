@@ -1659,7 +1659,7 @@ This command collects statistics once. It should be used when no background thre
 
 ## `dolt_stats_wait()`:
 
-Block on a full queue cycle. In practice it takes at least one cycle for stats to reflect the contents
+Blocks on a full queue cycle. In practice it takes at least one cycle for stats to reflect the contents
 of the database stats in the blocking session.
 
 ## `dolt_stats_gc()`:
