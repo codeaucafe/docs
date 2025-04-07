@@ -1668,7 +1668,7 @@ Blocks waiting for a GC signal. Garbage collection finalizes in the same cadence
 
 ## `dolt_stats_flush()`:
 
-Block waiting on a flush signl. Flushes occur after new statistic updates.
+Blocks waiting on a flush signal. Flushes occur after new statistic updates.
 
 ## `dolt_stats_info()`:
 
