@@ -1654,7 +1654,7 @@ Delete the stats cache from memory and the filesystem. Also clearing working que
 
 ## `dolt_stats_once()`:
 
-This command cillect statistics once. It should be used when no background thread is running
+This command collects statistics once. It should be used when no background thread is running
 (ex: in `dolt sql` and when we do not wish to run a background thread).
 
 ## `dolt_stats_wait()`:
