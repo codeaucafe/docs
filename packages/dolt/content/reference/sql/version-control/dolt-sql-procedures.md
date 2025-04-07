@@ -1645,7 +1645,7 @@ parameters.
 
 ## `dolt_stats_stop()`
 
-Clear the work queue and stop the thread
+Clears the work queue and stops the thread
 (otherwise no-op).
 
 ## `dolt_stats_purge()`
