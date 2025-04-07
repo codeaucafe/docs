@@ -25,10 +25,6 @@ behavior:
   auto_gc_behavior:
     enable: false
 
-user:
-  name: root
-  password: ""
-
 listener:
   host: localhost
   port: 3306
