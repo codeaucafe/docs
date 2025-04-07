@@ -128,7 +128,7 @@ update cycle will swap the currently active histogram buckets to a new in-memory
 
 Stats garbage collection can be disabled with the `dolt_stats_gc_enabled=0` variable.
 
-Garbage collectoin freuency can be tuned with the `dolt_stats_gc_interval` variable (default 1 hour).
+Garbage collection frequency can be tuned with the `dolt_stats_gc_interval` variable (default 1 hour).
 
 ### Stats Controller Functions
 
