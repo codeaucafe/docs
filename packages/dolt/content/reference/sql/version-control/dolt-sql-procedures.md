@@ -1672,7 +1672,7 @@ Blocks waiting on a flush signal. Flushes occur after new statistic updates.
 
 ## `dolt_stats_info()`:
 
-Print the current state of the stats provider (optional `'-short'` flag).
+Returns the current state of the stats provider (optional `'-short'` flag).
 
 ```sql
 > call dolt_stats_info('--short');
