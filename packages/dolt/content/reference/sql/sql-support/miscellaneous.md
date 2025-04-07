@@ -124,7 +124,7 @@ Stats caching disabled with the `dolt_stats_memory_only=1` variable.
 ### Stats Garbage Collection
 
 The stats in-memory cache accumulates new histograms proportionally to the write rate and stats update rate. Periodically, an
-update cycle will swap the currently actice histogram buckets to a new in-memory map and clear the old set.
+update cycle will swap the currently active histogram buckets to a new in-memory map and clear the old set.
 
 Stats garbage collection can be disabled with the `dolt_stats_gc_enabled=0` variable.
 
