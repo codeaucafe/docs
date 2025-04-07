@@ -119,7 +119,7 @@ Stats throughput can be lowered by raising the the `dolt_stats_job_interval` var
 
 Stats can be disabled with the `dolt_stats_enabled=0` variable.
 
-Stats caching disabled with the `dolt_stats_memory_only=1` variable.
+Stats persistence can be disabled with the `dolt_stats_memory_only=1` variable.
 
 ### Stats Garbage Collection
 
