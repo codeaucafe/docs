@@ -1650,7 +1650,7 @@ Clear the work queue and stop the thread
 
 ## `dolt_stats_purge()`
 
-Delete the stats cache from memory and the filesystem. Also clearing working queue and stop the update thread.
+Deletes the stats cache from memory and the filesystem. Also clearing working queue and stop the update thread.
 
 ## `dolt_stats_once()`:
 
