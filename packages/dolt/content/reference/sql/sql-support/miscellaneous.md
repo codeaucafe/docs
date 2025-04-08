@@ -88,8 +88,6 @@ SELECT * from information_schema.tables;
 +-------------+------------+-------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-Statistics are persisted in database's chunk store in a `refs/stats` ref stored separately from the commit graph. Each database has its own statistics store. The contents of the `refs/stats` reflect a single point-in-time for a single branch and are un-versioned. The contents of this ref in the current database can be inspected with the `dolt_statistics` system table. 
-
 ```sql
 create table horses (id int primary key, name varchar(10), key(name));
 insert into horses select x, 'Steve' from (with recursive inputs(x) as (select 1 union select x+1 from inputs where x < 1000) select * from inputs) dt;
@@ -111,90 +109,63 @@ select `index`, `position`, row_count, distinct_count, columns, upper_bound, upp
 +---------+----------+-----------+----------------+----------+-------------+-----------------+-----------+
 ```
 
+### Disable
+
+Some workloads, like batch imports, perform strictly better without the overhead of statistics collection. In these cases, we can explicitly stop or purge (stop + delete) statistics on a running server:
+
+```sql
+call dolt_stats_stop();
+call dolt_stats_purge();
+```
+
+A stopped-stats server can be restarted, or have a single collection cycle performed by an operator:
+
+```sql
+call dolt_stats_starts();
+call dolt_stats_once();
+```
+
+An environment variable can disable statistics on server reboots:
+
+```sql
+— on version 1.51.0 or higher
+SET @@PERSIST.dolt_stats_enabled = 0;
+
+— up to 1.50.x
+SET @@PERSIST.dolt_stats_auto_refresh_enabled = 0;
+```
+
+A rebooted server with stats turned off has no reversal mechanism at the moment. All stats operations are no-ops
+if a server starts with the above variables set.
+
 ### Auto-Refresh
 
-Static statistics become stale quickly for tables that change frequently. Users can choose to manually manage run `ANALYZE` statements, or use some form of auto-refresh.
+Statistics automatically update for servers by default. Stats are stored in a database in `.dolt/stats` separate from user data. This folder can safely be deleted offline.
 
-Auto-refresh statistic updates work the same way as partial `ANALYZE` updates. A table's "former" and "new" chunk set will 1) share common chunks preexisting in "former" 2) differ by deleted chunks only in the "former" table, and 3) differ by new chunks in the "new" table. This mirrors Dolt's inherent structural sharing. Rather than forcing an update on every refresh interval, we can toggle how many changes triggers the update.
+Stats throughput can be lowered by raising the the `dolt_stats_job_interval` variable, which indicates the milliseconds of delay between processing steps. The higher the delay and more branches in a database, the longer it will take for statistic updates to materialize. High delays reduce the fraction of runtime resources diverted to managing background statistics.
 
-When the auto-refresh threshold is 0%, the auto-refresh thread behaves like a cron job that runs `ANALYZE` periodically.
+Stats can be disabled with the `dolt_stats_enabled=0` variable.
 
-Setting a non-zero threshold defers updates until after a certain fraction of chunks are edited. For example, a 100% difference threshold updates stats when:
+Stats persistence can be disabled with the `dolt_stats_memory_only=1` variable.
 
-1) The table was previously empty and now contains data.
+### Stats Garbage Collection
 
-2) The table grew or shrank such that the tree height grew or shrank, and therefore the target fanout level changed.
+The stats in-memory cache accumulates new histograms proportionally to the write rate and stats update rate. Periodically, an
+update cycle will swap the currently active histogram buckets to a new in-memory map and clear the old set.
 
-3) Inserts added twice as many chunks.
+Stats garbage collection can be disabled with the `dolt_stats_gc_enabled=0` variable.
 
-4) Deletes removed 100% of the preexisting chunks.
-
-5) 50% of the chunks were edited (an in-place edit deletes one chunk and adds one chunk, for a total of two changes relative to the original chunk)
-
-Any combination of edits/inserts/deletes that exceeds the trigger threshold will also update stats.
-
-We enable refresh with one mandatory and two optional system variables:
-
-```sql
-dolt sql -q "set @@PERSIST.dolt_stats_auto_refresh_enabled   = 1;"
-dolt sql -q "set @@PERSIST.dolt_stats_auto_refresh_interval  = 120;"
-dolt sql -q "set @@PERSIST.dolt_stats_auto_refresh_threshold = 0.5"
-```
-
-The first enables auto-refresh. It is a global variable that must be set during `dolt sql-server` startup and affects all databases in a server context. Databases added or dropped to a running server automatically opt-in to statistics refresh if enabled.
-
-The second two variables configure 1) how often a timer wakes up to check stats freshness (seconds), and 2) the threshold updating a table's active statistics (new+deleted/previous chunks as a percentage between 0-1). For example, `dolt_stats_auto_refresh_interval = 600` means the server only attempt to update stats every 10 minutes, regardless of how much a table has changed. Setting `dolt_stats_auto_refresh_threshold = 0` forces stats to update in response to any table change.
-
-A last variable blocks statistics from loading from disk on startup, or writing to disk on ANALYZE:
-
-```sql
-dolt sql -q "set @@PERSIST.dolt_stats_memory_only = 1"
-```
+Garbage collection frequency can be tuned with the `dolt_stats_gc_interval` variable (default 1 hour).
 
 ### Stats Controller Functions
 
-Dolt exposes a set of helper functions for managing statistics collection and use:
+Dolt exposes a set of helper procedures for managing statistics collection and use:
 
-- `dolt_stats_drop()`: Deletes the stats ref on disk and wipes the database stats held in memory for the current database.
-
-- `dolt_stats_stop()`: Cancels active auto-refresh threads for the current database.
-
-- `dolt_stats_restart()`: Stops and restarts a refresh thread for the current database with the current session's interval and threshold variables.
-
-- `dolt_stats_status()`: Returns the latest update to statistics for the current database.
-
-- `dolt_stats_prune()`: Garbage collects the statistics cache storage, retaining only
-    the most recent statistic updates.
-
-- `dolt_stats_purge()`: Deletes the old statistics cache from the
-    filesystem. This can be used to silence warnings from backwards
-    incompatible upgrades. Statistics will need
-    to be recollected, which can be time consuming.
-
-### Performance
-
-Lowering check intervals and update thresholds increases the refresh read and write load. Refreshing statistics uses shortcuts to avoid reading from disk when possible, but in most cases at least needs to read the target fanout level of the tree from disk to compare previous and current chunk sets. Exceeding the refresh threshold reads all data from disk associated with the new chunk ranges, which will be the most expensive impact of auto-refresh. Dolt uses ordinal offsets to avoid reading unnecessary data, but the tree growing or shrinking by a level forces a full tablescan.
-
-For example, setting the check interval to 0 seconds (constant), the update threshold to 0 (any change triggers refresh) reduces the `oltp_read_write` sysbench benchmark's throughput by 15%. An increase in the update threshold for a 0-interval reduces throughput even more. On the other hand, basically any non-zero interval reduces the fraction of time spent performing stats updates to a negligible level:
-
-| interval(s) | threshold(%) | latency  |
-|------------|---------------|----------|
-| 0          | 0             | -15%     |
-| 0          | 1             | -46%     |
-| 0          | 10            | -45%     |
-| 1          | 0             | -.1%     |
-| 1          | 1             | 0%       |
-
-A small set of TPC-C run with one thread has a similar pattern compared to the baseline values, comparing queries per second (qps) now:
-
-| interval(s) | threshold(%) | qps  |
-|-------------|--------------|------|
-| 0           | 0            | -15% |
-| 0           | 1            | -26% |
-| 0           | 10           | -10% |
-| 1           | 0            | -4%  |
-| 1           | 1            | 0%   |
-
-Statistics' usefulness is rarely improved by immediate updates. Updating every minute or hour is probably fine for most workloads. If you do need quick statistics updates, performing them immediately instead of in batches appears to be preferable with the current implementation tradeoffs.
-
-Statistics also have read performance implications, expensing more compute cycles to obtain better join cost estimates. Histograms with the maximum bucket fanout will be the most expensive to use. That said, at the time of writing this sysbench read benchmarks are not impacted by stats estimate overhead. Behavior for custom workloads will depend on read/write/freshness trade-offs.
+  - `dolt_stats_stop`: clear queue and disable thread
+  - `dolt_stats_restart`: clear queue, refresh queue, start thread
+  - `dolt_stats_purge`: clear queue, refresh queue, clear cache disable thread
+  - `dolt_stats_once`: collect statistics once, ex: in sql-shell
+  - `dolt_stats_wait`: block on a full queue cycle
+  - `dolt_stats_gc`: block waiting for a GC signal
+  - `dolt_stats_flush`: block waiting for a flush signal
+  - `dolt_stats_info`: print the current state of the stats provider (optional `'-short'` flag)
