@@ -54,7 +54,7 @@ title: "Expressions, Functions, and Operators"
 
 ## Functions and operators
 
-**Currently supporting 316 of 431 MySQL functions.**
+**Currently supporting 324 of 431 MySQL functions.**
 
 Most functions are simple to implement. If you need one that isn't implemented, [please file an issue](https://github.com/dolthub/dolt/issues). We can fulfill most requests for new functions within 24 hours.
 
@@ -306,7 +306,7 @@ Most functions are simple to implement. If you need one that isn't implemented, 
 | `NOT`, `!`                        | ✅            |                                                                                                                                               |
 | `NOW()`                           | ✅            |                                                                                                                                               |
 | `NTH_VALUE()`                     | ❌            |                                                                                                                                               |
-| `NTILE()`                         | ❌            |                                                                                                                                               |
+| `NTILE()`                         | ✅            |                                                                                                                                               |
 | `NULLIF()`                        | ✅            |                                                                                                                                               |
 | `OCT()`                           | ❌            |                                                                                                                                               |
 | `OCTET_LENGTH()`                  | ✅            |                                                                                                                                               |
@@ -364,10 +364,10 @@ Most functions are simple to implement. If you need one that isn't implemented, 
 | `SQRT()`                          | ✅            |                                                                                                                                               |
 | `STATEMENT_DIGEST()`              | ❌            |                                                                                                                                               |
 | `STATEMENT_DIGEST_TEXT()`         | ❌            |                                                                                                                                               |
-| `STD()`                           | ❌            |                                                                                                                                               |
-| `STDDEV()`                        | ❌            |                                                                                                                                               |
-| `STDDEV_POP()`                    | ❌            |                                                                                                                                               |
-| `STDDEV_SAMP()`                   | ❌            |                                                                                                                                               |
+| `STD()`                           | ✅            |                                                                                                                                               |
+| `STDDEV()`                        | ✅            |                                                                                                                                               |
+| `STDDEV_POP()`                    | ✅            |                                                                                                                                               |
+| `STDDEV_SAMP()`                   | ✅            |                                                                                                                                               |
 | `STRCMP()`                        | ✅            |                                                                                                                                               |
 | `STR_TO_DATE()`                   | ✅            |                                                                                                                                               |
 | `ST_AREA()`                       | ✅            | Geodetic not yet supported                                                                                                                    |
@@ -480,9 +480,9 @@ Most functions are simple to implement. If you need one that isn't implemented, 
 | `UPDATEXML()`                     | ❌            |                                                                                                                                               |
 | `VALIDATE_PASSWORD_STRENGTH()`    | ✅            |                                                                                                                                               |
 | `VALUES()`                        | ✅            |                                                                                                                                               |
-| `VARIANCE()`                      | ❌            |                                                                                                                                               |
-| `VAR_POP()`                       | ❌            |                                                                                                                                               |
-| `VAR_SAMP()`                      | ❌            |                                                                                                                                               |
+| `VARIANCE()`                      | ✅            |                                                                                                                                               |
+| `VAR_POP()`                       | ✅            |                                                                                                                                               |
+| `VAR_SAMP()`                      | ✅            |                                                                                                                                               |
 | `VERSION()`                       | ✅            |                                                                                                                                               |
 | `WAIT_FOR_EXECUTED_GTID_SET()`    | ❌            |                                                                                                                                               |
 | `WEEK()`                          | ✅            |                                                                                                                                               |
@@ -509,14 +509,14 @@ Refer to the [MySQL Aggregate Function Documentation](https://dev.mysql.com/doc/
 | `JSON_ARRAY_AGG()`                | ✅         |                                                                                                |
 | `MAX()`                           | ✅         |                                                                                                |
 | `MIN()`                           | ✅         |                                                                                                |
-| `STD()`                           | ❌         |                                                                                                |
-| `STDDEV()`                        | ❌         |                                                                                                |
-| `STDDEV_POP()`                    | ❌         |                                                                                                |
-| `STDDEV_SAMP()`                   | ❌         |                                                                                                |
+| `STD()`                           | ✅         |                                                                                                |
+| `STDDEV()`                        | ✅         |                                                                                                |
+| `STDDEV_POP()`                    | ✅         |                                                                                                |
+| `STDDEV_SAMP()`                   | ✅         |                                                                                                |
 | `SUM()`                           | ✅         |                                                                                                |
-| `VAR_POP()`                       | ❌         |                                                                                                |
-| `VAR_SAMP()`                      | ❌         |                                                                                                |
-| `VARIANCE()`                      | ❌         |                                                                                                |
+| `VAR_POP()`                       | ✅         |                                                                                                |
+| `VAR_SAMP()`                      | ✅         |                                                                                                |
+| `VARIANCE()`                      | ✅         |                                                                                                |
 
 ## Window Functions
 
@@ -533,7 +533,7 @@ Refer to the [MySQL Window Function Descriptions](https://dev.mysql.com/doc/refm
 | `LAST()`                          | ✅        |                                                                                                |
 | `LEAD()`                          | ✅        |                                                                                                |
 | `NTH_VALUE()`                     | ❌        |                                                                                                |
-| `NTILE()`                         | ❌        |                                                                                                |
+| `NTILE()`                         | ✅        |                                                                                                |
 | `PERCENT_RANK()`                  | ✅        |                                                                                                |
 | `RANK()`                          | ✅        |                                                                                                |
 | `ROW_NUMBER()`                    | ✅        |                                                                                                |
