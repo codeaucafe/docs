@@ -18,7 +18,7 @@ to a [production quality Beta
 release](https://www.dolthub.com/blog/2024-08-06-doltgres-beta/). Doltgres Beta will ship in Q1
 2025, with hosted deployment available.
 
-Roadmap last updated Mar 2025, next update Jun 2025.
+Roadmap last updated Apr 2025, next update Jun 2025.
 
 ## Upcoming features
 
@@ -53,18 +53,29 @@ explicitly unless it's a major separable effort.
 
 Dolt and Doltgres share an engine, so most features on the Dolt roadmap also apply to Doltgres.
 
-| Feature                                                   | Estimate |
-|-----------------------------------------------------------|----------|
-| Toast types                                               | Q1 2025  |
-| Doltges Beta release                                      | Q1 2025  |
-| Stored procedures                                         | Q2 2025  |
-| Support for most common extensions, e.g. geospatial types | Q2 2025  |
-| 50% most common function coverage                         | 2025     |
+| Feature                                                         | Estimate |
+|-----------------------------------------------------------------|----------|
+| Triggers                                                        | May 2025 |
+| Stored procedures                                               | Q2 2025  |
+| Collation support                                               | Q3 2025  |
+| Support for most common extensions, e.g. geospatial types       | Q3 2025  |
+| Common table expressions (WITH)                                 | Q3 2025  |
+| Updates on two or more tables in the same statement             | Q3 2025  |
+| Window functions                                                | Q3 2025  |
+| Full psql support                                               | Q3 2025  |
+| Extension suport                                                | Q4 2025  |
+| Custom operators                                                | Q4 2025  |
+| Custom indexing (anything not built in)                         | 2026     |
+| Custom aggregate functions                                      | 2026     |
+| More built-in function support                                  | Ongoing  |
+| Additional DDL statements (e.g. `ALTER SEQUENCE`,  `COMMENT ON` | Ongoing  |
 
 ## Selection of recent feature launches
 
 | Feature                                                                                                                            | Launch Date |
 |------------------------------------------------------------------------------------------------------------------------------------|-------------|
+| [Doltgres TOAST types](https://www.dolthub.com/blog/2025-04-14-adaptive-encoding/)                                                 | Apr 2025    |
+| [Doltges Beta release](https://www.dolthub.com/blog/2025-04-16-doltgres-goes-beta/)                                                | Apr 2025    |
 | [Automatic garbage collection](https://www.dolthub.com/blog/2025-02-28-announcing-automatic-gc-in-sql-server/)                     | Mar 2025    |
 | Doltgres user defined functions                                                                                                    | Feb 2024    |
 | [dolt_help table](https://www.dolthub.com/blog/2025-02-12-dolt-help-table/)                                                        | Feb 2025    |
