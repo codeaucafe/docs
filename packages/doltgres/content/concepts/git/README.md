@@ -11,7 +11,7 @@ Git.
 
 In SQL, Git read operations are modeled as [system
 tables](../../reference/sql/version-control/dolt-system-tables.md). Git write operations are modeled
-as [stored procedures](../../reference/sql/version-control/dolt-sql-procedures.md). But
+as [system functions](../../reference/sql/version-control/dolt-sql-functions.md). But
 conceptually, all the Git concepts you are familiar with extend to SQL.
 
 In this section we explore the following Git concepts and explain how they work in Doltgres:

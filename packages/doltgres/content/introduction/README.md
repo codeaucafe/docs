@@ -12,11 +12,15 @@ Dolt and Doltgres share the same [storage engine](https://docs.dolthub.com/archi
 
 So, what is different?
 
-### Doltgres is pre-alpha
+### Doltgres is beta
 
-Dolt is 1.0 and production ready. Doltgres is still in very active development and many required features are missing. See [our SQL support documentation for the latest compatibility](../reference/sql-support/README.md). If you are a potential user and need something missing, please [create an issue](https://github.com/dolthub/doltgresql/issues).
+Dolt is 1.0 and production ready. Doltgres is still in very active development and many required
+features are missing. See [our SQL support documentation for the latest
+compatibility](../reference/sql-support/README.md). If you are a potential user and need something
+missing, please [create an issue](https://github.com/dolthub/doltgresql/issues).
 
-Check back often for progress. We are investing heavily in Doltgres. You can also follow our [blog](?q=doltgres) for updates, where we publish Doltgres blogs every week.
+Check back often for progress. We are investing heavily in Doltgres. You can also follow our
+[blog](?q=doltgres) for updates, where we publish Doltgres blogs every week.
 
 ### Doltgres does not have a CLI
 
@@ -27,12 +31,14 @@ run as a server. For example, the Dolt CLI command to pull from a remote:
 % dolt pull
 ```
 
-Can only be accessed in Doltgres through its corresponding [SQL stored
-procedure](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures):
+Can only be accessed in Doltgres through its corresponding [SQL
+function](../reference/sql/version-control/dolt-sql-functions.md):
 
 ```bash
 % doltgres &
 % PGPASSWORD=password psql -h 127.0.0.1 -U postgres -c "SELECT DOLT_PULL()"
 ```
 
-Refer to the docs for [version control features](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures) for details on supported stored procedures and system tables.
+Refer to the docs for [version control
+features](../reference/sql/version-control/dolt-sql-functions.md) for details on supported functions
+and system tables.

@@ -410,7 +410,7 @@ epoch. This configuration epoch can only increase &mdash; attempting to assume a
 at a lower configuration epoch, or a different role at the current
 configuration epoch, will fail.
 
-A server's configured role can be manually changed by calling a stored procedure,
+A server's configured role can be manually changed by calling a function,
 `dolt_assume_cluster_role`. This can be used for controlled and lossless
 failover from a primary to a standby. It can also be used to promote a standby
 to a primary when a primary is lost, although in that case the failover is not

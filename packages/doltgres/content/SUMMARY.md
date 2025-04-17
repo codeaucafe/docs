@@ -57,7 +57,6 @@
   - [Merges](reference/sql/version-control/merges.md)
   - [Querying History](reference/sql/version-control/querying-history.md)
   - [Using Remotes](reference/sql/version-control/remotes.md)
-  - [Procedures](reference/sql/version-control/dolt-sql-procedures.md)
   - [Functions](reference/sql/version-control/dolt-sql-functions.md)
   - [System Tables](reference/sql/version-control/dolt-system-tables.md)
   - [System Variables](reference/sql/version-control/dolt-sysvars.md)

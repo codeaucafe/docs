@@ -5,13 +5,13 @@ title: Merges
 # Merging branches
 
 To merge a branch into your current branch, use the [`DOLT_MERGE()`
-procedure](dolt-sql-procedures.md#doltmerge):
+function](dolt-sql-functions.md#doltmerge):
 
 ```sql
 SELECT DOLT_MERGE('feature-branch');
 ```
 
-Usually, you will want to start a transaction before calling the procedure:
+Usually, you will want to start a transaction before calling the function:
 
 ```sql
 START TRANSACTION;
@@ -85,7 +85,7 @@ automatically merged.
 
 Merges that result in schema conflicts will leave an active merge state until
 the schema conflicts are resolved. Users can either `--abort` the active merge
-or resolve the schema conflict using [`dolt_conflicts_resolve()`](./dolt-sql-procedures.md#doltconflictsresolve).
+or resolve the schema conflict using [`dolt_conflicts_resolve()`](./dolt-sql-functions.md#doltconflictsresolve).
 `dolt_conflicts_resolve()` takes as arguments a table name and an option `--ours`
 or `--theirs` to specify which side of the merge should be accepted. It is important
 to note that this resolution strategy takes the _entire_ table from the choosen side
@@ -229,9 +229,9 @@ set @@dolt_allow_commit_conflicts = 1;
 ```
 
 The server will not allow you to create new Dolt commits (with the
-[`dolt_commit()` system function](./dolt-sql-procedures.md#doltcommit)
+[`dolt_commit()` system function](./dolt-sql-functions.md#dolt_commit)
 or with the [`@@dolt_transaction_commit` system
-variable](./dolt-sysvars.md#dolttransactioncommit)) if the working
+variable](./dolt-sysvars.md#dolt_transaction_commit)) if the working
 set has conflicts. You must resolve conflicts before creating a Dolt
 commit.
 
