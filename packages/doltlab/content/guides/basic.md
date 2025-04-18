@@ -227,6 +227,117 @@ You can find the location where Docker writes a service's logs by inspecting the
 docker inspect --format='{{.LogPath}}' doltlab_doltlabapi_1
 ```
 
+## Data logged by DoltLab Services
+
+Below is a list of data logged by DoltLab's various services. As of DoltLab v2.3.10 DoltLab's logging is not configurable via the installer, but
+this may change.
+
+### doltlabdb
+
+This is DoltLab's application Dolt server.
+DoltLab runs the server at `log-level=debug`, which writes full database queries to the server logs.
+
+### doltlabremoteapi
+
+DoltLab's Remote API gRPC service manages access to remote data. This service uses gRPC middleware to log the following information
+on all ingress requests:
+
+- gRPC Method
+- gRPC Code
+- Tracing Request ID
+- User Agent
+- Panic stack if one occurs.
+
+The Remote API service itself logs the following:
+
+- Data conflicts if detected.
+- S3 Bucket name (If AWS Cloud backed storage is configured).
+- S3 Keys (If AWS Cloud backed storage is configured).
+- File size an S3 UploadPart numbers (If AWS Cloud backed storage is configured).
+- DoltLab usernames, display names, and email addresses.
+- Internal deployment IDs.
+- Internal repository IDs.
+- Hashes of downloaded chunks.
+- Upload URL where chunks will be uploaded.
+- Repository token root hash.
+- Commit hashes.
+
+DoltLab's Remote API also runs a background process that serves repository data on a different port, but
+writes logs to Stdout of `doltlabremoteapi`. This is an HTTP service and it logs the following information
+for all ingress requests:
+
+- Http method
+- Http URL
+- Request timing information
+
+### doltlabapi
+
+DoltLab's Main API, which is a gRPC service. This service uses gRPC middleware to log the following information
+on all ingress requests:
+
+- gRPC Method
+- gRPC Code
+- Tracing Request ID
+- User Agent
+- Panic stack if one occurs.
+
+DoltLab API itself logs the following:
+
+- Third party errors from [LicenseSpring](https://licensespring.com/) golang SDK in DoltLab Enterprise.
+- The number of request headers and token prefix used on ingress repository authentication requests.
+- The [DBR](https://github.com/dolthub/dbr) event name of database errors, i.e. `dbr.begin.error`.
+- The username of the default DoltLab user, often `admin`.
+- Internal end-user session IDs.
+- Internal end-user API token IDs.
+- Internal webhook IDs.
+- Database table column tag names, during some errors.
+- The full logs of any DoltLab Job that resulted in an error. Because DoltLab Jobs are cleaned up after they complete, destroying the logs,
+the logs, in the event of a failure, are written to the DoltLab API logs so they are persisted for debugging.
+
+### Jobs
+
+DoltLab currently supports four jobs, "file import," "pull request merge," "large query," and "continuous integration" jobs.
+Each of these Jobs runs outside the main DoltLab API process.
+These Job run Dolt binaries in order to perform tasks and their logs contain the following information:
+
+- Dolt CLI Stderr output if the command has written to stderr.
+- Repository owner.
+- Repository owner email address (pull request merge Job, large query Job).
+- Repository name.
+- Repository branches (only those relevant to the Job's task).
+- Internal operation IDs.
+- AWS SDK errors (if AWS cloud backed storage is configured).
+- S3 Bucket (if AWS cloud backed storage is configured).
+- S3 Key (if AWS cloud backed storage is configured).
+- Internal user IDs.
+- Repository commits (only those relevant to the Job's task).
+- Key/path of a file stored by `doltlabfileserviceapi` (file import Job).
+- Repository table name (file import Job).
+- Original uploaded file name (file import Job).
+- Pull request merge commit message (pull request merge Job).
+- Repository query (large query Job).
+- `dolt sql-server` logs at the default loglevel (continuous integration Job).
+- Saved query name (continuous integration Job).
+- Saved query value (continuous integration Job).
+
+### doltlabfileserviceapi
+
+DoltLab File Service API manages user upload files when cloud backed storage is not configured. This is an HTTP service, and it logs the following information
+for all ingress requests:
+
+- Http method
+- Http URL
+- Request timing information
+
+### doltlabgraphql
+
+DoltLab GraphQL API is the data API for DoltLab's frontend UI. This service only logs errors returned by `doltlabapi`.
+
+### doltlabui
+
+DoltLab UI is a react application. It does not log any information in the server, and only logs a internal "ResourceType" name
+in the client on a particular error.
+
 # Send Service Logs to DoltLab Team
 
 If you need to send service logs to the DoltLab team, first locate the logs on the host using the `docker inspect` command, then `cp` the logs to your working directory:
@@ -236,7 +347,7 @@ DOLTLABAPI_LOGS=$(docker inspect --format='{{.LogPath}}' doltlab_doltlabapi_1)
 cp "$DOLTLABAPI_LOGS" ./doltlab-api-logs.json
 ```
 
-Next change permissions on the copied file to enable reads by running:
+Next, change permissions on the copied file to enable reads by running:
 
 ```bash
 chmod 0644 ./doltlab-api-logs.json
