@@ -27,6 +27,7 @@
   - [Views](concepts/sql/views.md)
   - [Constraints](concepts/sql/constraints.md)
   - [Triggers](concepts/sql/triggers.md)
+  - [Functions](concepts/sql/functions.md)
   - [Procedures](concepts/sql/procedures.md)
   - [Users/Grants](concepts/sql/users-grants.md)
   - [Transactions](concepts/sql/transaction.md)

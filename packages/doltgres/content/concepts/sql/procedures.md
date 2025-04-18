@@ -6,9 +6,9 @@ title: Stored Procedures
 
 ## What is a Stored Procedure?
 
-A stored procedure is SQL code that can be accessed using SQL `CALL` syntax. Much like a function in
-other programming languages, you can pass values into a stored procedures. Stored procedures cannot
-return results, unlike functions.
+A stored procedure is SQL code that can be accessed using the SQL `CALL` syntax. Much like a
+function in other programming languages, you can pass values into a stored procedures. Stored
+procedures cannot return results, unlike functions.
 
 Database users create procedures. Procedures are schema and are stored along with other schema
 elements in the database.
