@@ -15,7 +15,7 @@ it's parent commit and then effectively you have created a new copy of the Doltg
 database. Changes to the branch only effect that branch. As you commit to the branch the head of the
 branch changes to the new commit.
 
-You can merge two branches together using the `DOLT_MERGE()` procedure. This creates a commit in the
+You can merge two branches together using the `DOLT_MERGE()` function. This creates a commit in the
 graph with two parents.
 
 Your Doltgres database starts with one named branch, `main`. The name is configurable.

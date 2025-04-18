@@ -17,13 +17,10 @@ system variables, functions, and stored procedures.
   past revisions or different branches of a database.
 - [Using Remotes](./remotes.md) describes how to use remotes to
   coordinate between Doltgres clones.
-- [Stored procedures](./dolt-sql-procedures.md) documents all the
-  stored procedures that implement version control operations such as
-  `DOLT_COMMIT`, `DOLT_CHECKOUT`, `DOLT_MERGE`, etc.
-- [Functions](./dolt-sql-functions.md) documents Doltgres-provided
-  functions that aren't part of standard Postgres, including table
-  functions that produce diffs of any table at two points in its
-  history.
+- [Functions](./dolt-sql-functions.md) documents all the system functions that implement version
+  control operations such as `DOLT_COMMIT`, `DOLT_CHECKOUT`, `DOLT_MERGE`, etc. Also documents
+  Doltgres-provided functions that aren't part of standard Postgres, including table functions that
+  produce diffs of any table at two points in its history.
 - [System tables](./dolt-system-tables.md) describes the system tables
   that provide read access to version control information, such as
   branches, commit log, diffs, and conflicts.

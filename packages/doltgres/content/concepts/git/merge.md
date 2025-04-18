@@ -10,7 +10,7 @@ A merge is an operation that takes two branches and assembles a reasonable combi
 databases represented by those branches. The merge may or may not generate
 [conflicts](./conflicts.md). Merges happen at the Dolt storage layer. No SQL is used to merge.
 
-A merge is triggered with the `DOLT_MERGE()` procedure.
+A merge is triggered with the `DOLT_MERGE()` function.
 
 Dolt implements one merge strategy. The Dolt merge strategy will generally produce reasonable
 results. For schema, if the two branches modify different tables or columns, no conflict is

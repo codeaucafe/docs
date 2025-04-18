@@ -44,8 +44,8 @@ We built Doltgres using the following axioms:
 
 1. Git versions files. Doltgres versions table schema and table data.
 2. Doltgres will be PosgreSQL compatible.
-3. Git features in SQL will extend SQL. Write operations will be procedures. Read operations will be
-   system tables.
+3. Git features in SQL will extend SQL. Write operations will be system functions. Read operations
+   will be system tables.
 
 In order to achieve the above at scale, we needed to start at the bottom; the storage engine of the
 database. [Doltgres is built from the storage engine up](../architecture/architecture.md) to offer
