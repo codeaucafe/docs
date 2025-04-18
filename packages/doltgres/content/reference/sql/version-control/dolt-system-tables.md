@@ -86,7 +86,7 @@ to the database.
 
 Because the branch information is global to all clients, not just your
 session, `dolt.branches` system table is read-only. Branches can be created
-or deleted with the [`DOLT_BRANCH()` stored procedure](dolt-sql-procedures.md#dolt_branch).
+or deleted with the [`DOLT_BRANCH()` function](dolt-sql-functions.md#dolt_branch).
 
 #### Schema
 
@@ -249,7 +249,7 @@ postgres> SELECT * FROM dolt.procedures;
 `dolt.remotes` (also usable as `dolt_remotes`) returns the remote subcontents of the `repo_state.json`, similar
 to running `dolt remote -v` from the Dolt command line.
 
-The `dolt.remotes` table is currently read only. Use the [`dolt_remote()` procedure](./dolt-sql-procedures.md#dolt_remote) to add, update or delete remotes.
+The `dolt.remotes` table is currently read only. Use the [`dolt_remote()` function](./dolt-sql-functions.md#dolt_remote) to add, update or delete remotes.
 
 #### Schema
 
@@ -284,7 +284,7 @@ postgres=> SELECT * FROM dolt.remotes WHERE name = 'origin';
 
 `dolt.tags` (also usable as `dolt_tags`) shows information for all active tags in the current database.
 
-[DOLT_TAG()](./dolt-sql-procedures.md#dolt_tag) procedure can be used to INSERT and DELETE tags on the `dolt.tags` table.
+[DOLT_TAG()](./dolt-sql-functions.md#dolt_tag) function can be used to INSERT and DELETE tags on the `dolt.tags` table.
 
 #### Schema
 
@@ -303,7 +303,7 @@ postgres=> SELECT * FROM dolt.remotes WHERE name = 'origin';
 
 #### Example Query
 
-Create a tag using dolt_tag() stored procedure.
+Create a tag using the `dolt_tag()` function.
 
 ```sql
 postgres=> SELECT DOLT_TAG('_migrationtest', 'head', '-m', 'savepoint for migration testing');
@@ -698,7 +698,7 @@ merge base could be referenced via a foreign key constraint by an added row in t
 
 ### `dolt.rebase`
 
-`dolt.rebase` (also usable as `dolt_rebase`) is only present while an interactive rebase is in progress, and only on the branch where the rebase is being executed. For example, when rebasing the `feature1` branch, the rebase will be executed on the `dolt_rebase_feature1` branch, and the `dolt.rebase` system table will exist on that branch while the rebase is in-progress. The `dolt.rebase` system table starts off with the default rebase plan, which is to `pick` all of the commits identified for the rebase. Users can adjust the rebase plan by updating the `dolt.rebase` table to change the rebase action, reword a commit message, or even add new rows with additional commits to be applied as part of the rebase. For more details about rebasing, see [the `dolt_rebase()` stored procedure](dolt-sql-procedures.md#dolt_rebase).
+`dolt.rebase` (also usable as `dolt_rebase`) is only present while an interactive rebase is in progress, and only on the branch where the rebase is being executed. For example, when rebasing the `feature1` branch, the rebase will be executed on the `dolt_rebase_feature1` branch, and the `dolt.rebase` system table will exist on that branch while the rebase is in-progress. The `dolt.rebase` system table starts off with the default rebase plan, which is to `pick` all of the commits identified for the rebase. Users can adjust the rebase plan by updating the `dolt.rebase` table to change the rebase action, reword a commit message, or even add new rows with additional commits to be applied as part of the rebase. For more details about rebasing, see [the `dolt_rebase()` function](dolt-sql-functions.md#dolt_rebase).
 
 #### Schema
 
@@ -1277,9 +1277,9 @@ Each row in the `dolt_workspace_$TABLENAME` corresponds to a single row update i
 ```
 
 The `staged` column will be `true` when the changes are going to be committed on the next
-call to [`dolt_commit()`](dolt-sql-procedures.md#dolt_commit). Changes which have `staged = false` are present in your
+call to [`dolt_commit()`](dolt-sql-functions.md#dolt_commit). Changes which have `staged = false` are present in your
 workspace which means all queries in your session contain them but they will not be recorded
-in the event that [`dolt_commit()`](dolt-sql-procedures.md#dolt_commit) is executed.
+in the event that [`dolt_commit()`](dolt-sql-functions.md#dolt_commit) is executed.
 
 There are two ways you can alter the state of your workspace using these tables.
 

@@ -90,11 +90,7 @@ and for tags:
 SELECT * from `mydatabase/v1.0`.accounts;
 ```
 
-## Switch branches with the `DOLT_CHECKOUT()` procedure
-
-The `DOLT_CHECKOUT()` SQL procedure provides identical functionality to
-the `dolt checkout` command on the Dolt command line, and accepts the same
-arguments.
+## Switch branches with the `DOLT_CHECKOUT()` function
 
 `SELECT DOLT_CHECKOUT('feature-branch');` switches the session to the
 `feature-branch` branch. You can also switch to a new branch, like so:
@@ -122,8 +118,8 @@ branch or reset it to point at an older commit, you can't revert or undo that ch
 with your data. Instead, you can use
 [the `dolt_reflog()` table function](./dolt-sql-functions.md#dolt_reflog) to see the history of commits
 your branch has referenced and either recreate the branch from the last referenced commit with
-[the `dolt_branch()` stored procedure](./dolt-sql-procedures.md#dolt_branch) or reset the branch to a
-previous commit with [the `dolt_reset()` stored procedure](./dolt-sql-procedures.md#dolt_reset). See
+[the `dolt_branch()` function](./dolt-sql-functions.md#dolt_branch) or reset the branch to a
+previous commit with [the `dolt_reset()` function](./dolt-sql-functions.md#dolt_reset). See
 [the `dolt_reflog()` table function](./dolt-sql-functions.md#dolt_reflog) for an example of recreating
 a deleted branch and more information on how the Doltgres reflog works and what limitations it has.
 
