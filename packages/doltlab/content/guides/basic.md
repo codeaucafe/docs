@@ -235,7 +235,7 @@ this may change.
 ### doltlabdb
 
 This is DoltLab's application Dolt server.
-DoltLab runs the server at `log-level=debug`, which writes full database queries to the server logs.
+DoltLab runs the server at `log-level=debug`, which writes full database queries to the server logs. The logs at this level contain sensitive information, including insert statements executed against the server, session information, and end-user information. These logs should not be shared with third parties. 
 
 ### doltlabremoteapi
 
@@ -251,8 +251,8 @@ on all ingress requests:
 The Remote API service itself logs the following:
 
 - Data conflicts if detected.
-- S3 Bucket name (If AWS Cloud backed storage is configured).
-- S3 Keys (If AWS Cloud backed storage is configured).
+- S3 Bucket names (If AWS Cloud backed storage is configured).
+- S3 Object Keys (If AWS Cloud backed storage is configured).
 - File size and S3 UploadPart numbers (If AWS Cloud backed storage is configured).
 - DoltLab usernames, display names, and email addresses.
 - Internal deployment IDs.
@@ -307,8 +307,8 @@ These Job run Dolt binaries in order to perform tasks and their logs contain the
 - Repository branches (only those relevant to the Job's task).
 - Internal operation IDs.
 - AWS SDK errors (if AWS cloud backed storage is configured).
-- S3 Bucket (if AWS cloud backed storage is configured).
-- S3 Key (if AWS cloud backed storage is configured).
+- S3 Bucket names (if AWS cloud backed storage is configured).
+- S3 Object Keys (if AWS cloud backed storage is configured).
 - Internal user IDs.
 - Repository commits (only those relevant to the Job's task).
 - Key/path of a file stored by `doltlabfileserviceapi` (file import Job).
@@ -316,7 +316,7 @@ These Job run Dolt binaries in order to perform tasks and their logs contain the
 - Original uploaded file name (file import Job).
 - Pull request merge commit message (pull request merge Job).
 - Repository query (large query Job).
-- `dolt sql-server` logs at the default loglevel (continuous integration Job).
+- `dolt sql-server` logs at the default log-level (continuous integration Job).
 - Saved query name (continuous integration Job).
 - Saved query value (continuous integration Job).
 
