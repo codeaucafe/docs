@@ -253,7 +253,7 @@ The Remote API service itself logs the following:
 - Data conflicts if detected.
 - S3 Bucket name (If AWS Cloud backed storage is configured).
 - S3 Keys (If AWS Cloud backed storage is configured).
-- File size an S3 UploadPart numbers (If AWS Cloud backed storage is configured).
+- File size and S3 UploadPart numbers (If AWS Cloud backed storage is configured).
 - DoltLab usernames, display names, and email addresses.
 - Internal deployment IDs.
 - Internal repository IDs.
