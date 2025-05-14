@@ -24,6 +24,7 @@ behavior:
   event_scheduler: "ON"
   auto_gc_behavior:
     enable: false
+    archive_level: 0
 
 listener:
   host: localhost
@@ -628,6 +629,25 @@ ERROR 1105 (HY000): no changes since last gc
 ```
 
 Automatic garbage collection in Dolt is currently experimental. Its scheduling and pacing of the GC process itself is not yet configurable, and enabling it may have material performance impact on the running server.
+
+#### `archive_level`
+
+**Default**: 0
+
+**Values**: 0, 1
+
+When automatic garbage collection is enabled, you can optionally specify the amount of compression performed on the storage files.
+
+The default value of `0` will perform minimal compression, while level `1` will result in ~25% less space used.
+
+Automated Garbage Collection, and Archive support are both considered experimental features.
+
+**Example**:
+```sh
+% cat config.yaml
+behavior: { auto_gc_behavior: { enable: true, archive_level: 1 } }
+% dolt sql-server --config config.yaml
+```
 
 ## `listener`
 
