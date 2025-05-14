@@ -20,11 +20,13 @@ services:
     admin_password: "*****"
     dolthubapi_password: "*****"
     tls_skip_verify: true
+    auto_gc_enabled: true
+    server_config: "/local/path/to/server/config.yaml"
     volume_paths:
       data_volume_path: "/local/path/to/store/database/data"
       root_volume_path: "/local/path/to/store/database/root"
       backups_volume_path: "/local/path/to/store/database/file/backups"
-      configs_volume_path: "/local/path/to/store/database/configs"
+      configs_volume_path: "/local/path/to/store/database/configs" # Removed in DoltLab >= v2.3.12
   doltlabapi:
     host: "127.0.0.1"
     port: 9443
@@ -228,6 +230,8 @@ _Dictionary_. Configuration options for `doltlabdb`.
 - [admin_password](#admin_password)
 - [dolthubapi_password](#dolthubapi_password)
 - [tls_skip_verify](#tls_skip_verify)
+- [server_config](#server_config)
+- [auto_gc_enabled](#auto_gc_enabled)
 - [volume_paths](#doltlabdb-volume-paths)
 
 <h4 id="doltlabdb-host">host</h4>
@@ -295,6 +299,34 @@ services:
 
 Command line equivalent [doltlabdb-tls-skip-verify](./cli.md#doltlabdb-tls-skip-verify).
 
+#### server_config
+
+_String_. Absolute path to the `doltlabdb` server configuration file. _Optional_. If set, all other server specific settings
+will be ignored, and this specified config file will be used in `doltlabdb`.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabdb:
+    server_config: /path/to/server/config.yaml
+```
+
+Command line equivalent [doltlabdb-server-config-file](./cli.md#doltlabdb-server-config-file).
+
+#### auto_gc_enabled
+
+_Boolean_. If true, [auto GC](https://docs.dolthub.com/sql-reference/server/garbage-collection#automated-gc) will be enabled on `doltlabdb`. _Optional_. This
+will not be active if `server_config` is provided. In this case, enable auto GC on the config being supplied in `server_config`.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabdb:
+    auto_gc_enabled: true
+```
+
+Command line equivalent [doltlabdb-autogc-enabled](./cli.md#doltlabdb-autogc-enabled).
+
 <h4 id="doltlabdb-volume-paths">volume_paths</h4>
 
 _Dictionary_. Local paths used for persisting `doltlabdb` Docker volumes.
@@ -348,7 +380,8 @@ Command line equivalent [doltlabdb-backups-volume-host-path](./cli.md#doltlabdb-
 
 #### configs_volume_path
 
-_String_. The path to an existing directory on the DoltLab host used for persisting the 'doltlabdb-dolt-configs' Docker volume.
+_String_. The path to an existing directory on the DoltLab host used for persisting the 'doltlabdb-dolt-configs' Docker volume. The field volume has been removed in DoltLab >= v2.3.12
+in favor of the [server_config](#server_config) field.
 
 ```yaml
 # example installer_config.yaml

@@ -204,6 +204,12 @@ _String_. The `dolthubadmin` SQL user password of the `doltlabdb` instance.
 
 Configuration file equivalent [admin_password](./configuration-file.md#admin_password).
 
+## doltlabdb-autogc-enabled
+
+_Boolean_. If true, automatic garbage collection will be enabled on the `doltlabdb` server..
+
+Configuration file equivalent [auto_gc_enabled](./configuration-file.md#auto_gc_enabled).
+
 ## doltlabdb-backups-volume-host-path
 
 _String_. The path to an existing directory on the DoltLab host used for persisting the 'doltlabdb-dolt-backups' Docker volume.
@@ -212,7 +218,8 @@ Configuration file equivalent [backups_volume_path](./configuration-file.md#back
 
 ## doltlabdb-config-volume-host-path
 
-_String_. The path to an existing directory on the DoltLab host used for persisting the 'doltlabdb-dolt-configs' Docker volume.
+_String_. The path to an existing directory on the DoltLab host used for persisting the 'doltlabdb-dolt-configs' Docker volume. This has been removed
+in DoltLab >= v2.3.12 in favor of [doltlabdb-server-config-file](#doltlabdb-server-config-file).
 
 Configuration file equivalent [configs_volume_path](./configuration-file.md#configs_volume_path).
 
@@ -257,6 +264,12 @@ Configuration file equivalent [root_volume_path](./configuration-file.md#root_vo
 _Boolean_. If true, will disable TLS verification for connection to `doltlabdb`.
 
 Configuration file equivalent [tls_skip_verify](./configuration-file.md#tls_skip_verify).
+
+## doltlabdb-server-config-file
+
+_String_. Absolute path to the `doltlabdb` server configuration file.
+
+Configuration file equivalent [server_config](./configuration-file.md#server_config).
 
 ## doltlabfileserviceapi-host
 
