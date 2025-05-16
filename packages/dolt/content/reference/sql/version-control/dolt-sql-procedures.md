@@ -26,6 +26,7 @@ title: Dolt SQL Procedures
   - [dolt_revert()](#dolt_revert)
   - [dolt_tag()](#dolt_tag)
   - [dolt_undrop()](#dolt_undrop)
+  - [dolt_update_column_tag()](#dolt_update_column_tag)
   - [dolt_verify_constraints()](#dolt_verify_constraints)
 - [Statistics Updates](#statistics-updates)
   - [dolt_stats_restart()](#dolt_stats_restart)
@@ -1455,6 +1456,37 @@ SELECT * FROM database1.t;
 ### Usage Notes
 
 Dropped databases are moved to the `.dolt_dropped_databases` directory in the Dolt data directory. If a database with the same name is dropped multiple times, the previous copy will be renamed to `<database_name>.backup.<timestamp>`. This enables you to restore a previously dropped database, even if it was recreated and dropped again. To restore a previous version, rename the backup directory to the original database name and then call `dolt_undrop('<database_name>')`. If you do not rename the directory and use the name with the timestamp when you call `dolt_undrop()`, then the database will be restored with the timestamp in the name.   
+
+## `DOLT_UPDATE_COLUMN_TAG()`
+
+Updates a column's internal identifier. Most users will never need to know about column tags, but [there are some rare cases where a column tag collision can occur during a merge](https://www.dolthub.com/blog/2025-05-15-column-tags/). In those cases, it can be useful to manually update a column's tag. This is an advanced operation, so use with caution and reach out to the Dolt team for questions or guidance on [Discord](https://discord.gg/gqr7K4VNKe) or [GitHub](https://github.com/dolthub/dolt/issues/new). 
+
+Note that the `dolt_update_column_tag()` stored procedure updates a column's tag in the working set, so users must call `dolt_commit()` after updating the tag to commit the changes to the `HEAD` of the current branch. Column tag changes do not currently show up in working set status or diffs, so users should be careful to commit the changes immediately after updating the tag to avoid confusion around a dirty working set without a visible diff.   
+
+### Arguments and Options
+
+`<table>`: The table containing the column to update.
+
+`<column>`: The name of the column to update.
+
+`<tag>`: An integer value to set for the column's new tag.
+
+### Output Schema
+
+```text
++--------+------+---------------------------+
+| Field  | Type | Description               |
++--------+------+---------------------------+
+| status | int  | 0 if successful, 1 if not |
++--------+------+---------------------------+
+```
+
+### Example
+
+```sql
+CALL dolt_update_column_tag('myTable', 'col1', 42);
+CALL dolt_commit('-am', 'updating myTable.col1 tag');
+```
 
 ## `DOLT_VERIFY_CONSTRAINTS()`
 
