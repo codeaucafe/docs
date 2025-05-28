@@ -620,22 +620,18 @@ The `DOLT_LOG()` table function takes any number of optional revision arguments:
 ### Schema
 
 ```sql
-+--------------+----------+
-| field        | type     |
-+--------------+--------- +
-| commit_hash  | text     |
-| committer    | text     |
-| email        | text     |
-| date         | datetime |
-| message      | text     |
-| commit_order | int      |
-| parents      | text     | -- column hidden unless `--parents` flag provided
-| refs         | text     | -- column hidden unless `--decorate` is "short" or "full"
-+--------------+--------- +
++-------------+----------+
+| field       | type     |
++-------------+--------- +
+| commit_hash | text     |
+| committer   | text     |
+| email       | text     |
+| date        | datetime |
+| message     | text     |
+| parents     | text     | -- column hidden unless `--parents` flag provided
+| refs        | text     | -- column hidden unless `--decorate` is "short" or "full"
++-------------+--------- +
 ```
-
-The `commit_order` field is an integer value that indicates the order of commits in descending order from HEAD. 
-Note that `commit_order` values can be repeated for different levels of the topological sort of the commit graph.
 
 ### Example
 
