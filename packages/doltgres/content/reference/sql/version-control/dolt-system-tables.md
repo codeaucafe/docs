@@ -365,13 +365,14 @@ checked out branch, whereas `dolt.commits` shows all commits from the entire dat
 #### Schema
 
 ```sql
-    Field    |   Type   | Null | Key | Default | Extra
--------------+----------+------+-----+---------+-------
- commit_hash | text     | NO   | PRI |         |
- committer   | text     | NO   |     |         |
- email       | text     | NO   |     |         |
- date        | datetime | NO   |     |         |
- message     | text     | NO   |     |         |
+     Field     |   Type   | Null | Key | Default | Extra
+---------------+----------+------+-----+---------+-------
+ commit_hash   | text     | NO   | PRI |         |
+ committer     | text     | NO   |     |         |
+ email         | text     | NO   |     |         |
+ date          | datetime | NO   |     |         |
+ message       | text     | NO   |     |         |
+ commit_order  | int      | NO   |     |         |
 ```
 
 #### Example Query
@@ -396,14 +397,18 @@ This is the same data returned by the [`dolt log` CLI command](https://docs.dolt
 #### Schema
 
 ```sql
-    Field    |   Type   | Null | Key | Default | Extra
--------------+----------+------+-----+---------+-------
- commit_hash | text     | NO   | PRI |         |
- committer   | text     | NO   |     |         |
- email       | text     | NO   |     |         |
- date        | datetime | NO   |     |         |
- message     | text     | NO   |     |         |
+     Field     |   Type   | Null | Key | Default | Extra
+---------------+----------+------+-----+---------+-------
+ commit_hash   | text     | NO   | PRI |         |
+ committer     | text     | NO   |     |         |
+ email         | text     | NO   |     |         |
+ date          | datetime | NO   |     |         |
+ message       | text     | NO   |     |         |
+ commit_order  | int      | NO   |     |         |
 ```
+
+The `commit_order` field is an integer value that indicates the order of commits in descending order from HEAD. 
+Note that `commit_order` values can be repeated for different levels of the topological sort of the commit graph.
 
 #### Example Query
 
