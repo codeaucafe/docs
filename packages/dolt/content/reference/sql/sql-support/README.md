@@ -21,5 +21,5 @@ This section is divided into five main categories:
 3. [Supported Statements](supported-statements.md): statements Dolt supports
 4. [Information Schema](information-schema.md): Dolt support for MySQL information schema
 5. [Collations and Character Sets](collations-and-charsets.md): SQL features for describing and comparing strings
-6. [System Variables](collations-and-charsets.md): SQL features for configuring server behavior
+6. [System Variables](system-variables.md): SQL features for configuring server behavior
 7. [Miscellaneous](miscellaneous.md): miscellaneous SQL features 
