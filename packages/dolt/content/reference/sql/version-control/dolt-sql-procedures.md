@@ -31,8 +31,12 @@ title: Dolt SQL Procedures
 - [Statistics Updates](#statistics-updates)
   - [dolt_stats_restart()](#dolt_stats_restart)
   - [dolt_stats_stop()](#dolt_stats_stop)
-  - [dolt_stats_status()](#dolt_stats_status)
-  - [dolt_stats_drop()](#dolt_stats_drop)
+  - [dolt_stats_purge()](#dolt_stats_purge)
+  - [dolt_stats_once()](#dolt_stats_once)
+  - [dolt_stats_wait()](#dolt_stats_wait)
+  - [dolt_stats_flush()](#dolt_stats_flush)
+  - [dolt_stats_gc()](#dolt_stats_gc)
+  - [dolt_stats_info()](#dolt_stats_info)
 - [Access Control](#access-control)
 # Dolt SQL Procedures
 
@@ -1666,38 +1670,46 @@ See [stats documentation](../sql-support/miscellaneous.md#stats-controller-funct
 ## `dolt_stats_restart()`
 
 If no thread is active for the current database, start a new update
-thread with the current session's interval and threshold parameters
-(`dolt_stats_auto_refresh_interval` and
-`dolt_stats_auto_refresh_threshold`).  If a thread is already active for
+thread with the current session's parameters (`dolt_stats_memory_only`, `dolt_stats_job_interval`, `dolt_stats_gc_enabled`).
+If a thread is already active for
 this database, the thread is stopped and started with the new
 parameters.
 
 ## `dolt_stats_stop()`
 
-Stop the update thread for the current database
+Clears the work queue and stops the thread
 (otherwise no-op).
-
-## `dolt_stats_status()`
-
-Returns the latest update to statistics for the current database.
-
-## `dolt_stats_drop()`
-
-Deletes the stats ref on disk and wipes the database stats held in memory for the current database.
-Stops update thread if active.
-
-## `dolt_stats_prune()`
-
-Garbage collect the statistics cache storage, retaining only
-the most recent statistic updates. Background threads need to be
-restarted after this operation.
 
 ## `dolt_stats_purge()`
 
-Delete the old statistics cache from the
-filesystem. This can be used to silence warnings from backwards
-incompatible upgrades. Statistics will need
-to be recollected, which can be time consuming.
+Deletes the stats cache from memory and the filesystem. Also clearing working queue and stop the update thread.
+
+## `dolt_stats_once()`:
+
+This command collects statistics once. It should be used when no background thread is running
+(ex: in `dolt sql` and when we do not wish to run a background thread).
+
+## `dolt_stats_wait()`:
+
+Blocks on a full queue cycle. In practice it takes at least one cycle for stats to reflect the contents
+of the database stats in the blocking session.
+
+## `dolt_stats_gc()`:
+
+Blocks waiting for a GC signal. Garbage collection finalizes in the same cadence as new statistic updates.
+
+## `dolt_stats_flush()`:
+
+Blocks waiting on a flush signal. Flushes occur after new statistic updates.
+
+## `dolt_stats_info()`:
+
+Returns the current state of the stats provider (optional `'-short'` flag).
+
+```sql
+> call dolt_stats_info('--short');
+{""dbCnt":1,"active":false,"storageBucketCnt":2,"cachedBucketCnt":2,"cachedBoundCnt":2,"cachedTemplateCnt":4,"statCnt":2,"backing":""repo2""}
+```
 
 # Access Control
 Dolt stored procedures are access controlled using the GRANT permissions system. MySQL database permissions trickle down to tables and procedures, someone who has Execute permission on a database would have Execute permission on all procedures related to that database. Dolt deviates moderately from this behavior for sensitive operations. See [Administrative Procedures](#administrative-procedures) below.

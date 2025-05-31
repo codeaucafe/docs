@@ -26,10 +26,6 @@ behavior:
     enable: false
     archive_level: 0
 
-user:
-  name: root
-  password: ""
-
 listener:
   host: localhost
   port: 3306
