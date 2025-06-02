@@ -1224,8 +1224,10 @@ In other words, this tells you the number of commits target branch has that base
 ### Options
 
 ```sql
-DOLT_BRANCH_STATUS(<base_refspec>, [<target_branch1, target_branch2, ...])
+DOLT_BRANCH_STATUS(<base_refspec>, [<target_refspec1, target_refspec2, ...])
 ```
+
+The refspecs can be branch names, commit hashes, or `HEAD` (with `~` or `^`).
 
 ### Schema
 
@@ -1268,6 +1270,7 @@ tmp/other> select * from dolt_log();
 3 rows in set (0.00 sec) 
 
 ```
+
 We can get the number of commits `other` is ahead and behind of `main`, like so:
 ```sql
 tmp/main> SELECT * FROM DOLT_BRANCH_STATUS('main', 'other');
@@ -1278,3 +1281,4 @@ tmp/main> SELECT * FROM DOLT_BRANCH_STATUS('main', 'other');
 +--------+---------------+----------------+
 1 row in set (0.00 sec) 
 ```
+This means that `other` has commits `"other commit 1"` and `"other commit 2"` that are missing from `main`, and `main` has commit `"main commit"` that is missing from `other`.
