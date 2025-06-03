@@ -65,6 +65,13 @@ requires you to create a support ticket.
 
 Learn more about backups [here](https://www.dolthub.com/blog/2022-08-31-hosted-backups/).
 
+## Private Networking
+
+Want to use Hosted Dolt, but don't want your database to be reachable through the public internet.
+We support both AWS and GCP private networking.
+
+[Private networking setup instructions](./private-networking.md)
+
 ## Dolt Upgrades
 
 We're releasing [new versions of Dolt](https://github.com/dolthub/dolt/releases) at least
