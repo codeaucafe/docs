@@ -96,14 +96,15 @@ The following contents on this page covers how to configure various Enterprise f
 3. [Customize DoltLab colors](#customize-doltlab-colors)
 4. [Add Super Admins to a DoltLab instance](#add-super-admins-to-a-doltlab-instance)
 5. [Configure SAML Single-Sign-on](#configure-saml-single-sign-on)
-6. [Automated Remote Backups](#automated-remote-backups)
-7. [Deploy DoltLab across multiple hosts](#deploy-doltlab-across-multiple-hosts)
-8. [Connect DoltLab to an SMTP server](#connect-doltlab-to-an-smtp-server)
-9. [Connect DoltLab to an SMTP server with implicit TLS](#connect-doltlab-to-an-smtp-server-with-implicit-tls)
-10. [Troubleshoot SMTP server connection problems](#troubleshoot-smtp-server-connection-problems)
-11. [Set up a SMTP server using any Gmail address](#set-up-a-smtp-server-using-any-gmail-address)
-12. [Serve DoltLab over HTTPS natively](#serve-doltlab-over-https-natively)
-13. [Automatically upgrade DoltLab](#automatically-upgrade-doltlab)
+6. [Configure OIDC Single-Sign-on](#configure-oidc-single-sign-on)
+7. [Automated Remote Backups](#automated-remote-backups)
+8. [Deploy DoltLab across multiple hosts](#deploy-doltlab-across-multiple-hosts)
+9. [Connect DoltLab to an SMTP server](#connect-doltlab-to-an-smtp-server)
+10. [Connect DoltLab to an SMTP server with implicit TLS](#connect-doltlab-to-an-smtp-server-with-implicit-tls)
+11. [Troubleshoot SMTP server connection problems](#troubleshoot-smtp-server-connection-problems)
+12. [Set up a SMTP server using any Gmail address](#set-up-a-smtp-server-using-any-gmail-address)
+13. [Serve DoltLab over HTTPS natively](#serve-doltlab-over-https-natively)
+14. [Automatically upgrade DoltLab](#automatically-upgrade-doltlab)
 
 # Use custom logo on DoltLab instance
 
@@ -454,7 +455,7 @@ Alternatively, you can use the [installer](../reference/installer.md) with the a
 
 # Configure SAML Single-Sign-On
 
-DoltLab Enterprise supports SAML single-sign-on. To configure your DoltLab instance to use single-sign-on, you will first need an Identity Provider (IP) to provide you with a metadata descriptor.
+DoltLab Enterprise supports SAML single-sign-on. To configure your DoltLab instance to use SAML single-sign-on, you will first need an Identity Provider (IP) to provide you with a metadata descriptor.
 
 For example, [Okta](https://www.okta.com/), a popular IP, provides an endpoint for downloading the metadata descriptor for a SAML application after you register an application on their platform.
 
@@ -520,6 +521,57 @@ On this tab you will see the following:
 `Certificate` can be downloaded if you want to add a signature certificate to the IP to verify the digital signatures.
 
 Your Enterprise instance will now use single-sign-on through your IP for user login and account creation.
+
+# Configure OIDC Single-Sign-On
+
+DoltLab Enterprise >= v2.3.14 supports OIDC single sign on. To configure your DoltLab Enterprise instance to use OIDC single-sign-on, obtain an OIDC `client_id` and `client_secret` from your Identity Provider (IP).
+
+For this example, we will use [Keycloak]() as our Identity Provider. To obtain a `client_id` and `client_secret`, we first create a Client.
+
+To do so, first we'll sign in as the `admin`, then create a new Realm, or namespace.
+
+![](../.gitbook/assets/oidc-sign-in-admin.png)
+
+![](../.gitbook/assets/oidc-create-realm.png)
+
+We've created the realm called `doltlab`. Next, we can create an OIDC Client by filling out the Create Client forms. It is important that we also make sure we select the Standard Flow and enable Client Authentication at screen two.
+
+![](../.gitbook/assets/oidc-create-client-1.png)
+
+![](../.gitbook/assets/oidc-create-client-2.png)
+
+![](../.gitbook/assets/oidc-create-client-3.png)
+
+As you can see from the screenshots above, we've chosen `doltlab` to be our `client_id`.
+
+For the Root url, we enter the hostname or IP address of our DoltLab Enterprise instance, followed by the `/sso` path. For this example, this is `https://doltlab.dolthub.com/sso`.
+
+For the Redirect url, we do the same thing we did for Root url, only now the path is `/sso/callback`. This makes our Redirect url `https://doltlab.dolthub.com/sso/callback`.
+
+After we've created the Client, navigating to the Credentials tab will allow us to copy our `client_secret`. We will use both the `client_id` and `client_secret` to configure our DoltLab Enterprise instance to use OIDC now.
+
+To do so, first stop your DoltLab Enterprise instance using the `./stop.sh` script. Then, edit the `installer_config.yaml` and add an `oidc` block to the `enterprise` block like so:
+
+```yaml
+enterprise:
+  oidc:
+    issuer_url: https://mykeycloakdeployment.com/realms/doltlab
+    client_id: doltlab
+    client_secret: **********
+```
+
+In this `oidc` block, add the three required fields, `issuer_url`, `client_id`, and `client_secret`. For Keycloak, we must specify the realm where we've configure OIDC, so our issuer url is:
+`https://mykeycloakdeployment.com/realms/doltlab`.
+
+We've then pasted our `client_id` and corresponding `client_secret` into the two remaining fields.
+
+Now we can restart our DoltLab Enterprise deployment with the `./start.sh` script.
+
+When DoltLab comes back up, a link to sign-in with the IP will be displayed at the Sign-in page. When users click this link, they will be redirected to the IP to sign-in.
+
+![](../.gitbook/assets/oidc-sign-in-redirect.png)
+
+After signing in with the IP, they'll be redirected to your DoltLab Enterprise instance and successfully logged in!
 
 # Automated Remote Backups
 
