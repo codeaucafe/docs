@@ -96,6 +96,10 @@ enterprise:
   saml:
     metadata_descriptor_file: "/path/to/metadata/descriptor"
     cert_common_name: "doltlab"
+  oidc:
+    issuer_url: "https://myidp.com/oidc"
+    client_id: "my-oidc-client-id"
+    client_secret: "my-oidc-client-secret"
   customize:
     logo: "/path/to/custom/logo"
     email_templates: true
@@ -841,6 +845,7 @@ _Dictionary_. Enterprise configuration options. _Optional_.
 - [multihost](#multihost)
 - [super_admins](#super_admins)
 - [saml](#saml)
+- [oidc](#oidc)
 
 ### online_product_code
 
@@ -1601,7 +1606,7 @@ Command line equivalent [super-admin-email](./cli.md#super-admin-email).
 
 ## saml
 
-_Dictionary_. Saml single-sign-on options. _Optional_. See [saml configuration](../../guides/enterprise.md#configure-saml-single-sign-on) for more information.
+_Dictionary_. SAML single-sign-on options. _Optional_. See [saml configuration](../../guides/enterprise.md#configure-saml-single-sign-on) for more information.
 
 - [metadata_descriptor_file](#metadata_descriptor_file)
 - [cert_common_name](#cert_common_name)
@@ -1631,3 +1636,45 @@ enterprise:
 ```
 
 Command line equivalent [sso-saml-cert-common-name](./cli.md#sso-saml-cert-common-name).
+
+## oidc 
+
+_Dictionary_. OIDC single-sign-on options. _Optional_. See [oidc configuration](../../guides/enterprise.md#configure-oidc-single-sign-on) for more information.
+
+- [issuer_url](#issuer_url)
+- [client_id](#client_id)
+- [client_secret](#client_secret)
+
+### issuer_url
+
+_String_. The url of the OIDC identity provider. _Required_.
+
+```yaml
+# example installer_config.yaml
+enterprise:
+  oidc:
+    issuer_url: "https://myidp.com/oidc"
+```
+
+### client_id
+
+_String_. The OIDC client id. _Required_.
+
+```yaml
+# example installer_config.yaml
+enterprise:
+  oidc:
+    client_id: "my-oidc-client-id"
+```
+
+### client_secret
+
+_String_. The OIDC client secret. _Required_.
+
+```yaml
+# example installer_config.yaml
+enterprise:
+  oidc:
+    client_secret: "my-oidc-client-secret"
+```
+

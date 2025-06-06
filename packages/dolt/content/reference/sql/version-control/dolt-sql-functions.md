@@ -25,6 +25,7 @@ title: Dolt SQL Functions
   - [dolt_reflog()](#dolt_reflog)
   - [dolt_schema_diff()](#dolt_schema_diff)
   - [dolt_query_diff()](#dolt_query_diff)
+  - [dolt_branch_status()](#dolt_branch_status)
 
 # Informational Functions
 
@@ -958,7 +959,6 @@ select * from dolt_reflog('prodBranch');
 call dolt_branch('prodBranch', 'v531ptpmv2tquig8v591tsjghtj84ksg');
 ```
 
-
 ## `DOLT_SCHEMA_DIFF()`
 
 The `DOLT_SCHEMA_DIFF()` table function calculates the schema difference between any two commits in the database.
@@ -1210,3 +1210,75 @@ dolt> select * from dolt_query_diff('select * from t as of main', 'select * from
 Query diff is performed brute force and thus, will be slow for large result sets.
 The algorithm is super linear (`n^2`) on the size of the results sets.
 Over time, we will optimize this to use features of the storage engine to improve performance.
+
+
+## `DOLT_BRANCH_STATUS()`
+
+The `DOLT_BRANCH_STATUS()` table function calculates the number of commits `ahead` and `behind` the target branch is from the base branch.
+In other words, this tells you the number of commits target branch has that base does not and vice versa.
+
+### Privileges
+
+`DOLT_BRANCH_STATUS()` table function requires `SELECT` privilege for all tables used in each query.
+
+### Options
+
+```sql
+DOLT_BRANCH_STATUS(<base_refspec>, [<target_refspec1, target_refspec2, ...])
+```
+
+The refspecs can be branch names, commit hashes, or `HEAD` (with `~` or `^`).
+
+### Schema
+
+```text
++----------------+------+
+| field          | type |
++----------------+------+
+| branch         | TEXT |
+| commits_ahead  | INT  |
+| commits_behind | INT  |
++----------------+------+
+```
+
+### Example
+
+Suppose you have two branches: `main` and `other`.
+
+`main`'s history looks like this:
+```sql
+tmp/main> select * from dolt_log();
++----------------------------------+-----------+-------------------+---------------------+----------------------------+--------------+
+| commit_hash                      | committer | email             | date                | message                    | commit_order |
++----------------------------------+-----------+-------------------+---------------------+----------------------------+--------------+
+| 0qkkos3enbd4bh8e1ppbcupsa1paubr0 | root      | root@localhost    | 2025-06-02 21:06:20 | main commit                | 2            |
+| 8elol3v7a8u94rti5fjpakkm1vq25slv | jcor      | james@dolthub.com | 2025-06-02 21:05:52 | Initialize data repository | 1            |
++----------------------------------+-----------+-------------------+---------------------+----------------------------+--------------+
+2 rows in set (0.00 sec)
+```
+
+`other`'s history looks like this:
+```sql
+tmp/other> select * from dolt_log();
++----------------------------------+-----------+-------------------+---------------------+----------------------------+--------------+
+| commit_hash                      | committer | email             | date                | message                    | commit_order |
++----------------------------------+-----------+-------------------+---------------------+----------------------------+--------------+
+| ip47q9ee2un84se8nvq5c5kuil7uuqvo | root      | root@localhost    | 2025-06-02 21:06:12 | other commit 2             | 3            |
+| hoitroluotdc94cdmma82mvh9s0ct94b | root      | root@localhost    | 2025-06-02 21:06:11 | other commit 1             | 2            |
+| 8elol3v7a8u94rti5fjpakkm1vq25slv | jcor      | james@dolthub.com | 2025-06-02 21:05:52 | Initialize data repository | 1            |
++----------------------------------+-----------+-------------------+---------------------+----------------------------+--------------+
+3 rows in set (0.00 sec) 
+
+```
+
+We can get the number of commits `other` is ahead and behind of `main`, like so:
+```sql
+tmp/main> SELECT * FROM DOLT_BRANCH_STATUS('main', 'other');
++--------+---------------+----------------+
+| branch | commits_ahead | commits_behind |
++--------+---------------+----------------+
+| other  | 2             | 1              |
++--------+---------------+----------------+
+1 row in set (0.00 sec) 
+```
+This means that `other` has commits `"other commit 1"` and `"other commit 2"` that are missing from `main`, and `main` has commit `"main commit"` that is missing from `other`.

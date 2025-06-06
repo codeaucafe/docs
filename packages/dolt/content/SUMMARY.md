@@ -139,6 +139,7 @@
   - [Cloning a Hosted Database](products/hosted/cloning.md)
   - [Using DoltHub as a Remote](products/hosted/dolthub-as-remote.md)
   - [Infrastructure](products/hosted/infrastructure.md)
+  - [Private Networking](products/hosted/private-networking.md)
 - [DoltHub](products/dolthub/README.md)
   - [Data Sharing](products/dolthub/data-sharing.md)
   - [API](products/dolthub/api/README.md)

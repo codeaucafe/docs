@@ -575,6 +575,24 @@ _String_. Absolute path to the SAML metadata descriptor file from an identity pr
 
 Configuration file equivalent [metadata_descriptor_file](./configuration-file.md#metadata_descriptor_file).
 
+## sso-oidc-issuer-url 
+
+_String_. The URL of the OIDC identity provider, DoltLab Enterprise only.
+
+Configuration file equivalent [issuer_url](./configuration-file.md#issuer_url).
+
+## sso-oidc-client-id
+
+_String_. The OIDC client id, DoltLab Enterprise only.
+
+Configuration file equivalent [client_id](./configuration-file.md#client_id).
+
+## sso-oidc-client-secret
+
+_String_. The OIDC client secret, DoltLab Enterprise only.
+
+Configuration file equivalent [client_secret](./configuration-file.md#client_secret).
+
 ## super-admin-email
 
 _String_. The email address of a DoltLab user granted "super admin" privileges. Can be supplied multiple times. DoltLab Enterprise only.
