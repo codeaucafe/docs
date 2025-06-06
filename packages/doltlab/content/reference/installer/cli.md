@@ -577,7 +577,7 @@ Configuration file equivalent [metadata_descriptor_file](./configuration-file.md
 
 ## sso-oidc-issuer-url 
 
-_String_. The url of the OIDC identity provider , DoltLab Enterprise only.
+_String_. The URL of the OIDC identity provider, DoltLab Enterprise only.
 
 Configuration file equivalent [issuer_url](./configuration-file.md#issuer_url).
 
