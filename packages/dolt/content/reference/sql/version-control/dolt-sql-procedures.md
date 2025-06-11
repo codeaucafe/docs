@@ -24,6 +24,7 @@ title: Dolt SQL Procedures
   - [dolt_remote()](#dolt_remote)
   - [dolt_reset()](#dolt_reset)
   - [dolt_revert()](#dolt_revert)
+  - [dolt_stash()](#dolt_stash)
   - [dolt_tag()](#dolt_tag)
   - [dolt_undrop()](#dolt_undrop)
   - [dolt_update_column_tag()](#dolt_update_column_tag)
@@ -1368,6 +1369,86 @@ SELECT from_pk, from_c, to_commit, diff_type FROM dolt_diff_t1 WHERE to_commit=h
 | 2       | b      | vbevrdghj3in3napcgdsch0mq7f8en4v | removed   |
 | 3       | c      | vbevrdghj3in3napcgdsch0mq7f8en4v | removed   |
 +---------+--------+----------------------------------+-----------+
+```
+
+## `DOLT_STASH()`
+
+Manage temporary saves of uncommitted changes. Changes can be saved, restored, or removed without affecting the commit history. 
+Similar to the [`dolt stash` command](../../cli/cli.md#dolt-stash) on the cli. An important exception is that the procedure requires a _push_ subcommand, 
+and cannot be called without arguments to stash away changes.
+To list existing stashes, use the [`dolt_stashes` system table](./dolt-system-tables.md#dolt_stashes).
+
+### Subcommands
+
+#### Push (Save changes)
+```sql
+CALL DOLT_STASH('push', 'stash_name');
+CALL DOLT_STASH('push', 'stash_name', '--include-untracked');
+CALL DOLT_STASH('push', 'stash_name', '--all');
+```
+
+Saves current working directory and staged changes to a named stash. By default, only tracks changes to already-tracked tables.
+
+- `--include-untracked`, `-u`: Include untracked tables in the stash
+- `--all`, `-a`: Include all changes (tracked, untracked, and ignored tables)
+
+#### Pop (Restore and remove)
+```sql
+CALL DOLT_STASH('pop', 'stash_name');
+CALL DOLT_STASH('pop', 'stash_name', 'stash@{0}');
+```
+
+Applies the changes from the specified stash to the working directory and removes the stash. If conflicts occur, the operation is aborted.
+
+#### Drop 
+```sql
+CALL DOLT_STASH('drop', 'stash_name');
+CALL DOLT_STASH('drop', 'stash_name', 'stash@{0}');
+```
+
+Removes the specified stash without applying the changes. If no number is specified, removes most recent stash for the given name.
+
+#### Clear 
+```sql
+CALL DOLT_STASH('clear', 'stash_name');
+```
+
+Removes all stashes for the specified stash name.
+
+### Examples
+
+```sql
+-- Create a table and make some changes
+CREATE TABLE employees (id INT PRIMARY KEY, name VARCHAR(100));
+INSERT INTO employees VALUES (1, 'Alice'), (2, 'Bob');
+CALL DOLT_ADD('.');
+
+-- Stash the changes
+CALL DOLT_STASH('push', 'stash1');
+
+-- Working directory is now clean
+SELECT * FROM employees;
+Empty set (0.00 sec)
+
+-- View stashes
+SELECT * FROM dolt_stashes;
++--------+----------+--------+----------------------------------+-------------------------------------+
+| name   | stash_id | branch | hash                             | commit_message                      |
++--------+----------+--------+----------------------------------+-------------------------------------+
+| stash1 | stash@{0}|  main  | abc123def456789...               | Initialized Data Repository         |
++--------+----------+--------+----------------------------------+-------------------------------------+
+
+-- Restore the changes
+CALL DOLT_STASH('pop', 'stash1');
+
+-- Changes are restored
+SELECT * FROM employees;
++----+-------+
+| id | name  |
++----+-------+
+|  1 | Alice |
+|  2 | Bob   |
++----+-------+
 ```
 
 ## `DOLT_TAG()`
