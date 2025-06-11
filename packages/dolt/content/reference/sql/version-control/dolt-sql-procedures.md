@@ -1374,7 +1374,8 @@ SELECT from_pk, from_c, to_commit, diff_type FROM dolt_diff_t1 WHERE to_commit=h
 ## `DOLT_STASH()`
 
 Manage temporary saves of uncommitted changes. Changes can be saved, restored, or removed without affecting the commit history. 
-Similar to the [`dolt stash` command](../../cli/cli.md#dolt-stash) on the cli, with the exception of a strict _push_ subcommand.
+Similar to the [`dolt stash` command](../../cli/cli.md#dolt-stash) on the cli. An important exception is that the procedure requires a _push_ subcommand, 
+and cannot be called without arguments to stash away changes.
 To list existing stashes, use the [`dolt_stashes` system table](./dolt-system-tables.md#dolt_stashes).
 
 ### Subcommands
@@ -1420,6 +1421,7 @@ Removes all stashes for the specified stash name.
 -- Create a table and make some changes
 CREATE TABLE employees (id INT PRIMARY KEY, name VARCHAR(100));
 INSERT INTO employees VALUES (1, 'Alice'), (2, 'Bob');
+CALL DOLT_ADD('.');
 
 -- Stash the changes
 CALL DOLT_STASH('push', 'stash1');
@@ -1430,11 +1432,11 @@ Empty set (0.00 sec)
 
 -- View stashes
 SELECT * FROM dolt_stashes;
-+--------+----------+--------+----------------------------------+----------------+
-|  name  | stash_id | branch |               hash               | commit_message |
-+--------+----------+--------+----------------------------------+----------------+
-| stash1 | stash@{0}|  main  | abc123def456789...               | NULL           |
-+--------+----------+--------+----------------------------------+----------------+
++--------+----------+--------+----------------------------------+-------------------------------------+
+| name   | stash_id | branch | hash                             | commit_message                      |
++--------+----------+--------+----------------------------------+-------------------------------------+
+| stash1 | stash@{0}|  main  | abc123def456789...               | Initialized Data Repository         |
++--------+----------+--------+----------------------------------+-------------------------------------+
 
 -- Restore the changes
 CALL DOLT_STASH('pop', 'stash1');

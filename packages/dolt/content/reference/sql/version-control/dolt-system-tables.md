@@ -1150,7 +1150,7 @@ The `dolt_stashes` table is read-only. Use the [`dolt_stash()`](./dolt-sql-proce
 | stash_id       | text | NO   |     |
 | branch         | text | NO   |     |
 | hash           | text | NO   |     |
-| commit_message | text | YES  |     |
+| commit_message | text | NO   |     |
 +----------------+------+------+-----+
 ```
 
@@ -1171,7 +1171,7 @@ WHERE name = 'myStash';
 ```
 ```
 +---------+------------+--------+----------------------------------+------------------+
-|  name   |  stash_id  | branch |               hash               |  commit_message  |
+| name    | stash_id   | branch | hash                             | commit_message   |
 +---------+------------+--------+----------------------------------+------------------+
 | myStash | stash@{0}  |  main  | pnpq4p07977jjbpkg6ojj2mpjp2kru9r | Created a table  |
 +---------+------------+--------+----------------------------------+------------------+
