@@ -38,6 +38,7 @@ title: Dolt System Tables
   - [dolt_conflicts\_$tablename](#dolt_conflicts_usdtablename)
   - [dolt_schema_conflicts](#dolt_schema_conflicts)
   - [dolt_merge_status](#dolt_merge_status)
+  - [dolt_stashes](#dolt_stashes)
   - [dolt_status](#dolt_status)
   - [dolt_workspace\_$tablename](#dolt_workspace_usdtablename)
 
@@ -1131,6 +1132,49 @@ Output of `SELECT * from dolt_merge_status;`:
 +------------+--------+----------------------------------+-----------------+-----------------+
 | true       | right  | fbghslue1k9cfgbi00ti4r8417frgbca | refs/heads/main | t               |
 +------------+--------+----------------------------------+-----------------+-----------------+
+```
+
+## `dolt_stashes`
+
+The `dolt_stashes` system table returns information about all stashes in the current database.
+
+The `dolt_stashes` table is read-only. Use the [`dolt_stash()`](./dolt-sql-procedures.md#dolt_stash) stored procedure or the [`dolt stash`](../../cli/cli.md#dolt-stash) cli functions to create, apply, or delete stashes.
+
+### Schema
+
+```text
++----------------+------+------+-----+
+| Field          | Type | Null | Key |
++----------------+------+------+-----+
+| name           | text | NO   |     |
+| stash_id       | text | NO   |     |
+| branch         | text | NO   |     |
+| hash           | text | NO   |     |
+| commit_message | text | NO   |     |
++----------------+------+------+-----+
+```
+
+### Fields
+
+* `name`: The name of the stash entry 
+* `stash_id`: The unique identifier for the stash (e.g., "stash@{0}")
+* `branch`: The branch where the stash was created
+* `hash`: The commit hash of the stashed changes
+* `commit_message`: Message for the commit the stash was created on
+
+### Example Query
+
+```sql
+SELECT * 
+FROM dolt_stashes
+WHERE name = 'myStash';
+```
+```
++---------+------------+--------+----------------------------------+------------------+
+| name    | stash_id   | branch | hash                             | commit_message   |
++---------+------------+--------+----------------------------------+------------------+
+| myStash | stash@{0}  |  main  | pnpq4p07977jjbpkg6ojj2mpjp2kru9r | Created a table  |
++---------+------------+--------+----------------------------------+------------------+
 ```
 
 ## `dolt_status`
