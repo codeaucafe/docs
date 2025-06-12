@@ -308,7 +308,7 @@ Most functions are simple to implement. If you need one that isn't implemented, 
 | `NTH_VALUE()`                     | ❌            |                                                                                                                                               |
 | `NTILE()`                         | ✅            |                                                                                                                                               |
 | `NULLIF()`                        | ✅            |                                                                                                                                               |
-| `OCT()`                           | ❌            |                                                                                                                                               |
+| `OCT()`                           | ✅            |                                                                                                                                               |
 | `OCTET_LENGTH()`                  | ✅            |                                                                                                                                               |
 | `ORD()`                           | ✅            |                                                                                                                                               |
 | `OR`                              | ✅            |                                                                                                                                               |
