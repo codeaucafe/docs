@@ -1059,9 +1059,9 @@ Keyless tables include additional columns not present in tables with primary key
 +-------------------+--------+
 ```
 
-- `base_cardinality` — the number of occurrences of the conflicting row in the base branch
-- `our_cardinality` — the number of occurrences of the conflicting row in the our branch
-- `their_cardinality` — the number of occurrences of the conflicting row in the their branch
+- `base_cardinality` — the number of occurrences of the conflicting row in the merge ancestor commit
+- `our_cardinality` — the number of occurrences of the conflicting row in the base branch
+- `their_cardinality` — the number of occurrences of the conflicting row in the merge branch
 
 Consider a keyless table `logs` with columns `timestamp`, `level`, and `message`:
 
