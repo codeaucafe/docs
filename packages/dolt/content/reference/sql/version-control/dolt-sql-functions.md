@@ -22,6 +22,8 @@ title: Dolt SQL Functions
   - [dolt_diff_summary()](#dolt_diff_summary)
   - [dolt_log()](#dolt_log)
   - [dolt_patch()](#dolt_patch)
+  - [dolt_preview_merge_conflicts_summary()](#dolt_preview_merge_conflicts_summary)
+  - [dolt_preview_merge_conflicts()](#dolt_preview_merge_conflicts)
   - [dolt_reflog()](#dolt_reflog)
   - [dolt_schema_diff()](#dolt_schema_diff)
   - [dolt_query_diff()](#dolt_query_diff)
@@ -101,11 +103,11 @@ mysql> SELECT dolt_hashof_db();
 
 It should be noted that if you are connected to branch 'main' and you call `dolt_hashof_db('feature')`, the hash may be different
 than if you were connected to branch 'feature' and called `dolt_hashof_db()`. This happens if there exist changes to the working set on
-branch 'feature' that have not been committed.  Calling `dolt_hashof_db('feature')` while on 'main' is equivalent to calling
+branch 'feature' that have not been committed. Calling `dolt_hashof_db('feature')` while on 'main' is equivalent to calling
 `dolt_hashof_db('HEAD')` while on branch 'feature'.
 
 The general recommendation when trying to look for changes to the database is to connect to the branch you want to use, then
-call `dolt_hashof_db()` without any arguments.  Any change in the hash means that the database has changed.
+call `dolt_hashof_db()` without any arguments. Any change in the hash means that the database has changed.
 
 ## `DOLT_VERSION()`
 
@@ -147,23 +149,24 @@ select has_ancestor('G', 'main');    -- true
 
 ## `LAST_INSERT_UUID()`
 
-The `last_insert_uuid()` function returns the UUID of the first row inserted by the last statement executed in the current session. 
-This is the UUID analogue of 
-[MySQL's `LAST_INSERT_ID()` function](https://dev.mysql.com/doc/refman/8.3/en/information-functions.html#function_last-insert-id). 
-We [recommend using UUIDs in keys instead of auto_increment values](https://www.dolthub.com/blog/2023-10-27-uuid-keys/) due to their better 
-support for merging values across distributed clones of your database. 
+The `last_insert_uuid()` function returns the UUID of the first row inserted by the last statement executed in the current session.
+This is the UUID analogue of
+[MySQL's `LAST_INSERT_ID()` function](https://dev.mysql.com/doc/refman/8.3/en/information-functions.html#function_last-insert-id).
+We [recommend using UUIDs in keys instead of auto_increment values](https://www.dolthub.com/blog/2023-10-27-uuid-keys/) due to their better
+support for merging values across distributed clones of your database.
 
 While `last_insert_id()` uses the presence of the `auto_increment` modifier on a column to determine which automatically generated
 key value to return, `last_insert_uuid()` instead depends on the column having a specific definition. For `last_insert_uuid()`
 to grab an inserted UUID value, the column **must** be part of the table's primary key, and it **must** have one of the following type definitions:
-- `VARCHAR(36)` or `CHAR(36)` with a default value expression of `(UUID())` 
-- `VARBINARY(16)` or `BINARY(16)` with a default value expression of `(UUID_TO_BIN(UUID()))` 
 
-When the column is defined as `VARBINARY` or `BINARY` and uses the `UUID_TO_BIN()` function in the default value expression, [the `swap_flag` for `UUID_TO_BIN` may optionally be specified](https://dev.mysql.com/doc/refman/8.3/en/miscellaneous-functions.html#function_uuid-to-bin).  
+- `VARCHAR(36)` or `CHAR(36)` with a default value expression of `(UUID())`
+- `VARBINARY(16)` or `BINARY(16)` with a default value expression of `(UUID_TO_BIN(UUID()))`
+
+When the column is defined as `VARBINARY` or `BINARY` and uses the `UUID_TO_BIN()` function in the default value expression, [the `swap_flag` for `UUID_TO_BIN` may optionally be specified](https://dev.mysql.com/doc/refman/8.3/en/miscellaneous-functions.html#function_uuid-to-bin).
 
 The following code shows how to create a table that conforms to the requirements above and demonstrates how to use `last_insert_uuid()`:
 
-```sql 
+```sql
 > create table t (pk binary(16) primary key default (UUID_to_bin(UUID())), c1 varchar(100));
 
 > insert into t (c1) values ("one"), ("two");
@@ -182,7 +185,7 @@ Query OK, 2 rows affected (0.00 sec)
 +-----+
 | one |
 +-----+
-``` 
+```
 
 # Table Functions
 
@@ -684,7 +687,7 @@ The `DOLT_LOG()` table function takes any number of optional revision arguments:
 +--------------+--------- +
 ```
 
-The `commit_order` field is an integer value that indicates the order of commits in descending order from HEAD. 
+The `commit_order` field is an integer value that indicates the order of commits in descending order from HEAD.
 Note that `commit_order` values can be repeated for different levels of the topological sort of the commit graph.
 
 ### Example
@@ -756,8 +759,8 @@ Learn more about two vs three dot log [here](https://www.dolthub.com/blog/2022-1
 
 ## `DOLT_PATCH()`
 
-Generate the SQL statements needed to patch a table (or all tables) from a starting revision 
-to a target revision. This can be useful when you want to import data into Dolt from an external source, 
+Generate the SQL statements needed to patch a table (or all tables) from a starting revision
+to a target revision. This can be useful when you want to import data into Dolt from an external source,
 compare differences, and generate the SQL statements needed to patch the original source. This command is
 equivalent of [`dolt diff -r sql` CLI command](../../cli/cli.md#dolt-diff).
 Both schema and/or data diff statements are returned if applicable. Some data diff cannot be
@@ -895,17 +898,207 @@ With result of single row:
 +-----------------+------------------+----------------------------------+------------+-----------+---------------------+
 ```
 
+## `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()`
+
+The `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function provides a summary of merge conflicts that would occur when merging a branch. This function is useful for understanding potential conflicts before performing an actual merge operation, allowing you to identify which tables would have conflicts and how many data and schema conflicts would occur.
+
+This function performs a "dry run" merge operation and returns information about conflicts without actually modifying the database or creating a merge commit.
+
+### Privileges
+
+`DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function requires `SELECT` privilege for all tables.
+
+### Options
+
+```sql
+DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY(<base_branch>, <merge_branch>)
+```
+
+The `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function takes two required arguments:
+
+- `base_branch` — the base branch to merge into (e.g. "main").
+- `merge_branch` — the branch to merge into the base branch (e.g. "feature_branch").
+
+### Schema
+
+```text
++---------------------+--------+
+| field               | type   |
++---------------------+--------+
+| table               | TEXT   |
+| num_data_conflicts  | BIGINT |
+| num_schema_conflicts| BIGINT |
++---------------------+--------+
+```
+
+### Example
+
+Consider a scenario where you have a `main` branch and a `feature_branch` that have diverged and made conflicting changes to the same data. You can preview the conflicts that would occur when merging `feature_branch` into `main`:
+
+```sql
+SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY('main', 'feature_branch');
+```
+
+This might return results like:
+
+```text
++----------+--------------------+---------------------+
+| table    | num_data_conflicts | num_schema_conflicts|
++----------+--------------------+---------------------+
+| users    | 3                  | 0                   |
+| orders   | 1                  | 0                   |
+| products | NULL               | 2                   |
++----------+--------------------+---------------------+
+```
+
+Note that if there are schema conflicts the data conflicts are not able to be calculated and that column will be null.
+
+This output indicates that merging `feature_branch` into `main` would create conflicts in three tables:
+
+- The `users` table would have 3 data conflicts and no schema conflicts
+- The `orders` table would have 1 data conflict and no schema conflicts
+- The `products` table would have 2 schema conflicts
+
+If there would be no conflicts, the function returns an empty result set.
+
+This information helps you understand the scope of conflicts before attempting a merge, allowing you to plan conflict resolution strategies or coordinate with other developers who may have made conflicting changes.
+
+## `DOLT_PREVIEW_MERGE_CONFLICTS()`
+
+The `DOLT_PREVIEW_MERGE_CONFLICTS()` table function provides detailed information about merge conflicts that would occur when merging a branch. Unlike `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` which only provides a count of conflicts per table, this function returns the actual conflicting rows with their base, ours, and theirs values.
+
+This function performs a "dry run" merge operation and returns detailed conflict information without actually modifying the database or creating a merge commit. The results are similar to what you would see in the `dolt_conflicts_$TABLENAME` system tables after performing an actual merge, but without making any changes to the database.
+
+### Privileges
+
+`DOLT_PREVIEW_MERGE_CONFLICTS()` table function requires `SELECT` privilege for all tables.
+
+### Options
+
+```sql
+DOLT_PREVIEW_MERGE_CONFLICTS(<base_branch>, <merge_branch>, <table_name>)
+```
+
+The `DOLT_PREVIEW_MERGE_CONFLICTS()` table function takes three required arguments:
+
+- `base_branch` — the base branch to merge into (e.g. "main").
+- `merge_branch` — the branch to merge into the base branch (e.g. "feature_branch").
+- `table_name` — the name of the table to preview conflicts for.
+
+### Schema
+
+The schema of the `DOLT_PREVIEW_MERGE_CONFLICTS()` function depends on the schema of the specified table. For each column `X` in the table, the result set contains three columns:
+
+- `base_X` — the value of column X at the common ancestor commit
+- `our_X` — the value of column X in the base branch
+- `their_X` — the value of column X in the merge branch
+
+Additionally, the result set includes these metadata columns:
+
+```text
++------------------+--------+
+| field            | type   |
++------------------+--------+
+| from_root_ish    | TEXT   |
+| our_diff_type    | TEXT   |
+| their_diff_type  | TEXT   |
+| dolt_conflict_id | TEXT   |
++------------------+--------+
+```
+
+Where:
+
+- `from_root_ish` — the commit hash of the merge branch (the "from" branch of the merge). This hash can be used to identify which merge produced a conflict, since conflicts can accumulate across merges. User code generally ignores this column.
+- `our_diff_type` and `their_diff_type` indicate whether the row was "added", "modified", or "removed" in the corresponding branch
+- `dolt_conflict_id` is a unique identifier for each conflict
+
+### Example
+
+Consider a table `users` with columns `id`, `name`, and `email` that has conflicts between `main` and `feature_branch`. You can preview the specific conflicts:
+
+```sql
+SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS('main', 'feature_branch', 'users');
+```
+
+This might return results like:
+
+```text
++----------------------------------+---------+-----------+----------------+---------+-----------+------------------+---------------+-----------+-----------+-------------------+-----------------+------------------------+
+| from_root_ish                    | base_id | base_name | base_email     | our_id  | our_name  | our_email        | our_diff_type | their_id  | their_name| their_email       | their_diff_type | dolt_conflict_id       |
++----------------------------------+---------+-----------+----------------+---------+-----------+------------------+---------------+-----------+-----------+-------------------+-----------------+------------------------+
+| abc123def456789012345678901234567 | 1       | John      | john@email.com | 1       | John Doe  | john@email.com   | modified      | 1         | John      | john@newemail.com | modified        | abc123def456           |
+| abc123def456789012345678901234567 | NULL    | NULL      | NULL           | 2       | Jane      | jane@email.com   | added         | 2         | Jane Doe  | jane@email.com    | added           | def789ghi012           |
++----------------------------------+---------+-----------+----------------+---------+-----------+------------------+---------------+-----------+-----------+-------------------+-----------------+------------------------+
+```
+
+This output shows:
+
+- Row 1: Both branches modified the same user but with different changes (name vs email)
+- Row 2: Both branches added a new user with the same ID but different data
+
+To view only specific columns for easier reading:
+
+```sql
+SELECT dolt_conflict_id, base_name, our_name, our_diff_type, their_name, their_diff_type
+FROM DOLT_PREVIEW_MERGE_CONFLICTS('main', 'feature_branch', 'users');
+```
+
+### Keyless Tables
+
+For keyless tables (tables without primary keys), the behavior is slightly different. Dolt uses content-based addressing to identify rows, so conflicts in keyless tables are detected when the same content would be added or modified differently on each branch.
+
+Keyless tables include additional columns not present in tables with primary keys:
+
+```text
++-------------------+--------+
+| field             | type   |
++-------------------+--------+
+| base_cardinality  | BIGINT |
+| our_cardinality   | BIGINT |
+| their_cardinality | BIGINT |
++-------------------+--------+
+```
+
+- `base_cardinality` — the number of occurrences of the conflicting row in the merge ancestor commit
+- `our_cardinality` — the number of occurrences of the conflicting row in the base branch
+- `their_cardinality` — the number of occurrences of the conflicting row in the merge branch
+
+Consider a keyless table `logs` with columns `timestamp`, `level`, and `message`:
+
+```sql
+SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS('main', 'feature_branch', 'logs');
+```
+
+This might return results like:
+
+```text
++----------------------------------+---------------------+-------------+------------------+---------------------+-------------+------------------+---------------+---------------------+-------------+------------------+-----------------+------------------------+------------------+-------------------+---------------------+
+| from_root_ish                    | base_timestamp      | base_level  | base_message     | our_timestamp       | our_level   | our_message      | our_diff_type | their_timestamp     | their_level | their_message    | their_diff_type | dolt_conflict_id       | base_cardinality | our_cardinality   | their_cardinality   |
++----------------------------------+---------------------+-------------+------------------+---------------------+-------------+------------------+---------------+---------------------+-------------+------------------+-----------------+------------------------+------------------+-------------------+---------------------+
+| abc123def456789012345678901234567 | 2023-01-01 10:00:00 | ERROR       | Database timeout | 2023-01-01 10:00:00 | ERROR       | Database timeout | modified      | 2023-01-01 10:00:00 | ERROR       | Database timeout | modified        | xyz789abc123           | 1                | 3                 | 2                   |
++----------------------------------+---------------------+-------------+------------------+---------------------+-------------+------------------+---------------+---------------------+-------------+------------------+-----------------+------------------------+------------------+-------------------+---------------------+
+```
+
+In this example, the same log entry exists once in the base branch, but appears 3 times in our branch and 2 times in their branch, creating a conflict about cardinality (how many times the row should appear).
+
+### Notes
+
+If there are no conflicts in the specified table, the function returns an empty result set.
+
+This detailed view allows you to examine the exact differences that would cause conflicts and plan appropriate resolution strategies before performing the actual merge. The results are similar to what you would see in the `dolt_conflicts_$TABLENAME` system tables after an actual merge, but without making any changes to your database.
+
 ## `DOLT_REFLOG()`
 
-The `DOLT_REFLOG()` table function shows the history of named refs (e.g. branches and tags), which is useful when you want to understand how a branch or tag has changed over time to reference different commits, particularly for information that isn't surfaced through the `dolt_log` system table or `dolt_log()` table function. For example, if you use `dolt_reset()` to change the commit a branch points to, you can use `dolt_reflog()` to see what commit the branch was pointing to before it was moved to that commit. Another common use case for `dolt_reflog()` is to recreate a branch or tag that was accidentally deleted. The example section below shows how to recreate a deleted branch.  
+The `DOLT_REFLOG()` table function shows the history of named refs (e.g. branches and tags), which is useful when you want to understand how a branch or tag has changed over time to reference different commits, particularly for information that isn't surfaced through the `dolt_log` system table or `dolt_log()` table function. For example, if you use `dolt_reset()` to change the commit a branch points to, you can use `dolt_reflog()` to see what commit the branch was pointing to before it was moved to that commit. Another common use case for `dolt_reflog()` is to recreate a branch or tag that was accidentally deleted. The example section below shows how to recreate a deleted branch.
 
-The data from Dolt's reflog comes from [Dolt's journaling chunk store](https://www.dolthub.com/blog/2023-03-08-dolt-chunk-journal/). This data is local to a Dolt database and never included when pushing, pulling, or cloning a Dolt database. This means when you clone a Dolt database, it will not have any reflog data until you perform operations that change what commit branches or tags reference.   
+The data from Dolt's reflog comes from [Dolt's journaling chunk store](https://www.dolthub.com/blog/2023-03-08-dolt-chunk-journal/). This data is local to a Dolt database and never included when pushing, pulling, or cloning a Dolt database. This means when you clone a Dolt database, it will not have any reflog data until you perform operations that change what commit branches or tags reference.
 
 Dolt's reflog is similar to [Git's reflog](https://git-scm.com/docs/git-reflog), but there are a few differences:
+
 - The Dolt reflog currently only supports named references, such as branches and tags, and not any of Git's special refs (e.g. `HEAD`, `FETCH-HEAD`, `MERGE-HEAD`).
 - The Dolt reflog can be queried for the log of references, even after a reference has been deleted. In Git, once a branch or tag is deleted, the reflog for that ref is also deleted and to find the last commit a branch or tag pointed to you have to use Git's special `HEAD` reflog to find the commit, which can sometimes be challenging. Dolt makes this much easier by allowing you to see the history for a deleted ref so you can easily see the last commit a branch or tag pointed to before it was deleted.
 
-### Privileges 
+### Privileges
 
 There are no special privileges required to use the `dolt_reflog()` table function.
 
@@ -935,14 +1128,14 @@ The `dolt_reflog()` table function can also be called with the `--all` flag to s
 
 ### Example
 
-The example below shows how to recreate a branch that was deleted by finding the last commit it referenced in Dolt's reflog. 
+The example below shows how to recreate a branch that was deleted by finding the last commit it referenced in Dolt's reflog.
 
 ```sql
 -- Someone accidentally deletes the wrong branch!
 call dolt_branch('-D', 'prodBranch');
 
 -- After we realize the wrong branch has been deleted, we query the Dolt reflog on the same Dolt database instance
--- where the branch was deleted to see what commits the prodBranch branch has referenced. Using the same Dolt 
+-- where the branch was deleted to see what commits the prodBranch branch has referenced. Using the same Dolt
 -- instance is important, since reflog information is always local and not included when pushing/pulling databases.
 select * from dolt_reflog('prodBranch');
 +-----------------------+---------------------+----------------------------------+-------------------------------+
@@ -1168,6 +1361,7 @@ The `DOLT_QUERY_DIFF()` table function calculates the data difference between an
 For this example, we have the table `t` in two branches `main` and `other`.
 
 On `main`, the table `t` has the following data:
+
 ```text
 +---+----+
 | i | j  |
@@ -1180,6 +1374,7 @@ On `main`, the table `t` has the following data:
 ```
 
 On `other`, the table `t` has the following data:
+
 ```text
 +---+---+
 | i | j |
@@ -1210,7 +1405,6 @@ dolt> select * from dolt_query_diff('select * from t as of main', 'select * from
 Query diff is performed brute force and thus, will be slow for large result sets.
 The algorithm is super linear (`n^2`) on the size of the results sets.
 Over time, we will optimize this to use features of the storage engine to improve performance.
-
 
 ## `DOLT_BRANCH_STATUS()`
 
@@ -1246,6 +1440,7 @@ The refspecs can be branch names, commit hashes, or `HEAD` (with `~` or `^`).
 Suppose you have two branches: `main` and `other`.
 
 `main`'s history looks like this:
+
 ```sql
 tmp/main> select * from dolt_log();
 +----------------------------------+-----------+-------------------+---------------------+----------------------------+--------------+
@@ -1258,6 +1453,7 @@ tmp/main> select * from dolt_log();
 ```
 
 `other`'s history looks like this:
+
 ```sql
 tmp/other> select * from dolt_log();
 +----------------------------------+-----------+-------------------+---------------------+----------------------------+--------------+
@@ -1267,11 +1463,12 @@ tmp/other> select * from dolt_log();
 | hoitroluotdc94cdmma82mvh9s0ct94b | root      | root@localhost    | 2025-06-02 21:06:11 | other commit 1             | 2            |
 | 8elol3v7a8u94rti5fjpakkm1vq25slv | jcor      | james@dolthub.com | 2025-06-02 21:05:52 | Initialize data repository | 1            |
 +----------------------------------+-----------+-------------------+---------------------+----------------------------+--------------+
-3 rows in set (0.00 sec) 
+3 rows in set (0.00 sec)
 
 ```
 
 We can get the number of commits `other` is ahead and behind of `main`, like so:
+
 ```sql
 tmp/main> SELECT * FROM DOLT_BRANCH_STATUS('main', 'other');
 +--------+---------------+----------------+
@@ -1279,6 +1476,7 @@ tmp/main> SELECT * FROM DOLT_BRANCH_STATUS('main', 'other');
 +--------+---------------+----------------+
 | other  | 2             | 1              |
 +--------+---------------+----------------+
-1 row in set (0.00 sec) 
+1 row in set (0.00 sec)
 ```
+
 This means that `other` has commits `"other commit 1"` and `"other commit 2"` that are missing from `main`, and `main` has commit `"main commit"` that is missing from `other`.
