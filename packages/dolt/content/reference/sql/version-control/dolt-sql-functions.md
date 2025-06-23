@@ -957,7 +957,7 @@ This output indicates that merging `feature_branch` into `main` would create con
 
 - The `users` table would have 3 data conflicts and no schema conflicts
 - The `orders` table would have 1 data conflict and no schema conflicts
-- The `products` table would 2 schema conflicts
+- The `products` table would have 2 schema conflicts
 
 If there would be no conflicts, the function returns an empty result set.
 
