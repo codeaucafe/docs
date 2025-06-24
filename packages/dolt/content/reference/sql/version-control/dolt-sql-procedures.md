@@ -644,8 +644,11 @@ SELECT * FROM DOLT_REMOTES;
 
 ## `DOLT_COMMIT()`
 
-Commits staged tables to HEAD. Works exactly like `dolt commit` with
-each value directly following the flag.
+Commits staged tables to HEAD. Works like `dolt commit` with
+each value directly following the flag. The one difference is that the 
+default commit author is the authenticated SQL user (e.g. `root@localhost`)
+instead of the `user.name` and `user.email` properties configured via 
+`dolt config`.
 
 `DOLT_COMMIT()` also commits the current transaction.
 
@@ -669,11 +672,9 @@ default. This option bypasses that safety.
 
 `--skip-empty`: Record a commit only if there are changes to be committed. The commit operation will be a no-op, instead of an error, if there are no changes staged to commit. An error will be thrown if `--skip-empty` is used with `--allow-empty`.
 
-`--date`: Specify the date used in the commit. If not specified the
-current system time is used.
+`--date`: Specify the date used in the commit. If not specified, the current system time is used.
 
-`--author`: Specify an explicit author using the standard "A U Thor
-author@example.com" format.
+`--author`: Specify an explicit author using the standard "A U Thor author@example.com" format. Note that unlike `dolt commit` on the CLI, when invoking the `dolt_commit()` stored procedure, the default commit author is the authenticated SQL user (e.g. `root@localhost`). 
 
 ### Output Schema
 
