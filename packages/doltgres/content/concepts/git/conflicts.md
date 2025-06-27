@@ -179,7 +179,7 @@ select dolt_merge('make-conflicts'); -- conflict created
 ### Resolving a Conflict
 
 ```sql
-call_dolt_conflicts_resolve('--ours', 'docs');
+select dolt_conflicts_resolve('--ours', 'docs');
 select * from docs;
 +----+----+
 | pk | c1 |
