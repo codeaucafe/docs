@@ -11,6 +11,7 @@ Learn more about Hosted Dolt's features and get started with our guides:
 - [Using DoltHub as a remote](./dolthub-as-remote.md)
 - [Infrastructure](./infrastructure.md)
 - [Private Networking](./private-networking.md)
+- [Single Sign-On](./sso.md)
 
 You can also check out these blogs for more details:
 
