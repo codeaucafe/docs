@@ -1375,7 +1375,7 @@ SELECT from_pk, from_c, to_commit, diff_type FROM dolt_diff_t1 WHERE to_commit=h
 
 ## `DOLT_RM()`
 
-Default mode removes tables from the staging area and working directory. <!--Works exactly like `dolt rm` on the CLI, and takes the same arguments. --> When used with the `--cached` flag, removes tables only from the staging area while leaving the working directory unchanged.
+Default mode removes tables from the staging area and working directory. <!--Works exactly like `dolt rm` on the CLI, and takes the same arguments. -->When used with the `--cached` flag, removes tables only from the staging area while leaving the working directory unchanged.
 
 ```sql
 CALL DOLT_RM('table1');
@@ -1400,14 +1400,9 @@ CALL DOLT_RM('--cached', 'table1');
 ### Example
 
 ```sql
--- Set the current database for the session
-USE mydb;
-
--- Create and modify a table
+-- Create and modify a table, then stage it
 CREATE TABLE t1 (id INT PRIMARY KEY, name VARCHAR(50));
 INSERT INTO t1 VALUES (1, 'test');
-
--- Stage the table
 CALL DOLT_ADD('t1');
 
 -- Remove the table from staging area only, but keep the working copy
