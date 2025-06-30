@@ -24,6 +24,7 @@ title: Dolt SQL Procedures
   - [dolt_remote()](#dolt_remote)
   - [dolt_reset()](#dolt_reset)
   - [dolt_revert()](#dolt_revert)
+  - [dolt_rm()](#dolt_rm)
   - [dolt_stash()](#dolt_stash)
   - [dolt_tag()](#dolt_tag)
   - [dolt_undrop()](#dolt_undrop)
@@ -1372,6 +1373,59 @@ SELECT from_pk, from_c, to_commit, diff_type FROM dolt_diff_t1 WHERE to_commit=h
 +---------+--------+----------------------------------+-----------+
 ```
 
+## `DOLT_RM()`
+
+Default mode removes tables from the staging area and working directory. <!--Works exactly like `dolt rm` on the CLI, and takes the same arguments. -->When used with the `--cached` flag, removes tables only from the staging area while leaving the working directory unchanged.
+
+```sql
+CALL DOLT_RM('table1');
+CALL DOLT_RM('table1', 'table2', 'table3');
+CALL DOLT_RM('--cached', 'table1');
+```
+
+### Options
+
+`--cached`: Use this option to unstage and remove tables only from the staging area. Working tree tables, whether modified or not, will be left alone.
+
+### Output Schema
+
+```text
++--------+------+---------------------------+
+| Field  | Type | Description               |
++--------+------+---------------------------+
+| status | int  | 0 if successful, 1 if not |
++--------+------+---------------------------+
+```
+
+### Example
+
+```sql
+-- Create and modify a table, then stage it
+CREATE TABLE t1 (id INT PRIMARY KEY, name VARCHAR(50));
+INSERT INTO t1 VALUES (1, 'test');
+CALL DOLT_ADD('t1');
+
+-- Remove the table from staging area only, but keep the working copy
+CALL DOLT_RM('--cached', 't1');
+
+--Examine the state of the working directory
+SELECT * FROM DOLT_STATUS;
++------------+--------+-----------+
+| table_name | staged | status    |
++------------+--------+-----------+
+| t1         | false  | new table |
++------------+--------+-----------+
+
+-- Stage the table again
+CALL DOLT_ADD('t1');
+
+-- Remove the table completely (from both staging and working directory)
+CALL DOLT_RM('t1');
+
+--Examine the state of the working directory
+SELECT * FROM DOLT_STATUS;
+Empty set (0.00 sec)
+```
 ## `DOLT_STASH()`
 
 Manage temporary saves of uncommitted changes. Changes can be saved, restored, or removed without affecting the commit history. 
