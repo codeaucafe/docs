@@ -158,7 +158,7 @@ Follow the pointer to the next layer and compare those chunks, finding the hashe
 
 ![Prolly Tree Diff Step 4](../../.gitbook/assets/prolly-tree-diff-step-4.png)
 
-As you can see this algorithm scales with the size of the differences, not the size of the tree. This makes finding small differences in even large tress very fast.
+As you can see this algorithm scales with the size of the differences, not the size of the tree. This makes finding small differences in even large trees very fast.
 
 ## Structural Sharing
 
