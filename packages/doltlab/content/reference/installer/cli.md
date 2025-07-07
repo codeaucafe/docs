@@ -174,24 +174,6 @@ _Number_. The port for `doltlabapi`'s CSV service.
 
 Configuration file equivalent [csv_port](./configuration-file.md#csv_port).
 
-## doltlabapi-host
-
-_String_. The hostname or IP address of `doltlabapi`.
-
-Configuration file equivalent [host](./configuration-file.md#doltlabapi-host).
-
-## doltlabapi-only
-
-_Boolean_. If true, will only run `doltlabapi` on the host. This is used for running DoltLab services across multiple hosts. DoltLab Enterprise only.
-
-Configuration file equivalent [doltlabapi_only](./configuration-file.md#doltlabapi_only).
-
-## doltlabapi-port
-
-_Number_. The port for `doltlabapi`.
-
-Configuration file equivalent [port](./configuration-file.md#doltlabapi-port).
-
 ## doltlabapi-query-job-aws-s3-bucket
 
 _String_. The name of the S3 bucket used to store the results of SQL query Jobs, DoltLab Enterprise only.
@@ -241,12 +223,6 @@ _String_. The hostname or IP address of `doltlabdb`.
 
 Configuration file equivalent [host](./configuration-file.md#doltlabdb-host).
 
-## doltlabdb-only
-
-_Boolean_. If true, will only run `doltlabdb` on the host. This is used for running DoltLab services across multiple hosts. DoltLab Enterprise only.
-
-Configuration file equivalent [doltlabdb_only](./configuration-file.md#doltlabdb_only)
-
 ## doltlabdb-port
 
 _Number_. The port of `doltlabdb`.
@@ -271,77 +247,17 @@ _String_. Absolute path to the `doltlabdb` server configuration file.
 
 Configuration file equivalent [server_config](./configuration-file.md#server_config).
 
-## doltlabfileserviceapi-host
-
-_String_. The hostname or IP address for `doltlabfileserviceapi`.
-
-Configuration file equivalent [host](./configuration-file.md#doltlabfileserviceapi-host).
-
-## doltlabfileserviceapi-only
-
-_Boolean_. If true, will only run `doltlabfileserviceapi` on the host. This is used for running DoltLab services across multiple hosts. DoltLab Enterprise only.
-
-Configuration file equivalent [doltlabfileserviceapi_only](./configuration-file.md#doltlabfileserviceapi_only).
-
-## doltlabfileserviceapi-port
-
-_Number_. The port for `doltlabfileserviceapi`.
-
-Configuration file equivalent [port](./configuration-file.md#doltlabfileserviceapi-port).
-
 ## doltlabfileserviceapi-uploads-volume-host-path
 
 _String_. The path to an existing directory on the DoltLab host for persisting the 'doltlab-user-uploads' Docker volume.
 
 Configuration file equivalent [uploads_volume_path](./configuration-file.md#uploads_volume_path).
 
-## doltlabgraphql-host
-
-_String_. The hostname or IP address for `doltlabgraphql`.
-
-Configuration file equivalent [host](./configuration-file.md#doltlabgrapqhl-host).
-
-## doltlabgraphql-only
-
-_Boolean_. If true, will only run `doltlabgraphql` on the host. This is used for running DoltLab services across multiple hosts. DoltLab Enterprise only.
-
-Configuration file equivalent [doltlabgraphql_only](./configuration-file.md#doltlabgraphql_only).
-
-## doltlabgraphql-port
-
-_Number_. The port for `doltlabgraphql`.
-
-Configuration file equivalent [port](./configuration-file.md#doltlabgrapqhl-port).
-
 ## doltlabremoteapi-data-volume-host-path
 
 _String_. The path to an existing directory on the DoltLab host used for persisting the 'doltlab-remote-storage' Docker volume.
 
 Configuration file equivalent [data_volume_path](./configuration-file.md#doltlabremoteapi-data-volume-path).
-
-## doltlabremoteapi-file-server-port
-
-_Number_. The port for `doltlabremoteapi`'s file server.
-
-Configuration file equivalent [file_server_port](./configuration-file.md#file_server_port).
-
-## doltlabremoteapi-host
-
-_String_. The hostname for `doltlabremoteapi`.
-
-Configuration file equivalent [host](./configuration-file.md#doltlabremoteapi-host).
-
-## doltlabremoteapi-only
-
-_Boolean_. If true, will only run `doltlabremoteapi` on the host. This is used for running DoltLab services across multiple hosts. DoltLab Enterprise only.
-
-Configuration file equivalent [doltlabremoteapi_only](./configuration-file.md#doltlabremoteapi_only).
-
-## doltlabremoteapi-port
-
-_Number_. The port for `doltlabremoteapi`.
-
-Configuration file equivalent [port](./configuration-file.md#doltlabremoteapi-port).
 
 ## doltlabremoteapi-storage-aws-bucket
 
@@ -360,24 +276,6 @@ Configuration file equivalent [aws_dynamodb_table](./configuration-file.md#aws_d
 _String_. The AWS region where the DynamoDb table is located. DoltLab Enterprise only.
 
 Configuration file equivalent [aws_region](./configuration-file.md#doltlabremoteapi-aws-region).
-
-## doltlabui-host
-
-_String_. The hostname or IP address of `doltlabui`.
-
-Configuration file equivalent [host](./configuration-file.md#doltlabui-host).
-
-## doltlabui-only
-
-_Boolean_. If true, will only run `doltlabui` on the host. This is used for running DoltLab services across multiple hosts. DoltLab Enterprise only.
-
-Configuration file equivalent [doltlabui_only](./configuration-file.md#doltlabui_only).
-
-## doltlabui-port
-
-_Number_. The port for `doltlabui`.
-
-Configuration file equivalent [port](./configuration-file.md#doltlabui-port).
 
 ## enterprise-online-api-key
 

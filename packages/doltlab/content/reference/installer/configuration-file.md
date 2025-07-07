@@ -121,12 +121,6 @@ enterprise:
     google_credentials_file: "/path/to/gcloud/credentials/file"
     oci_config_file: "/path/to/oci/config/file"
     oci_key_file: "/path/to/oci/key/file"
-  multihost:
-    doltlabdb_only: true
-    doltlabapi_only: true
-    doltlabfileserviceapi_only: true
-    doltlabgraphql_only: true
-    doltlabui_only: true
   super_admins: ["admin1@localhost", "admin2@localhost"]
 ```
 
@@ -401,36 +395,8 @@ Command line equivalent [doltlabdb-configs-volume-host-path](./cli.md#doltlabdb-
 
 _Dictionary_. Configuration options for `doltlabapi`.
 
-- [host](#doltlabapi-host)
-- [port](#doltlabapi-port)
 - [csv_port](#csv_port)
 - [cloud_storage](#doltlabapi-cloud-storage)
-
-<h4 id="doltlabapi-host">host</h4>
-
-_String_. The host name or IP address of the host running `doltlabapi`. _Required_ for [configuring multi-host deployments](../../guides/enterprise.md#deploy-doltlab-across-multiple-hosts).
-
-```yaml
-# example installer_config.yaml
-services:
-  doltlabapi:
-    host: "127.0.0.1"
-```
-
-Command line equivalent [doltlabapi-host](./cli.md#doltlabapi-host).
-
-<h4 id="doltlabapi-port">port</h4>
-
-_Number_. The port for `doltlabapi`. _Required_ for [configuring multi-host deployments](../../guides/enterprise.md#deploy-doltlab-across-multiple-hosts).
-
-```yaml
-# example installer_config.yaml
-services:
-  doltlabapi:
-    port: 3306
-```
-
-Command line equivalent [doltlabapi-port](./cli.md#doltlabapi-port).
 
 #### csv_port
 
@@ -500,50 +466,8 @@ Command line equivalent [doltlabapi-asyncworker-aws-sqs-queue](./cli.md#doltlaba
 
 _Dictionary_. Configuration options for `doltlabremoteapi`.
 
-- [host](#doltlabremoteapi-host)
-- [port](#doltlabremoteapi-port)
-- [file_server_port](#file_server_port)
 - [volume_paths](#doltlabremoteapi-volume-paths)
 - [cloud_storage](#doltlabremoteapi-cloud-storage)
-
-<h4 id="doltlabremoteapi-host">host</h4>
-
-_String_. The host name or IP address of the host running `doltlabremoteapi`. _Required_ for [configuring multi-host deployments](../../guides/enterprise.md#deploy-doltlab-across-multiple-hosts).
-
-```yaml
-# example installer_config.yaml
-services:
-  doltlabremoteapi:
-    host: "127.0.0.1"
-```
-
-Command line equivalent [doltlabremoteapi-host](./cli.md#doltlabremoteapi-host).
-
-<h4 id="doltlabremoteapi-port">port</h4>
-
-_Number_. The port for `doltlabremoteapi`. _Required_ for [configuring multi-host deployments](../../guides/enterprise.md#deploy-doltlab-across-multiple-hosts).
-
-```yaml
-# example installer_config.yaml
-services:
-  doltlabremoteapi:
-    port: 3306
-```
-
-Command line equivalent [doltlabremoteapi-port](./cli.md#doltlabremoteapi-port).
-
-#### file_server_port
-
-_Number_. The port for `doltlabremoteapi`'s file server. _Required_ for [configuring multi-host deployments](../../guides/enterprise.md#deploy-doltlab-across-multiple-hosts).
-
-```yaml
-# example installer_config.yaml
-services:
-  doltlabremoteapi:
-    file_server_port: 100
-```
-
-Command line equivalent [doltlabremoteapi-file-server-port](./cli.md#doltlabremoteapi-file-server-port).
 
 <h4 id="doltlabremoteapi-volume-paths">volume_paths</h4>
 
@@ -619,35 +543,7 @@ Command line equivalent [doltlabremoteapi-storage-aws-dynamodb-table](./cli.md#d
 
 _Dictionary_. Configuration options for `doltlabapifileserviceapi`.
 
-- [host](#doltlabfileserviceapi-host)
-- [port](#doltlabfileserviceapi-port)
 - [volume_paths](#doltlabfileserviceapi-volume-paths)
-
-<h4 id="doltlabfileserviceapi-host">host</h4>
-
-_String_. The host name or IP address of the host running `doltlabfileserviceapi`. _Required_ for [configuring multi-host deployments](../../guides/enterprise.md#deploy-doltlab-across-multiple-hosts).
-
-```yaml
-# example installer_config.yaml
-services:
-  doltlabfileserviceapi:
-    host: "127.0.0.1"
-```
-
-Command line equivalent [doltlabfileserviceapi-host](./cli.md#doltlabfileserviceapi-host).
-
-<h4 id="doltlabfileserviceapi-port">port</h4>
-
-_Number_. The port for `doltlabfileserviceapi`. _Required_ for [configuring multi-host deployments](../../guides/enterprise.md#deploy-doltlab-across-multiple-hosts).
-
-```yaml
-# example installer_config.yaml
-services:
-  doltlabfileserviceapi:
-    port: 4321
-```
-
-Command line equivalent [doltlabfileserviceapi-port](./cli.md#doltlabfileserviceapi-port).
 
 <h4 id="doltlabfileserviceapi-volume-paths">volume_paths</h4>
 
@@ -673,65 +569,9 @@ Command line equivalent [doltlabfileserviceapi-uploads-volume-host-path](./cli.m
 
 _Dictionary_. Configuration options for `doltlabgraphql`.
 
-- [host](#doltlabgraphql-host)
-- [port](#doltlabgraphql-port)
-
-<h4 id="doltlabgraphql-host">host</h4>
-
-_String_. The host name or IP address of the host running `doltlabgraphql`. _Required_ for [configuring multi-host deployments](../../guides/enterprise.md#deploy-doltlab-across-multiple-hosts).
-
-```yaml
-# example installer_config.yaml
-services:
-  doltlabgraphql:
-    host: "127.0.0.1"
-```
-
-Command line equivalent [doltlabgraphql-host](./cli.md#doltlabgraphql-host).
-
-<h4 id="doltlabgraphql-port">port</h4>
-
-_Number_. The port for `doltlabgraphql`. _Required_ for [configuring multi-host deployments](../../guides/enterprise.md#deploy-doltlab-across-multiple-hosts).
-
-```yaml
-# example installer_config.yaml
-services:
-  doltlabgraphql:
-    port: 9000
-```
-
-Command line equivalent [doltlabgraphql-port](./cli.md#doltlabgraphql-port).
-
 ### doltlabui
 
 _Dictionary_. Configuration options for `doltlabui`.
-
-- [host](#doltlabui-host)
-- [port](#doltlabui-port)
-
-<h4 id="doltlabui-host">host</h4>
-
-_String_. The host name or IP address of the host running `doltlabui`. _Required_ for [configuring multi-host deployments](../../guides/enterprise.md#deploy-doltlab-across-multiple-hosts).
-
-```yaml
-# example installer_config.yaml
-services:
-  doltlabui:
-    host: "127.0.0.1"
-```
-
-Command line equivalent [doltlabui-host](./cli.md#doltlabui-host).
-
-<h4 id="doltlabui-port">port</h4>
-
-_Number_. The port for `doltlabui`. _Required_ for [configuring multi-host deployments](../../guides/enterprise.md#deploy-doltlab-across-multiple-hosts).
-
-```yaml
-# example installer_config.yaml
-services:
-  doltlabui:
-    port: 80
-```
 
 Command line equivalent [doltlabui-port](./cli.md#doltlabui-port).
 
@@ -842,7 +682,6 @@ _Dictionary_. Enterprise configuration options. _Optional_.
 - [smtp](#smtp)
 - [customize](#customize)
 - [automated_backups](#automated_backups)
-- [multihost](#multihost)
 - [super_admins](#super_admins)
 - [saml](#saml)
 - [oidc](#oidc)
@@ -1502,95 +1341,6 @@ enterprise:
 ```
 
 Command line equivalent [oci-key-file](./cli.md#oci-key-file).
-
-### multihost
-
-_Dictionary_. Multi-host deployment options. _Optional_. See [configuring multi-host deployments](../../guides/enterprise.md#deploy-doltlab-across-multiple-hosts) for more information.
-
-- [doltlabdb_only](#doltlabdb_only)
-- [doltlabapi_only](#doltlabapi_only)
-- [doltlabremoteapi_only](#doltlabremoteapi_only)
-- [doltlabfileserviceapi_only](#doltlabfileserviceapi_only)
-- [doltlabgraphql_only](#doltlabgraphql_only)
-- [doltlabui_only](#doltlabui_only)
-
-#### doltlabdb_only
-
-_Boolean_. If true, makes deployment the `doltlabdb` service only. _Optional_.
-
-```yaml
-# example installer_config.yaml
-enterprise:
-  multihost:
-    doltlabdb_only: true
-```
-
-Command line equivalent [doltlabdb-only](./cli.md#doltlabdb-only).
-
-#### doltlabapi_only
-
-_Boolean_. If true, makes deployment the `doltlabapi` service only. _Optional_.
-
-```yaml
-# example installer_config.yaml
-enterprise:
-  multihost:
-    doltlabapi_only: true
-```
-
-Command line equivalent [doltlabapi-only](./cli.md#doltlabapi-only).
-
-#### doltlabremoteapi_only
-
-_Boolean_. If true, makes deployment the `doltlabremoteapi` service only. _Optional_.
-
-```yaml
-# example installer_config.yaml
-enterprise:
-  multihost:
-    doltlabremoteapi_only: true
-```
-
-Command line equivalent [doltlabremoteapi-only](./cli.md#doltlabremoteapi-only).
-
-#### doltlabfileserviceapi_only
-
-_Boolean_. If true, makes deployment the `doltlabfileserviceapi` service only. _Optional_.
-
-```yaml
-# example installer_config.yaml
-enterprise:
-  multihost:
-    doltlabfileserviceapi_only: true
-```
-
-Command line equivalent [doltlabfileserviceapi-only](./cli.md#doltlabfileserviceapi-only).
-
-#### doltlabgraphql_only
-
-_Boolean_. If true, makes deployment the `doltlabgraphql` service only. _Optional_.
-
-```yaml
-# example installer_config.yaml
-enterprise:
-  multihost:
-    doltlabgraphql_only: true
-```
-
-Command line equivalent [doltlabgraphql-only](./cli.md#doltlabgraphql-only).
-
-#### doltlabui_only
-
-_Boolean_. If true, makes deployment the `doltlabui` service only. _Optional_.
-
-```yaml
-# example installer_config.yaml
-enterprise:
-  multihost:
-    doltlabui_only: true
-```
-
-Command line equivalent [doltlabui-only](./cli.md#doltlabui-only).
 
 #### super_admins
 
