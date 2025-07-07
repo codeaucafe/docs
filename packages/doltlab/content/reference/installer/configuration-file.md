@@ -19,7 +19,7 @@ services:
     placement:
       constraints: ["node.labels.doltlabenvoy == true"]
       preferences:
-        spread: ["nodes.labels.doltlabenvoy"]
+        - spread: "nodes.labels.doltlabenvoy"
   doltlabdb:
     host: "127.0.0.1"
     port: 3306
@@ -37,7 +37,7 @@ services:
     placement:
       constraints: ["node.labels.doltlabdb == true"]
       preferences:
-        spread: ["nodes.labels.doltlabdb"]
+        - spread: "nodes.labels.doltlabdb"
   doltlabapi:
     host: "127.0.0.1"
     port: 9443
@@ -51,7 +51,7 @@ services:
     placement:
       constraints: ["node.labels.doltlabapi == true"]
       preferences:
-        spread: ["nodes.labels.doltlabapi"]
+        - spread: "nodes.labels.doltlabapi"
   doltlabremoteapi:
     host: "127.0.0.1"
     port: 50051
@@ -66,7 +66,7 @@ services:
     placement:
       constraints: ["node.labels.doltlabremoteapi == true"]
       preferences:
-        spread: ["nodes.labels.doltlabremoteapi"]
+        - spread: "nodes.labels.doltlabremoteapi"
   doltlabfileserviceapi:
     host: "127.0.0.1"
     port: 4321
@@ -76,7 +76,7 @@ services:
     placement:
       constraints: ["node.labels.doltlabfileserviceapi == true"]
       preferences:
-        spread: ["nodes.labels.doltlabfileserviceapi"]
+        - spread: "nodes.labels.doltlabfileserviceapi"
   doltlabgraphql:
     host: "127.0.0.1"
     port: 9000
@@ -84,7 +84,7 @@ services:
     placement:
       constraints: ["node.labels.doltlabgraphql == true"]
       preferences:
-        spread: ["nodes.labels.doltlabgraphql"]
+        - spread: "nodes.labels.doltlabgraphql"
   doltlabui:
     host: "127.0.0.1"
     port: 80
@@ -92,7 +92,7 @@ services:
     placement:
       constraints: ["node.labels.doltlabui == true"]
       preferences:
-        spread: ["nodes.labels.doltlabui"]
+        - spread: "nodes.labels.doltlabui"
 default_user:
   name: "admin"
   email: "admin@localhost"
