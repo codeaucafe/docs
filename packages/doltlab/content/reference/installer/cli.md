@@ -509,6 +509,18 @@ _Boolean_. If true, generates DoltLab Enterprise assets that will run via Docker
  
 Configuration file equivalent [multihost_deployment](./configuration-file.md#multihost_deployment).
 
+## no-default-placement-constraints
+
+_Boolean_. If true, will not add the default placment contraints to services when running in multihost deployment mode. DoltLab Enterprise only.
+
+Configuration file equivalent [no_default_placement_contraints](./configuration-file.md#no_default_placement_contraints).
+
+## no-default-placement-preferences-spreads
+
+_Boolean_. If true, will not add the default placment preferences spread to services when running in multihost deployment mode. DoltLab Enterprise only.
+
+Configuration file equivalent [no_default_placement_preferences_spreads](./configuration-file.md#no_default_placement_preferences_spreads).
+
 ## no-reply-email
 
 _String_. The email address used as the "from" address in emails sent from DoltLab. DoltLab Enterprise only.

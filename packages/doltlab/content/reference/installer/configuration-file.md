@@ -113,6 +113,8 @@ enterprise:
   request_offline_activation: false
   offline_license_file: "/local/path/to/license/file"
   multihost_deployment: true
+  no_multihost_default_placement_constraints: false
+  no_multihost_default_placement_preferences_spreads: false
   scheme: "http"
   tls:
     cert_chain: "/path/to/cert.pem"
@@ -1120,6 +1122,8 @@ _Dictionary_. Enterprise configuration options. _Optional_.
 - [request_offline_activation](#request_offline_activation)
 - [offline_license_file](#offline_license_file)
 - [multihost_deployment](#multihost_deployment)
+- [no_multihost_default_placement_constraints](#no_multihost_default_placement_constraints)
+- [no_multihost_default_placement_preferences_spreads](#no_multihost_default_placement_preferences_spreads)
 - [scheme](#scheme)
 - [tls](#tls)
 - [smtp](#smtp)
@@ -1258,6 +1262,30 @@ enterprise:
 ```
 
 Command line equivalent [multihost-deployment](./cli.md#multihost-deployment).
+
+### no_multihost_default_placement_constraints
+
+_Boolean_. If true, will not add the default placement contraints to services when running in multihost deployment mode. DoltLab Enterprise only.. _Optional_.
+
+```yaml
+# example installer_config.yaml
+enterprise:
+  no_multihost_default_placement_constraints: true
+```
+
+Command line equivalent [no-default-placement-constraints](./cli.md#no-default-placement-constraints).
+
+### no_multihost_default_placement_preferences_spreads
+
+_Boolean_. If true, will not add the default placement preferences spread to services when running in multihost deployment mode. DoltLab Enterprise only. _Optional_.
+
+```yaml
+# example installer_config.yaml
+enterprise:
+  no_multihost_default_placement_preferences_spreads: true
+```
+
+Command line equivalent [no-default-placement-preferences-spreads](./cli.md#no-default-placement-preferences-spreads).
 
 ## scheme
 
