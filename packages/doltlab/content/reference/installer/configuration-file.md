@@ -14,6 +14,12 @@ metrics_disabled: false
 whitelist_all_users: true
 use_env: false
 services:
+  doltlabenvoy:
+    replicas: 1
+    placement:
+      constraints: ["node.labels.doltlabenvoy == true"]
+      preferences:
+        spread: ["nodes.labels.doltlabenvoy"]
   doltlabdb:
     host: "127.0.0.1"
     port: 3306
@@ -27,6 +33,11 @@ services:
       root_volume_path: "/local/path/to/store/database/root"
       backups_volume_path: "/local/path/to/store/database/file/backups"
       configs_volume_path: "/local/path/to/store/database/configs" # Removed in DoltLab >= v2.3.12
+    replicas: 1
+    placement:
+      constraints: ["node.labels.doltlabdb == true"]
+      preferences:
+        spread: ["nodes.labels.doltlabdb"]
   doltlabapi:
     host: "127.0.0.1"
     port: 9443
@@ -36,6 +47,11 @@ services:
       user_import_uploads_aws_bucket: "uploads-bucket"
       query_job_aws_bucket: "query-job-bucket"
       asyncworker_aws_sqs_queue: "async-queue"
+    replicas: 1
+    placement:
+      constraints: ["node.labels.doltlabapi == true"]
+      preferences:
+        spread: ["nodes.labels.doltlabapi"]
   doltlabremoteapi:
     host: "127.0.0.1"
     port: 50051
@@ -46,17 +62,37 @@ services:
       aws_dynamodb_table: "manifest-db"
     volume_paths:
       data_volume_path: "/local/path/to/store/remote/data"
+    replicas: 1
+    placement:
+      constraints: ["node.labels.doltlabremoteapi == true"]
+      preferences:
+        spread: ["nodes.labels.doltlabremoteapi"]
   doltlabfileserviceapi:
     host: "127.0.0.1"
     port: 4321
     volume_paths:
       uploads_volume_path: "/local/path/to/store/uploads"
+    replicas: 1
+    placement:
+      constraints: ["node.labels.doltlabfileserviceapi == true"]
+      preferences:
+        spread: ["nodes.labels.doltlabfileserviceapi"]
   doltlabgraphql:
     host: "127.0.0.1"
     port: 9000
+    replicas: 1
+    placement:
+      constraints: ["node.labels.doltlabgraphql == true"]
+      preferences:
+        spread: ["nodes.labels.doltlabgraphql"]
   doltlabui:
     host: "127.0.0.1"
     port: 80
+    replicas: 1
+    placement:
+      constraints: ["node.labels.doltlabui == true"]
+      preferences:
+        spread: ["nodes.labels.doltlabui"]
 default_user:
   name: "admin"
   email: "admin@localhost"
@@ -76,6 +112,7 @@ enterprise:
   offline_license_key: "*****"
   request_offline_activation: false
   offline_license_file: "/local/path/to/license/file"
+  multihost_deployment: true
   scheme: "http"
   tls:
     cert_chain: "/path/to/cert.pem"
@@ -218,6 +255,7 @@ _Dictionary_. Configuration options for DoltLab's various services. `doltlabdb` 
 - [doltlabfileserviceapi](#doltlabfileserviceapi)
 - [doltlabgraphql](#doltlabgraphql)
 - [doltlabui](#doltlabui)
+- [doltlabenvoy](#doltlabenvoy)
 
 ### doltlabdb
 
@@ -231,6 +269,8 @@ _Dictionary_. Configuration options for `doltlabdb`.
 - [server_config](#server_config)
 - [auto_gc_enabled](#auto_gc_enabled)
 - [volume_paths](#doltlabdb-volume-paths)
+- [replicas](#doltlabdb-replicas)
+- [placement](#doltlabdb-placement)
 
 <h4 id="doltlabdb-host">host</h4>
 
@@ -391,12 +431,69 @@ services:
 
 Command line equivalent [doltlabdb-configs-volume-host-path](./cli.md#doltlabdb-configs-volume-host-path).
 
+<h4 id="doltlabdb-replicas">replicas</h4>
+
+_Number_. Specifies the number of doltlabdb service replicas to run. NOTE: only a single replica of `doltlabdb` is currently supported. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabdb:
+    replicas: 1 
+```
+
+Command line equivalent [doltlabdb-replicas](./cli.md#doltlabdb-replicas).
+
+<h4 id="doltlabdb-placement">placement</h4>
+
+_Dictionary_. Configuration options for `placement`.
+
+- [constraints](#doltlabdb-placement-constraints)
+- [preferences](#doltlabdb-placement-preferences)
+
+<h5 id="doltlabdb-placement-constraints">constraints</h5>
+
+_String_ _Array_. The placement constraints to add to the `doltlabdb` service. By default, DoltLab will add the `node.labels.doltlabdb == true` constraint to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabdb:
+    placement:
+      constraints: ["node.labels.doltlabdb == true"]
+```
+
+Command line equivalent [doltlabdb-placement-constraint](./cli.md#doltlabdb-placement-constraint).
+
+<h5 id="doltlabdb-preferences">preferences</h5>
+
+_Dictionary_. Configuration options for `preferences`.
+
+- [spread](#doltlabdb-placement-preferences-spread)
+
+<h6 id="doltlabdb-placement-preferences-spread">spread</h6>
+
+_Dictionary_ _Array_. The spread preferences to add to the `doltlabdb` service. By default, DoltLab will add the `node.labels.doltlabdb` spread preference to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabdb:
+    placement:
+      preferences:
+        - spread: "node.labels.doltlabdb"
+```
+
+Command line equivalent [doltlabdb-placement-preferences-spread](./cli.md#doltlabdb-placement-preferences-spread).
+
 ### doltlabapi
 
 _Dictionary_. Configuration options for `doltlabapi`.
 
 - [csv_port](#csv_port)
 - [cloud_storage](#doltlabapi-cloud-storage)
+- [replicas](#doltlabapi-replicas)
+- [placement](#doltlabapi-placement)
 
 #### csv_port
 
@@ -462,12 +559,69 @@ services:
 
 Command line equivalent [doltlabapi-asyncworker-aws-sqs-queue](./cli.md#doltlabapi-asyncworker-aws-sqs-queue).
 
+<h4 id="doltlabapi-replicas">replicas</h4>
+
+_Number_. Specifies the number of doltlabapi service replicas to run. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabapi:
+    replicas: 1 
+```
+
+Command line equivalent [doltlabapi-replicas](./cli.md#doltlabapi-replicas).
+
+<h4 id="doltlabapi-placement">placement</h4>
+
+_Dictionary_. Configuration options for `placement`.
+
+- [constraints](#doltlabapi-placement-constraints)
+- [preferences](#doltlabapi-placement-preferences)
+
+<h5 id="doltlabapi-placement-constraints">constraints</h5>
+
+_String_ _Array_. The placement constraints to add to the `doltlabapi` service. By default, DoltLab will add the `node.labels.doltlabapi == true` constraint to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabapi:
+    placement:
+      constraints: ["node.labels.doltlabapi == true"]
+```
+
+Command line equivalent [doltlabapi-placement-constraint](./cli.md#doltlabapi-placement-constraint).
+
+<h5 id="doltlabapi-preferences">preferences</h5>
+
+_Dictionary_. Configuration options for `preferences`.
+
+- [spread](#doltlabapi-placement-preferences-spread)
+
+<h6 id="doltlabapi-placement-preferences-spread">spread</h6>
+
+_Dictionary_ _Array_. The spread preferences to add to the `doltlabapi` service. By default, DoltLab will add the `node.labels.doltlabapi` spread preference to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabapi:
+    placement:
+      preferences:
+        - spread: "node.labels.doltlabapi"
+```
+
+Command line equivalent [doltlabapi-placement-preferences-spread](./cli.md#doltlabapi-placement-preferences-spread).
+
 ### doltlabremoteapi
 
 _Dictionary_. Configuration options for `doltlabremoteapi`.
 
 - [volume_paths](#doltlabremoteapi-volume-paths)
 - [cloud_storage](#doltlabremoteapi-cloud-storage)
+- [replicas](#doltlabremoteapi-replicas)
+- [placement](#doltlabremoteapi-placement)
 
 <h4 id="doltlabremoteapi-volume-paths">volume_paths</h4>
 
@@ -539,11 +693,68 @@ services:
 
 Command line equivalent [doltlabremoteapi-storage-aws-dynamodb-table](./cli.md#doltlabremoteapi-storage-aws-dynamodb-table).
 
+<h4 id="doltlabremoteapi-replicas">replicas</h4>
+
+_Number_. Specifies the number of doltlabremoteapi service replicas to run. NOTE: only a single replica of `doltlabremoteapi` is supported when cloud-backed storage is NOT configured. Use cloud-backed storage to remove this scaling limitation. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabremoteapi:
+    replicas: 1 
+```
+
+Command line equivalent [doltlabremoteapi-replicas](./cli.md#doltlabremoteapi-replicas).
+
+<h4 id="doltlabremoteapi-placement">placement</h4>
+
+_Dictionary_. Configuration options for `placement`.
+
+- [constraints](#doltlabremoteapi-placement-constraints)
+- [preferences](#doltlabremoteapi-placement-preferences)
+
+<h5 id="doltlabremoteapi-placement-constraints">constraints</h5>
+
+_String_ _Array_. The placement constraints to add to the `doltlabremoteapi` service. By default, DoltLab will add the `node.labels.doltlabremoteapi == true` constraint to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabremoteapi:
+    placement:
+      constraints: ["node.labels.doltlabremoteapi == true"]
+```
+
+Command line equivalent [doltlabremoteapi-placement-constraint](./cli.md#doltlabremoteapi-placement-constraint).
+
+<h5 id="doltlabremoteapi-preferences">preferences</h5>
+
+_Dictionary_. Configuration options for `preferences`.
+
+- [spread](#doltlabremoteapi-placement-preferences-spread)
+
+<h6 id="doltlabremoteapi-placement-preferences-spread">spread</h6>
+
+_Dictionary_ _Array_. The spread preferences to add to the `doltlabremoteapi` service. By default, DoltLab will add the `node.labels.doltlabremoteapi` spread preference to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabremoteapi:
+    placement:
+      preferences:
+        - spread: "node.labels.doltlabremoteapi"
+```
+
+Command line equivalent [doltlabremoteapi-placement-preferences-spread](./cli.md#doltlabremoteapi-placement-preferences-spread).
+
 ### doltlabfileserviceapi
 
 _Dictionary_. Configuration options for `doltlabapifileserviceapi`.
 
 - [volume_paths](#doltlabfileserviceapi-volume-paths)
+- [replicas](#doltlabfileserviceapi-replicas)
+- [placement](#doltlabfileserviceapi-placement)
 
 <h4 id="doltlabfileserviceapi-volume-paths">volume_paths</h4>
 
@@ -565,15 +776,246 @@ services:
 
 Command line equivalent [doltlabfileserviceapi-uploads-volume-host-path](./cli.md#doltlabfileserviceapi-uploads-volume-host-path).
 
+<h4 id="doltlabfileserviceapi-replicas">replicas</h4>
+
+_Number_. Specifies the number of doltlabfileserviceapi service replicas to run. NOTE: only a single replica of `doltlabfileserviceapi` is currently supported. Use cloud-backed storage to remove this scaling limitation. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabfileserviceapi:
+    replicas: 1 
+```
+
+Command line equivalent [doltlabfileserviceapi-replicas](./cli.md#doltlabfileserviceapi-replicas).
+
+<h4 id="doltlabfileserviceapi-placement">placement</h4>
+
+_Dictionary_. Configuration options for `placement`.
+
+- [constraints](#doltlabfileserviceapi-placement-constraints)
+- [preferences](#doltlabfileserviceapi-placement-preferences)
+
+<h5 id="doltlabfileserviceapi-placement-constraints">constraints</h5>
+
+_String_ _Array_. The placement constraints to add to the `doltlabfileserviceapi` service. By default, DoltLab will add the `node.labels.doltlabfileserviceapi == true` constraint to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabfileserviceapi:
+    placement:
+      constraints: ["node.labels.doltlabfileserviceapi == true"]
+```
+
+Command line equivalent [doltlabfileserviceapi-placement-constraint](./cli.md#doltlabfileserviceapi-placement-constraint).
+
+<h5 id="doltlabfileserviceapi-preferences">preferences</h5>
+
+_Dictionary_. Configuration options for `preferences`.
+
+- [spread](#doltlabfileserviceapi-placement-preferences-spread)
+
+<h6 id="doltlabfileserviceapi-placement-preferences-spread">spread</h6>
+
+_Dictionary_ _Array_. The spread preferences to add to the `doltlabfileserviceapi` service. By default, DoltLab will add the `node.labels.doltlabfileserviceapi` spread preference to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabfileserviceapi:
+    placement:
+      preferences:
+        - spread: "node.labels.doltlabfileserviceapi"
+```
+
+Command line equivalent [doltlabfileserviceapi-placement-preferences-spread](./cli.md#doltlabfileserviceapi-placement-preferences-spread).
+
 ### doltlabgraphql
 
 _Dictionary_. Configuration options for `doltlabgraphql`.
+
+- [replicas](#doltlabgraphql-replicas)
+- [placement](#doltlabgraphql-placement)
+
+<h4 id="doltlabgraphql-replicas">replicas</h4>
+
+_Number_. Specifies the number of doltlabgraphql replicas to run. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabgraphql:
+    replicas: 1 
+```
+
+Command line equivalent [doltlabgraphql-replicas](./cli.md#doltlabgraphql-replicas).
+
+<h4 id="doltlabgraphql-placement">placement</h4>
+
+_Dictionary_. Configuration options for `placement`.
+
+- [constraints](#doltlabgraphql-placement-constraints)
+- [preferences](#doltlabgraphql-placement-preferences)
+
+<h5 id="doltlabgraphql-placement-constraints">constraints</h5>
+
+_String_ _Array_. The placement constraints to add to the `doltlabgraphql` service. By default, DoltLab will add the `node.labels.doltlabgraphql == true` constraint to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabgraphql:
+    placement:
+      constraints: ["node.labels.doltlabgraphql == true"]
+```
+
+Command line equivalent [doltlabgraphql-placement-constraint](./cli.md#doltlabgraphql-placement-constraint).
+
+<h5 id="doltlabgraphql-preferences">preferences</h5>
+
+_Dictionary_. Configuration options for `preferences`.
+
+- [spread](#doltlabgraphql-placement-preferences-spread)
+
+<h6 id="doltlabgraphql-placement-preferences-spread">spread</h6>
+
+_Dictionary_ _Array_. The spread preferences to add to the `doltlabgraphql` service. By default, DoltLab will add the `node.labels.doltlabgraphql` spread preference to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabgraphql:
+    placement:
+      preferences:
+        - spread: "node.labels.doltlabgraphql"
+```
+
+Command line equivalent [doltlabgraphql-placement-preferences-spread](./cli.md#doltlabgraphql-placement-preferences-spread).
 
 ### doltlabui
 
 _Dictionary_. Configuration options for `doltlabui`.
 
-Command line equivalent [doltlabui-port](./cli.md#doltlabui-port).
+- [replicas](#doltlabui-replicas)
+- [placement](#doltlabui-placement)
+
+<h4 id="doltlabui-replicas">replicas</h4>
+
+_Number_. Specifies the number of doltlabui replicas to run. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabui:
+    replicas: 1 
+```
+
+Command line equivalent [doltlabui-replicas](./cli.md#doltlabui-replicas).
+
+<h4 id="doltlabui-placement">placement</h4>
+
+_Dictionary_. Configuration options for `placement`.
+
+- [constraints](#doltlabui-placement-constraints)
+- [preferences](#doltlabui-placement-preferences)
+
+<h5 id="doltlabui-placement-constraints">constraints</h5>
+
+_String_ _Array_. The placement constraints to add to the `doltlabui` service. By default, DoltLab will add the `node.labels.doltlabui == true` constraint to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabui:
+    placement:
+      constraints: ["node.labels.doltlabui == true"]
+```
+
+Command line equivalent [doltlabui-placement-constraint](./cli.md#doltlabui-placement-constraint).
+
+<h5 id="doltlabui-preferences">preferences</h5>
+
+_Dictionary_. Configuration options for `preferences`.
+
+- [spread](#doltlabui-placement-preferences-spread)
+
+<h6 id="doltlabui-placement-preferences-spread">spread</h6>
+
+_Dictionary_ _Array_. The spread preferences to add to the `doltlabui` service. By default, DoltLab will add the `node.labels.doltlabui` spread preference to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabui:
+    placement:
+      preferences:
+        - spread: "node.labels.doltlabui"
+```
+
+Command line equivalent [doltlabui-placement-preferences-spread](./cli.md#doltlabui-placement-preferences-spread).
+
+### doltlabenvoy
+
+_Dictionary_. Configuration options for `doltlabenvoy`.
+
+- [replicas](#doltlabenvoy-replicas)
+- [placement](#doltlabenvoy-placement)
+
+<h4 id="doltlabenvoy-replicas">replicas</h4>
+
+_Number_. Specifies the number of doltlabenvoy replicas to run. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabenvoy:
+    replicas: 1 
+```
+
+Command line equivalent [doltlabenvoy-replicas](./cli.md#doltlabenvoy-replicas).
+
+<h4 id="doltlabenvoy-placement">placement</h4>
+
+_Dictionary_. Configuration options for `placement`.
+
+- [constraints](#doltlabenvoy-placement-constraints)
+- [preferences](#doltlabenvoy-placement-preferences)
+
+<h5 id="doltlabenvoy-placement-constraints">constraints</h5>
+
+_String_ _Array_. The placement constraints to add to the `doltlabenvoy` service. By default, DoltLab will add the `node.labels.doltlabenvoy == true` constraint to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabenvoy:
+    placement:
+      constraints: ["node.labels.doltlabenvoy == true"]
+```
+
+Command line equivalent [doltlabenvoy-placement-constraint](./cli.md#doltlabenvoy-placement-constraint).
+
+<h5 id="doltlabenvoy-preferences">preferences</h5>
+
+_Dictionary_. Configuration options for `preferences`.
+
+- [spread](#doltlabenvoy-placement-preferences-spread)
+
+<h6 id="doltlabenvoy-placement-preferences-spread">spread</h6>
+
+_Dictionary_ _Array_. The spread preferences to add to the `doltlabenvoy` service. By default, DoltLab will add the `node.labels.doltlabenvoy` spread preference to a multihost deployment. DoltLab Enterprise only. _Optional_, used for multi-host deployments.
+
+```yaml
+# example installer_config.yaml
+services:
+  doltlabenvoy:
+    placement:
+      preferences:
+        - spread: "node.labels.doltlabenvoy"
+```
+
+Command line equivalent [doltlabenvoy-placement-preferences-spread](./cli.md#doltlabenvoy-placement-preferences-spread).
 
 ## default_user
 
@@ -677,6 +1119,7 @@ _Dictionary_. Enterprise configuration options. _Optional_.
 - [offline_license_key](#offline_license_key)
 - [request_offline_activation](#request_offline_activation)
 - [offline_license_file](#offline_license_file)
+- [multihost_deployment](#multihost_deployment)
 - [scheme](#scheme)
 - [tls](#tls)
 - [smtp](#smtp)
@@ -803,6 +1246,18 @@ enterprise:
 ```
 
 Command line equivalent [enterprise-offline-license-file](./cli.md#enterprise-offline-license-file).
+
+### multihost_deployment
+
+_Boolean_. If true, generates DoltLab Enterprise assets that will run via Docker Swarm. DoltLab Enterprise only. _Optional_.
+
+```yaml
+# example installer_config.yaml
+enterprise:
+  multihost_deployment: true
+```
+
+Command line equivalent [multihost-deployment](./cli.md#multihost-deployment).
 
 ## scheme
 
