@@ -816,7 +816,7 @@ DoltLab Enterprise can run in "multihost" mode, across multiple hosts, or on a s
 
 In multihost mode, DoltLab will deploy the following services:
 
-- `doltlabdbi`
+- `doltlabdb`
 - `doltlabremoteapi`
 - `doltlabapi`
 - `doltlabfileserviceapi`
@@ -834,8 +834,59 @@ The scaling of these services is limited in order to prevent data corruption tha
 
 ### Provisioning hosts
 
-When provisioning hosts to use in a DoltLab Enterprise multihost deployment, all hosts must be linux amd64 hosts running either Ubuntu or Centos. For all hosts in your DoltLab cluster,
+When provisioning hosts to use in a DoltLab Enterprise multihost deployment, all hosts must be linux amd64 hosts running either Ubuntu or Centos. They should also use the same filesystem and directory structures. For all hosts in your DoltLab cluster,
 you will need SSH access, and must have the following ports open on every host in the cluster:
+
+- `2377` TCP, for Docker Swarm. This port should only be accessible from within the DoltLab cluster.
+- `4789` UDP, for Docker Swarm. This port should only be accessible from within the DoltLab cluster.
+- `7946` TCP, for Docker Swarm. This port should only be accessible from within the DoltLab cluster.
+- `7946` UDP, for Docker Swarm. This port should only be accessible from within the DoltLab cluster.
+- `80` TCP, for DoltLab Enterprise services (if serving over HTTP).
+- `443` TCP, for DoltLab Enterprise services (if serving over HTTPS).
+- `50051` TCP, for DoltLab Enterprise services.
+- `4321` TCP, for DoltLab Enterprise servicess (if not using cloud-backed storage).
+
+In the images below you can see that for an example multihost deployment on AWS EC2, we've created two security groups to attach to all hosts we provision. The first group allows 
+access to the ports required by Docker Swarm, but only from within this same security group.
+
+![]()
+
+The second security group allows access to the ports DoltLab uses for its services, and permits connections from anywhere on these ports.
+
+![]()
+
+As an example deployment, we'll deploy a DoltLab Enterprise cluster with a single service replica per host, which is the default DoltLab Enterprise multihost deployment configuration. This means that in total,
+we'll provision eight hosts, one for each DoltLab Enterprise service, and one host to be the Swarm manager, which will not run any replica services itself.
+
+After the eight hosts come online, you'll need to install Docker on each host and install DoltLab Enterprise fully on the Manager node. The best way to accomplish both of these requirements,
+is to SSH into each host, download the latest DoltLab version, then use the `installer` to generate a dependency installation script, which will install Docker during execution.
+
+```bash
+# install unzip for unzipping DoltLab
+$ sudo apt update -y && sudo apt install unzip -y
+
+# download DoltLab
+$ curl -LO https://doltlab-releases.s3.us-east-1.amazonaws.com/linux/amd64/doltlab-v2.4.0.zip
+
+# unzip contents
+$ unzip doltlab-v2.4.0.zip -d doltlab
+$ cd doltlab
+
+# generate dependency installation script
+doltlab $ ./installer --ubuntu
+
+# run script
+doltlab $ ./ubuntu_install.sh
+```
+
+After Docker is installed on all hosts, SSH into the node you want to be the Swarm manager and configure DoltLab Enterprise using the `installer_config.yaml`. In order to run in multihost mode,
+you'll need to supply your DoltLab Enterprise credentials and set `enterprise.multihost_deployment: true`.
+
+Below is the config we'll use on our example Manager node.
+
+```yaml
+
+```
 
 # Connect DoltLab to an SMTP server
 
