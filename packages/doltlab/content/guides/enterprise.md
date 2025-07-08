@@ -810,7 +810,7 @@ Once you start your Enterprise instance with `./start.sh`, it will now automatic
 
 As of DoltLab Enterprise v2.4.0, multihost deployments are deployed and managed via Docker Swarm. We recommend upgrading to this version of DoltLab minimum if you plan to run multihost deployments.
 
-DoltLab Enterprise can run in "multihost" mode, across multiple hosts, or on a single host. In both instances, it will be deployed and managed via [Docker swarm]().
+DoltLab Enterprise can run in "multihost" mode, across multiple hosts, or on a single host. In both instances, it will be deployed and managed via [Docker swarm](https://docs.docker.com/engine/swarm/).
 
 ## Prerequisites
 
