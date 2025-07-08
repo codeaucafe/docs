@@ -832,6 +832,9 @@ Most of the services above can be scaled independently by increasing the number 
 
 The scaling of these services is limited in order to prevent data corruption that may occur when writing concurrently from multiple replicas.
 
+WARNING: after a deployment is live, it is possible to manually scale services using the `docker service scale` command, however, the writer services listed above
+should NOT be manually scaled, as this may result in data races/corruption.
+
 ### Provisioning hosts
 
 When provisioning hosts to use in a DoltLab Enterprise multihost deployment, all hosts must be linux amd64 hosts running either Ubuntu or Centos. They should also use the same filesystem and directory structures. For all hosts in your DoltLab cluster,
@@ -849,11 +852,11 @@ you will need SSH access, and must have the following ports open on every host i
 In the images below you can see that for an example multihost deployment on AWS EC2, we've created two security groups to attach to all hosts we provision. The first group allows 
 access to the ports required by Docker Swarm, but only from within this same security group.
 
-![]()
+![](../.gitbook/assets/doltlab_multihost_swarm_ports.png)
 
 The second security group allows access to the ports DoltLab uses for its services, and permits connections from anywhere on these ports.
 
-![]()
+![](../.gitbook/assets/doltlab_multihost_services_ports.png)
 
 As an example deployment, we'll deploy a DoltLab Enterprise cluster with a single service replica per host, which is the default DoltLab Enterprise multihost deployment configuration. This means that in total,
 we'll provision eight hosts, one for each DoltLab Enterprise service, and one host to be the Swarm manager, which will not run any replica services itself.
@@ -1050,7 +1053,41 @@ ubuntu@ip-10-2-2-56:~$ mkdir -p doltlab/doltlabdb
 ubuntu@ip-10-2-2-56:~$ mv config.yaml doltlab/doltlabdb/
 ```
 
-We will follow this same process for all services defined in the `docker-compose.yaml` that have local file mounts.
+We will follow this same process for all services defined in the `docker-compose.yaml` that have local file mounts. NOTE: you do not need to copy the `/var/run/docker.sock` file
+that is mounted for the `doltlabapi` service, since the worker host will already have this file at this path.
+
+## Deploy services
+
+Once all worker nodes have their copy of the required assets, we can now deploy our multihost DoltLab Docker Swarm stack. To do so, SSH into the Manager node and run the `start.sh` script.
+
+This will deploy DoltLab via Docker Swarm, and progress of the deployment can be observed by running `docker service ls` on the Manager.
+
+It may take several minutes for all services to come online.
+
+Once all services come online, the output will appear like so:
+
+```bash
+root@ip-10-2-2-252:/home/ubuntu/doltlab# docker service ls
+ID             NAME                            MODE         REPLICAS   IMAGE                                              PORTS
+e0ixncmfo7eu   doltlab_doltlabapi              replicated   1/1        quay.io/doltlab/dolthubapi-server:v2.4.0
+y3yopb0e6ah2   doltlab_doltlabdb               replicated   1/1        quay.io/doltlab/dolt-sql-server:v2.4.0
+minsjz5od9r3   doltlab_doltlabenvoy            replicated   1/1        envoyproxy/envoy:v1.33-latest                      *:80->80/tcp, *:2001->2001/tcp, *:4321->4321/tcp, *:7770->7770/tcp, *:50051->50051/tcp
+51if0bhyiuio   doltlab_doltlabfileserviceapi   replicated   1/1        quay.io/doltlab/fileserviceapi-server:v2.4.0
+0wcfh4hjwmpe   doltlab_doltlabgraphql          replicated   1/1        quay.io/doltlab/dolthubapi-graphql-server:v2.4.0
+swc5xn27px2c   doltlab_doltlabremoteapi        replicated   1/1        quay.io/doltlab/doltremoteapi-server:v2.4.0
+p5w420n364uh   doltlab_doltlabui               replicated   1/1        quay.io/doltlab/dolthub-server:v2.4.0
+```
+
+Once everything is running, you can access the running DoltLab cluster from the Manager node's IP/hostname.
+
+To tear down the deployment, run the `./stop.sh` script on the Manager node.
+
+## Upgrading a running multihost deployment
+
+When upgrading a multihost deployment, it is not necessary to teardown the deployment with the `stop.sh` script prior to upgrading. Instead,
+you can simply upgrade the DoltLab version on the Manager node, then rerun `./start.sh` after the DoltLab version is upgraded.
+
+Docker will perform an upgrade rollout across the hosts. Note, that you will have brief service interruption as DoltLab's writer services, like `doltlabdb` will stop before the new version is started.
 
 # Connect DoltLab to an SMTP server
 
