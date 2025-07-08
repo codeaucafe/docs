@@ -174,24 +174,6 @@ _Number_. The port for `doltlabapi`'s CSV service.
 
 Configuration file equivalent [csv_port](./configuration-file.md#csv_port).
 
-## doltlabapi-host
-
-_String_. The hostname or IP address of `doltlabapi`.
-
-Configuration file equivalent [host](./configuration-file.md#doltlabapi-host).
-
-## doltlabapi-only
-
-_Boolean_. If true, will only run `doltlabapi` on the host. This is used for running DoltLab services across multiple hosts. DoltLab Enterprise only.
-
-Configuration file equivalent [doltlabapi_only](./configuration-file.md#doltlabapi_only).
-
-## doltlabapi-port
-
-_Number_. The port for `doltlabapi`.
-
-Configuration file equivalent [port](./configuration-file.md#doltlabapi-port).
-
 ## doltlabapi-query-job-aws-s3-bucket
 
 _String_. The name of the S3 bucket used to store the results of SQL query Jobs, DoltLab Enterprise only.
@@ -241,17 +223,29 @@ _String_. The hostname or IP address of `doltlabdb`.
 
 Configuration file equivalent [host](./configuration-file.md#doltlabdb-host).
 
-## doltlabdb-only
+## doltlabdb-placement-constraint
 
-_Boolean_. If true, will only run `doltlabdb` on the host. This is used for running DoltLab services across multiple hosts. DoltLab Enterprise only.
+_String_. The placement constraint to add to the doltlabdb service. Can be supplied multiple times. By default, DoltLab will add the `node.labels.doltlabdb == true` constraint to a multihost deployment. DoltLab Enterprise only.
 
-Configuration file equivalent [doltlabdb_only](./configuration-file.md#doltlabdb_only)
+Configuration file equivalent [placement_constraints](./configuration-file.md#doltlabdb-placement-constraints).
+
+## doltlabdb-placement-preferences-spread
+
+_String_. The placement preferences spread to add to the doltlabdb service. Can be supplied multiple times. DoltLab Enterprise only.
+
+Configuration file equivalent [placement_preferences_spread](./configuration-file.md#doltlabdb-placement-preferences-spread).
 
 ## doltlabdb-port
 
 _Number_. The port of `doltlabdb`.
 
 Configuration file equivalent [port](./configuration-file.md#doltlabdb-port).
+
+## doltlabdb-replicas
+
+_Number_. Specifies the number of doltlabdb service replicas to run. NOTE: only a single replica of `doltlabdb` is currently supported. DoltLab Enterprise only.
+
+Configuration file equivalent [replicas](./configuration-file.md#doltlabdb-replicas).
 
 ## doltlabdb-root-volume-host-path
 
@@ -271,23 +265,41 @@ _String_. Absolute path to the `doltlabdb` server configuration file.
 
 Configuration file equivalent [server_config](./configuration-file.md#server_config).
 
-## doltlabfileserviceapi-host
+## doltlabapi-placement-constraint
 
-_String_. The hostname or IP address for `doltlabfileserviceapi`.
+_String_. The placement constraint to add to the doltlabapi service. Can be supplied multiple times. By default, DoltLab will add the `node.labels.doltlabapi == true` constraint to a multihost deployment. DoltLab Enterprise only.
 
-Configuration file equivalent [host](./configuration-file.md#doltlabfileserviceapi-host).
+Configuration file equivalent [placement_constraints](./configuration-file.md#doltlabapi-placement-constraints).
 
-## doltlabfileserviceapi-only
+## doltlabapi-placement-preferences-spread
 
-_Boolean_. If true, will only run `doltlabfileserviceapi` on the host. This is used for running DoltLab services across multiple hosts. DoltLab Enterprise only.
+_String_. The placement preferences spread to add to the doltlabapi service. Can be supplied multiple times. DoltLab Enterprise only.
 
-Configuration file equivalent [doltlabfileserviceapi_only](./configuration-file.md#doltlabfileserviceapi_only).
+Configuration file equivalent [placement_preferences_spread](./configuration-file.md#doltlabapi-placement-preferences-spread).
 
-## doltlabfileserviceapi-port
+## doltlabapi-replicas
 
-_Number_. The port for `doltlabfileserviceapi`.
+_Number_. Specifies the number of doltlabapi service replicas to run. DoltLab Enterprise only.
 
-Configuration file equivalent [port](./configuration-file.md#doltlabfileserviceapi-port).
+Configuration file equivalent [replicas](./configuration-file.md#doltlabapi-replicas).
+
+## doltlabenvoy-placement-constraint
+
+_String_. The placement constraint to add to the doltlabenvoy service. Can be supplied multiple times. By default, DoltLab will add the `node.labels.doltlabenvoy == true` constraint to a multihost deployment. DoltLab Enterprise only.
+
+Configuration file equivalent [placement_constraints](./configuration-file.md#doltlabenvoy-placement-constraints).
+
+## doltlabenvoy-placement-preferences-spread
+
+_String_. The placement preferences spread to add to the doltlabenvoy service. Can be supplied multiple times. DoltLab Enterprise only.
+
+Configuration file equivalent [placement_preferences_spread](./configuration-file.md#doltlabenvoy-placement-preferences-spread).
+
+## doltlabenvoy-replicas
+
+_Number_. Specifies the number of doltlabenvoy service replicas to run. DoltLab Enterprise only.
+
+Configuration file equivalent [replicas](./configuration-file.md#doltlabenvoy-replicas).
 
 ## doltlabfileserviceapi-uploads-volume-host-path
 
@@ -295,23 +307,41 @@ _String_. The path to an existing directory on the DoltLab host for persisting t
 
 Configuration file equivalent [uploads_volume_path](./configuration-file.md#uploads_volume_path).
 
-## doltlabgraphql-host
+## doltlabfileserviceapi-placement-constraint
 
-_String_. The hostname or IP address for `doltlabgraphql`.
+_String_. The placement constraint to add to the doltlabfileserviceapi service. Can be supplied multiple times. By default, DoltLab will add the `node.labels.doltlabfileserviceapi == true` constraint to a multihost deployment. DoltLab Enterprise only.
 
-Configuration file equivalent [host](./configuration-file.md#doltlabgrapqhl-host).
+Configuration file equivalent [placement_constraints](./configuration-file.md#doltlabfileserviceapi-placement-constraints).
 
-## doltlabgraphql-only
+## doltlabfileserviceapi-placement-preferences-spread
 
-_Boolean_. If true, will only run `doltlabgraphql` on the host. This is used for running DoltLab services across multiple hosts. DoltLab Enterprise only.
+_String_. The placement preferences spread to add to the doltlabfileserviceapi service. Can be supplied multiple times. DoltLab Enterprise only.
 
-Configuration file equivalent [doltlabgraphql_only](./configuration-file.md#doltlabgraphql_only).
+Configuration file equivalent [placement_preferences_spread](./configuration-file.md#doltlabfileserviceapi-placement-preferences-spread).
 
-## doltlabgraphql-port
+## doltlabfileserviceapi-replicas
 
-_Number_. The port for `doltlabgraphql`.
+_Number_. Specifies the number of doltlabfileserviceapi service replicas to run. NOTE: only a single replica of `doltlabfileserviceapi` is currently supported. Use cloud-backed storage to remove this scaling limitation. DoltLab Enterprise only.
 
-Configuration file equivalent [port](./configuration-file.md#doltlabgrapqhl-port).
+Configuration file equivalent [replicas](./configuration-file.md#doltlabfileserviceapi-replicas).
+
+## doltlabgraphql-placement-constraint
+
+_String_. The placement constraint to add to the doltlabgraphql service. Can be supplied multiple times. By default, DoltLab will add the `node.labels.doltlabgraphql == true` constraint to a multihost deployment. DoltLab Enterprise only.
+
+Configuration file equivalent [placement_constraints](./configuration-file.md#doltlabgraphql-placement-constraints).
+
+## doltlabgraphql-placement-preferences-spread
+
+_String_. The placement preferences spread to add to the doltlabgraphql service. Can be supplied multiple times. DoltLab Enterprise only.
+
+Configuration file equivalent [placement_preferences_spread](./configuration-file.md#doltlabgraphql-placement-preferences-spread).
+
+## doltlabgraphql-replicas
+
+_Number_. Specifies the number of doltlabgraphql service replicas to run. DoltLab Enterprise only.
+
+Configuration file equivalent [replicas](./configuration-file.md#doltlabgraphql-replicas).
 
 ## doltlabremoteapi-data-volume-host-path
 
@@ -319,29 +349,23 @@ _String_. The path to an existing directory on the DoltLab host used for persist
 
 Configuration file equivalent [data_volume_path](./configuration-file.md#doltlabremoteapi-data-volume-path).
 
-## doltlabremoteapi-file-server-port
+## doltlabremoteapi-placement-constraint
 
-_Number_. The port for `doltlabremoteapi`'s file server.
+_String_. The placement constraint to add to the doltlabremoteapi service. Can be supplied multiple times. By default, DoltLab will add the `node.labels.doltlabremoteapi == true` constraint to a multihost deployment. DoltLab Enterprise only. 
 
-Configuration file equivalent [file_server_port](./configuration-file.md#file_server_port).
+Configuration file equivalent [placement_constraints](./configuration-file.md#doltlabremoteapi-placement-constraints).
 
-## doltlabremoteapi-host
+## doltlabremoteapi-placement-preferences-spread
 
-_String_. The hostname for `doltlabremoteapi`.
+_String_. The placement preferences spread to add to the doltlabremoteapi service. Can be supplied multiple times. DoltLab Enterprise only.
 
-Configuration file equivalent [host](./configuration-file.md#doltlabremoteapi-host).
+Configuration file equivalent [placement_preferences_spread](./configuration-file.md#doltlabremoteapi-placement-preferences-spread).
 
-## doltlabremoteapi-only
+## doltlabremoteapi-replicas
 
-_Boolean_. If true, will only run `doltlabremoteapi` on the host. This is used for running DoltLab services across multiple hosts. DoltLab Enterprise only.
+_Number_. Specifies the number of doltlabremoteapi service replicas to run. NOTE: only a single replica of `doltlabremoteapi` is supported when cloud-backed storage is NOT configured. Use cloud-backed storage to remove this scaling limitation. DoltLab Enterprise only.
 
-Configuration file equivalent [doltlabremoteapi_only](./configuration-file.md#doltlabremoteapi_only).
-
-## doltlabremoteapi-port
-
-_Number_. The port for `doltlabremoteapi`.
-
-Configuration file equivalent [port](./configuration-file.md#doltlabremoteapi-port).
+Configuration file equivalent [replicas](./configuration-file.md#doltlabremoteapi-replicas).
 
 ## doltlabremoteapi-storage-aws-bucket
 
@@ -361,23 +385,23 @@ _String_. The AWS region where the DynamoDb table is located. DoltLab Enterprise
 
 Configuration file equivalent [aws_region](./configuration-file.md#doltlabremoteapi-aws-region).
 
-## doltlabui-host
+## doltlabui-placement-constraint
 
-_String_. The hostname or IP address of `doltlabui`.
+_String_. The placement constraint to add to the doltlabui service. Can be supplied multiple times. By default, DoltLab will add the `node.labels.doltlabui == true` constraint to a multihost deployment. DoltLab Enterprise only.
 
-Configuration file equivalent [host](./configuration-file.md#doltlabui-host).
+Configuration file equivalent [placement_constraints](./configuration-file.md#doltlabui-placement-constraints).
 
-## doltlabui-only
+## doltlabui-placement-preferences-spread
 
-_Boolean_. If true, will only run `doltlabui` on the host. This is used for running DoltLab services across multiple hosts. DoltLab Enterprise only.
+_String_. The placement preferences spread to add to the doltlabui service. Can be supplied multiple times. DoltLab Enterprise only.
 
-Configuration file equivalent [doltlabui_only](./configuration-file.md#doltlabui_only).
+Configuration file equivalent [placement_preferences_spread](./configuration-file.md#doltlabui-placement-preferences-spread).
 
-## doltlabui-port
+## doltlabui-replicas
 
-_Number_. The port for `doltlabui`.
+_Number_. Specifies the number of doltlabui service replicas to run. DoltLab Enterprise only.
 
-Configuration file equivalent [port](./configuration-file.md#doltlabui-port).
+Configuration file equivalent [replicas](./configuration-file.md#doltlabui-replicas).
 
 ## enterprise-online-api-key
 
@@ -478,6 +502,24 @@ Configuration file equivalent [concurrency_loop_seconds](./configuration-file.md
 _Number_. The number of times to retry `failed` Jobs.
 
 Configuration file equivalent [max_retries](./configuration-file.md#max_retries).
+
+## multihost-deployment
+
+_Boolean_. If true, generates DoltLab Enterprise assets that will run via Docker Swarm. DoltLab Enterprise only.
+ 
+Configuration file equivalent [multihost_deployment](./configuration-file.md#multihost_deployment).
+
+## no-default-placement-constraints
+
+_Boolean_. If true, will not add the default placment contraints to services when running in multihost deployment mode. DoltLab Enterprise only.
+
+Configuration file equivalent [no_default_placement_contraints](./configuration-file.md#no_default_placement_contraints).
+
+## no-default-placement-preferences-spreads
+
+_Boolean_. If true, will not add the default placment preferences spread to services when running in multihost deployment mode. DoltLab Enterprise only.
+
+Configuration file equivalent [no_default_placement_preferences_spreads](./configuration-file.md#no_default_placement_preferences_spreads).
 
 ## no-reply-email
 
