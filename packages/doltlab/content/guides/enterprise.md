@@ -863,30 +863,194 @@ is to SSH into each host, download the latest DoltLab version, then use the `ins
 
 ```bash
 # install unzip for unzipping DoltLab
-$ sudo apt update -y && sudo apt install unzip -y
+root@ip-10-2-2-252:/home/ubuntub# sudo apt update -y && sudo apt install unzip -y
 
 # download DoltLab
-$ curl -LO https://doltlab-releases.s3.us-east-1.amazonaws.com/linux/amd64/doltlab-v2.4.0.zip
+root@ip-10-2-2-252:/home/ubuntu# curl -LO https://doltlab-releases.s3.us-east-1.amazonaws.com/linux/amd64/doltlab-v2.4.0.zip
 
 # unzip contents
-$ unzip doltlab-v2.4.0.zip -d doltlab
-$ cd doltlab
+root@ip-10-2-2-252:/home/ubuntu# unzip doltlab-v2.4.0.zip -d doltlab
+root@ip-10-2-2-252:/home/ubuntu# cd doltlab
 
 # generate dependency installation script
-doltlab $ ./installer --ubuntu
+root@ip-10-2-2-252:/home/ubuntu/doltlab# ./installer --ubuntu
 
 # run script
-doltlab $ ./ubuntu_install.sh
+root@ip-10-2-2-252:/home/ubuntu/doltlab# ./ubuntu_install.sh
 ```
 
 After Docker is installed on all hosts, SSH into the node you want to be the Swarm manager and configure DoltLab Enterprise using the `installer_config.yaml`. In order to run in multihost mode,
 you'll need to supply your DoltLab Enterprise credentials and set `enterprise.multihost_deployment: true`.
 
-Below is the config we'll use on our example Manager node.
+Below is the config we'll use on Manager node for our example deployment.
 
 ```yaml
+version: "v2.4.0"
 
+host: "18.209.4.63"
+services:
+  doltlabdb:
+    admin_password: "DoltLab1234"
+    dolthubapi_password: "DoltLab1234"
+
+default_user:
+  name: "admin"
+  password: "DoltLab1234"
+  email: "admin@localhost"
+
+enterprise:
+    online_product_code: "${DOLTLAB_ENTERPRISE_ONLINE_PRODUCT_CODE}"
+    online_shared_key: "${DOLTLAB_ENTERPRISE_ONLINE_SHARED_KEY}"
+    online_api_key: "${DOLTLAB_ENTERPRISE_ONLINE_API_KEY}"
+    online_license_key: "${DOLTLAB_ENTERPRISE_ONLINE_LICENSE_KEY}"
+    multihost_deployment: true
 ```
+
+Using the config above we can run the `installer` which will generate the assets we need in order to run a multihost DoltLab deployment.
+
+```bash
+root@ip-10-2-2-252:/home/ubuntu/doltlab# ./installer
+2025-07-08T17:52:06.777Z        INFO    metrics/emitter.go:111  Successfully sent DoltLab usage metrics
+
+2025-07-08T17:52:06.777Z        INFO    cmd/main.go:682 Successfully configured DoltLab Enterprise      {"version": "v2.4.0"}
+
+2025-07-08T17:52:06.777Z        INFO    cmd/main.go:691 To start DoltLab, use:  {"script": "/home/ubuntu/doltlab/start.sh"}
+2025-07-08T17:52:06.777Z        INFO    cmd/main.go:696 To stop DoltLab, use:   {"script": "/home/ubuntu/doltlab/stop.sh"}
+```
+
+Next, we need to initialize the Swarm on our Manager node by running the following command, being sure to use the IP or hostname of our Manager node that is accessible by all nodes in our cluster:
+
+```bash
+root@ip-10-2-2-252:/home/ubuntu# docker swarm init --advertise-addr 10.2.2.252
+Swarm initialized: current node (pa0tat6n1ucmr1n5nuypfjvlm) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-05pzsu494x80888k5dkhmh4sc5crsoi8xrl9awmsfiypowu6zo-4xwey27l1hfxqt12ont2u6g57 10.2.2.252:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+```
+
+This command also outputs the join-token we'll use to register all other nodes in our cluster as workers. To do this, copy the join-token above, then SSH into the remaining nodes in the cluster
+and execute the following command, being sure to also use the IP or hostname for each worker node that is reachable by all other nodes in the cluster.
+
+```bash
+docker swarm join --token <token> --advertise-addr <ip/hostname> <manager ip/hostname>:2377
+```
+
+In our example case, because the ports used by Docker Swarm are only accessible by nodes with the same security group, we will use the private IP addresses of the nodes as their advertise address:
+
+```bash
+ubuntu@ip-10-2-2-56:~$ sudo newgrp docker
+root@ip-10-2-2-56:/home/ubuntu# docker swarm join --token SWMTKN-1-05pzsu494x80888k5dkhmh4sc5crsoi8xrl9awmsfiypowu6zo-4xwey27l1hfxqt12ont2u6g57 --advertise-addr 10.2.2.56 10.2.2.252:2377
+This node joined a swarm as a worker.
+```
+
+Once we've registered all nodes to the swarm, we can SSH back into our Manager node to view all nodes:
+
+```bash
+ubuntu@ip-10-2-2-252:~$ sudo newgrp docker
+root@ip-10-2-2-252:/home/ubuntu# docker node ls
+ID                            HOSTNAME        STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
+bf0lwl4h6tiw6je4lo3tgrj7m     ip-10-2-2-56    Ready     Active                          28.3.1
+dryr0aspuhouhhu526hhf9791     ip-10-2-2-72    Ready     Active                          28.3.1
+rpzn8er98pcd6orbu2nf81zgi     ip-10-2-2-116   Ready     Active                          28.3.1
+a3ooo5wjkxuo5b0oziycjxelk     ip-10-2-2-150   Ready     Active                          28.3.1
+pfhmsms97b2xkazz4yt5qvbgw     ip-10-2-2-166   Ready     Active                          28.3.1
+tx6li9tnvnzsimvc7qm4ka1jk     ip-10-2-2-192   Ready     Active                          28.3.1
+6oi9xacsq57bwk7lkq09bl10z     ip-10-2-2-242   Ready     Active                          28.3.1
+pa0tat6n1ucmr1n5nuypfjvlm *   ip-10-2-2-252   Ready     Active         Leader           28.3.1
+```
+
+Once all the nodes in our cluster are part of the Swarm, we need to label the nodes we want to run each service. The service definitions can be found in the generated `docker-compose.yaml` file on the Manager node.
+
+Let's do this now for our example deployment, starting with the `doltlabdb` service.
+
+We can label the node we want to run this service using the following command:
+
+```bash
+docker node update --label-add <key>=<value> <node id>
+```
+
+We want node with id `bf0lwl4h6tiw6je4lo3tgrj7m` to be our `doltlabdb` node, so we now run this on our Manager:
+
+```bash
+root@ip-10-2-2-252:/home/ubuntu# docker node update --label-add doltlabdb=true bf0lwl4h6tiw6je4lo3tgrj7m
+bf0lwl4h6tiw6je4lo3tgrj7m
+```
+
+We do this same process for every worker node in our cluster, so each one is labeled for one service:
+
+```bash
+root@ip-10-2-2-252:/home/ubuntu# docker node update --label-add doltlabremoteapi=true dryr0aspuhouhhu526hhf9791
+dryr0aspuhouhhu526hhf9791
+root@ip-10-2-2-252:/home/ubuntu# docker node update --label-add doltlabapi=true rpzn8er98pcd6orbu2nf81zgi
+rpzn8er98pcd6orbu2nf81zgi
+root@ip-10-2-2-252:/home/ubuntu# docker node update --label-add doltlabfileserviceapi=true pfhmsms97b2xkazz4yt5qvbgw
+pfhmsms97b2xkazz4yt5qvbgw
+root@ip-10-2-2-252:/home/ubuntu# docker node update --label-add doltlabgraphql=true a3ooo5wjkxuo5b0oziycjxelk
+a3ooo5wjkxuo5b0oziycjxelk
+root@ip-10-2-2-252:/home/ubuntu# docker node update --label-add doltlabui=true tx6li9tnvnzsimvc7qm4ka1jk
+tx6li9tnvnzsimvc7qm4ka1jk
+root@ip-10-2-2-252:/home/ubuntu# docker node update --label-add doltlabenvoy=true 6oi9xacsq57bwk7lkq09bl10z
+6oi9xacsq57bwk7lkq09bl10z
+```
+
+## Distributing assets
+
+After designating which nodes will run which services, we need to copy any assets required by the service over to its respective worker(s) node. These assets will be generate by the `installer` on the Manager node.
+To view which assets each service requires, open the `docker-compose.yaml` file on the Manager node and look for any service that has a volume definition mapped to a local file path. These local files are what we'll need to copy
+from the Manager node to each worker node, at the exact same file path.
+
+For example, this is the `doltlabdb` section from the `docker-compose.yaml` file in our example deployment:
+
+```yaml
+    doltlabdb:
+        deploy:
+            replicas: 1
+            placement:
+                constraints:
+                    - node.labels.doltlabdb == true
+                preferences:
+                    - spread: node.labels.doltlabdb
+            update_config:
+                order: stop-first
+        image: quay.io/doltlab/dolt-sql-server:v2.4.0
+        command: |-
+            -l debug
+        environment:
+            DOLT_ADMIN_PASSWORD: "${DOLT_ADMIN_PASSWORD}"
+            DOLT_DOLTHUBAPI_PASSWORD: "${DOLT_DOLTHUBAPI_PASSWORD}"
+            DOLTHUB_METRICS_ENABLED: "true"
+        networks:
+            - default
+        volumes:
+            - doltlabdb-dolt-data:/var/lib/dolt
+            - doltlabdb-dolt-root:/root/dolt
+            - /home/ubuntu/doltlab/doltlabdb/config.yaml:/etc/dolt/servercfg.d/config.yaml # This is the local volume mount we need on the worker node
+            - doltlabdb-dolt-backups:/backups
+```
+
+In the `volumes` section of this service definition are four volume mounts, where only the third one is a local file, `/home/ubuntu/doltlab/doltlabdb/config.yaml`.
+In order for our `doltlabdb` worker node to successfully run the service, we need to copy this file from the Manager, and place it on our worker (bf0lwl4h6tiw6je4lo3tgrj7m) at the same path.
+
+To do so, we can use `scp` to copy the file from the Manager to our local environment, the copy it from our local environment up to the worker.
+
+```bash
+➜  ✗ scp -i ~/.ssh/dustin_dev_us_east_1.pem ubuntu@18.209.4.63:/home/ubuntu/doltlab/doltlabdb/config.yaml ./config.yaml
+config.yaml                                                                                    100%  228     1.5KB/s   00:00
+➜  ✗ scp -i ~/.ssh/dustin_dev_us_east_1.pem ./config.yaml ubuntu@23.21.24.234:/home/ubuntu/config.yaml
+config.yaml
+```
+
+After copying the file to the worker, we can then SSH into the worker and move the file to the path Docker will expect the file to be at:
+
+```bash
+ubuntu@ip-10-2-2-56:~$ mkdir -p doltlab/doltlabdb
+ubuntu@ip-10-2-2-56:~$ mv config.yaml doltlab/doltlabdb/
+```
+
+We will follow this same process for all services defined in the `docker-compose.yaml` that have local file mounts.
 
 # Connect DoltLab to an SMTP server
 
