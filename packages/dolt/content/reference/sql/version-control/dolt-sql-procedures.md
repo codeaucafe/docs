@@ -1375,7 +1375,7 @@ SELECT from_pk, from_c, to_commit, diff_type FROM dolt_diff_t1 WHERE to_commit=h
 
 ## `DOLT_RM()`
 
-Default mode removes tables from the staging area and working directory. <!--Works exactly like `dolt rm` on the CLI, and takes the same arguments. -->When used with the `--cached` flag, removes tables only from the staging area while leaving the working directory unchanged.
+Default mode removes tables from the staging area and working directory. Works exactly like `dolt rm` on the CLI, and takes the same arguments. When used with the `--cached` flag, removes tables only from the staging area while leaving the working directory unchanged.
 
 ```sql
 CALL DOLT_RM('table1');
