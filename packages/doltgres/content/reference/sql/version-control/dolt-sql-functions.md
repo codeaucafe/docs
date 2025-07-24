@@ -5,6 +5,7 @@ title: Dolt SQL Functions
 # Table of Contents
 
 - [Version Control Functions](#version-control-functions)
+
   - [dolt_add()](#dolt_add)
   - [dolt_backup()](#dolt_backup)
   - [dolt_branch()](#dolt_branch)
@@ -45,10 +46,11 @@ title: Dolt SQL Functions
   - [dolt_diff_summary()](#dolt_diff_summary)
   - [dolt_log()](#dolt_log)
   - [dolt_patch()](#dolt_patch)
+  - [dolt_preview_merge_conflicts_summary()](#dolt_preview_merge_conflicts_summary)
+  - [dolt_preview_merge_conflicts()](#dolt_preview_merge_conflicts)
   - [dolt_reflog()](#dolt_reflog)
   - [dolt_schema_diff()](#dolt_schema_diff)
   - [dolt_query_diff()](#dolt_query_diff)
-
 
 # Version Control Functions
 
@@ -2378,6 +2380,195 @@ With result of single row:
 | 1               | WORKING          | gg4kasjl6tgrtoag8tnn1der09sit4co | public.items  | schema    | DROP TABLE `items`; |
 +-----------------+------------------+----------------------------------+---------------+-----------+---------------------+
 ```
+
+## `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()`
+
+The `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function provides a summary of merge conflicts that would occur when merging a branch. This function is useful for understanding potential conflicts before performing an actual merge operation, allowing you to identify which tables would have conflicts and how many data and schema conflicts would occur.
+
+This function performs a "dry run" merge operation and returns information about conflicts without actually modifying the database or creating a merge commit.
+
+### Privileges
+
+`DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function requires `SELECT` privilege for all tables.
+
+### Options
+
+```sql
+DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY(<base_branch>, <merge_branch>)
+```
+
+The `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` table function takes two required arguments:
+
+- `base_branch` — the base branch to merge into (e.g. "main").
+- `merge_branch` — the branch to merge into the base branch (e.g. "feature_branch").
+
+### Schema
+
+```text
++---------------------+--------+
+| field               | type   |
++---------------------+--------+
+| table               | TEXT   |
+| num_data_conflicts  | BIGINT |
+| num_schema_conflicts| BIGINT |
++---------------------+--------+
+```
+
+### Example
+
+Consider a scenario where you have a `main` branch and a `feature_branch` that have diverged and made conflicting changes to the same data. You can preview the conflicts that would occur when merging `feature_branch` into `main`:
+
+```sql
+SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY('main', 'feature_branch');
+```
+
+This might return results like:
+
+```text
++----------+--------------------+---------------------+
+| table    | num_data_conflicts | num_schema_conflicts|
++----------+--------------------+---------------------+
+| users    | 3                  | 0                   |
+| orders   | 1                  | 0                   |
+| products | NULL               | 2                   |
++----------+--------------------+---------------------+
+```
+
+Note that if there are schema conflicts the data conflicts are not able to be calculated and that column will be null.
+
+This output indicates that merging `feature_branch` into `main` would create conflicts in three tables:
+
+- The `users` table would have 3 data conflicts and no schema conflicts
+- The `orders` table would have 1 data conflict and no schema conflicts
+- The `products` table would have 2 schema conflicts
+
+If there would be no conflicts, the function returns an empty result set.
+
+This information helps you understand the scope of conflicts before attempting a merge, allowing you to plan conflict resolution strategies or coordinate with other developers who may have made conflicting changes.
+
+## `DOLT_PREVIEW_MERGE_CONFLICTS()`
+
+The `DOLT_PREVIEW_MERGE_CONFLICTS()` table function provides detailed information about merge conflicts that would occur when merging a branch. Unlike `DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY()` which only provides a count of conflicts per table, this function returns the actual conflicting rows with their base, ours, and theirs values.
+
+This function performs a "dry run" merge operation and returns detailed conflict information without actually modifying the database or creating a merge commit. The results are similar to what you would see in the `dolt_conflicts_$TABLENAME` system tables after performing an actual merge, but without making any changes to the database.
+
+### Privileges
+
+`DOLT_PREVIEW_MERGE_CONFLICTS()` table function requires `SELECT` privilege for all tables.
+
+### Options
+
+```sql
+DOLT_PREVIEW_MERGE_CONFLICTS(<base_branch>, <merge_branch>, <table_name>)
+```
+
+The `DOLT_PREVIEW_MERGE_CONFLICTS()` table function takes three required arguments:
+
+- `base_branch` — the base branch to merge into (e.g. "main").
+- `merge_branch` — the branch to merge into the base branch (e.g. "feature_branch").
+- `table_name` — the name of the table to preview conflicts for.
+
+### Schema
+
+The schema of the `DOLT_PREVIEW_MERGE_CONFLICTS()` function depends on the schema of the specified table. For each column `X` in the table, the result set contains three columns:
+
+- `base_X` — the value of column X at the common ancestor commit
+- `our_X` — the value of column X in the base branch
+- `their_X` — the value of column X in the merge branch
+
+Additionally, the result set includes these metadata columns:
+
+```text
++------------------+--------+
+| field            | type   |
++------------------+--------+
+| from_root_ish    | TEXT   |
+| our_diff_type    | TEXT   |
+| their_diff_type  | TEXT   |
+| dolt_conflict_id | TEXT   |
++------------------+--------+
+```
+
+Where:
+
+- `from_root_ish` — the commit hash of the merge branch (the "from" branch of the merge). This hash can be used to identify which merge produced a conflict, since conflicts can accumulate across merges. User code generally ignores this column.
+- `our_diff_type` and `their_diff_type` indicate whether the row was "added", "modified", or "removed" in the corresponding branch
+- `dolt_conflict_id` is a unique identifier for each conflict
+
+### Example
+
+Consider a table `users` with columns `id`, `name`, and `email` that has conflicts between `main` and `feature_branch`. You can preview the specific conflicts:
+
+```sql
+SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS('main', 'feature_branch', 'users');
+```
+
+This might return results like:
+
+```text
++----------------------------------+---------+-----------+----------------+---------+-----------+------------------+---------------+-----------+-----------+-------------------+-----------------+------------------------+
+| from_root_ish                    | base_id | base_name | base_email     | our_id  | our_name  | our_email        | our_diff_type | their_id  | their_name| their_email       | their_diff_type | dolt_conflict_id       |
++----------------------------------+---------+-----------+----------------+---------+-----------+------------------+---------------+-----------+-----------+-------------------+-----------------+------------------------+
+| abc123def456789012345678901234567 | 1       | John      | john@email.com | 1       | John Doe  | john@email.com   | modified      | 1         | John      | john@newemail.com | modified        | abc123def456           |
+| abc123def456789012345678901234567 | NULL    | NULL      | NULL           | 2       | Jane      | jane@email.com   | added         | 2         | Jane Doe  | jane@email.com    | added           | def789ghi012           |
++----------------------------------+---------+-----------+----------------+---------+-----------+------------------+---------------+-----------+-----------+-------------------+-----------------+------------------------+
+```
+
+This output shows:
+
+- Row 1: Both branches modified the same user but with different changes (name vs email)
+- Row 2: Both branches added a new user with the same ID but different data
+
+To view only specific columns for easier reading:
+
+```sql
+SELECT dolt_conflict_id, base_name, our_name, our_diff_type, their_name, their_diff_type
+FROM DOLT_PREVIEW_MERGE_CONFLICTS('main', 'feature_branch', 'users');
+```
+
+### Keyless Tables
+
+For keyless tables (tables without primary keys), the behavior is slightly different. Dolt uses content-based addressing to identify rows, so conflicts in keyless tables are detected when the same content would be added or modified differently on each branch.
+
+Keyless tables include additional columns not present in tables with primary keys:
+
+```text
++-------------------+--------+
+| field             | type   |
++-------------------+--------+
+| base_cardinality  | BIGINT |
+| our_cardinality   | BIGINT |
+| their_cardinality | BIGINT |
++-------------------+--------+
+```
+
+- `base_cardinality` — the number of occurrences of the conflicting row in the merge ancestor commit
+- `our_cardinality` — the number of occurrences of the conflicting row in the base branch
+- `their_cardinality` — the number of occurrences of the conflicting row in the merge branch
+
+Consider a keyless table `logs` with columns `timestamp`, `level`, and `message`:
+
+```sql
+SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS('main', 'feature_branch', 'logs');
+```
+
+This might return results like:
+
+```text
++----------------------------------+---------------------+-------------+------------------+---------------------+-------------+------------------+---------------+---------------------+-------------+------------------+-----------------+------------------------+------------------+-------------------+---------------------+
+| from_root_ish                    | base_timestamp      | base_level  | base_message     | our_timestamp       | our_level   | our_message      | our_diff_type | their_timestamp     | their_level | their_message    | their_diff_type | dolt_conflict_id       | base_cardinality | our_cardinality   | their_cardinality   |
++----------------------------------+---------------------+-------------+------------------+---------------------+-------------+------------------+---------------+---------------------+-------------+------------------+-----------------+------------------------+------------------+-------------------+---------------------+
+| abc123def456789012345678901234567 | 2023-01-01 10:00:00 | ERROR       | Database timeout | 2023-01-01 10:00:00 | ERROR       | Database timeout | modified      | 2023-01-01 10:00:00 | ERROR       | Database timeout | modified        | xyz789abc123           | 1                | 3                 | 2                   |
++----------------------------------+---------------------+-------------+------------------+---------------------+-------------+------------------+---------------+---------------------+-------------+------------------+-----------------+------------------------+------------------+-------------------+---------------------+
+```
+
+In this example, the same log entry exists once in the base branch, but appears 3 times in our branch and 2 times in their branch, creating a conflict about cardinality (how many times the row should appear).
+
+### Notes
+
+If there are no conflicts in the specified table, the function returns an empty result set.
+
+This detailed view allows you to examine the exact differences that would cause conflicts and plan appropriate resolution strategies before performing the actual merge. The results are similar to what you would see in the `dolt_conflicts_$TABLENAME` system tables after an actual merge, but without making any changes to your database.
 
 ## `DOLT_REFLOG()`
 
