@@ -19,11 +19,11 @@ not taken in the standard command line lexicon. So,
 
 ## Dolt is MySQL-compatible. I use Postgres?
 
-We released a Postgres version of Dolt called [DoltgreSQL](https://github.com/dolthub/doltgresql). 
+We released a Postgres version of Dolt called [DoltgreSQL](https://github.com/dolthub/doltgresql).
 
-However, Dolt is a production-grade version controlled database today. 
-[Dolt is 1.0](https://www.dolthub.com/blog/2023-05-05-dolt-1-dot-0/). 
-If you are ok with using a MySQL-client, we recommend using Dolt for 
+However, Dolt is a production-grade version controlled database today.
+[Dolt is 1.0](https://www.dolthub.com/blog/2023-05-05-dolt-1-dot-0/).
+If you are ok with using a MySQL-client, we recommend using Dolt for
 all use cases. Doltgres is experimental.
 
 ## What does `@@autocommit` do?
@@ -84,14 +84,14 @@ for many popular ORMs and tools.
 
 If you try it and it doesn't work, [let
 us know with an issue](https://github.com/dolthub/dolt/issues) or in
-[our Discord](https://discord.gg/s8uVgc3) and we'll [fix it in 24 hours](https://www.dolthub.com/blog/2024-05-15-24-hour-bug-fixes/). 
+[our Discord](https://discord.gg/s8uVgc3) and we'll [fix it in 24 hours](https://www.dolthub.com/blog/2024-05-15-24-hour-bug-fixes/).
 Our goal is to be a 100% drop-in replacement for MySQL.
 
 ## Why does Dolt use so much disk space?
 
 Dolt generates a lot of garbage during some writes, especially during initial import. It's not
 unusual to get a local storage size of 20x the actual data size after an import. Running `dolt gc`
-will remove the garbage and reclaim local storage. See the [docs on `dolt gc`](../reference/cli/cli.md#dolt-gc) 
+will remove the garbage and reclaim local storage. See the [docs on `dolt gc`](../reference/cli/cli.md#dolt-gc)
 and the [`dolt_gc` stored procedure](../reference/sql/version-control/dolt-sql-procedures.md#dolt_gc) for details.
 
 If you are concerned about the growth of a Dolt database at steady state while running the SQL server, there is [an experimental feature](../reference/sql/server/garbage-collection.md#automated-gc) to automatically run `dolt_gc()` as the database grows.
@@ -131,7 +131,7 @@ call dolt_stats_purge();
 
 Version incompatibilities should not hinder the purge command, but if
 manual intervention is desirable a specific database's
-stats cache can be removed from the filestystem:
+stats cache can be removed from the filesystem:
 
 ```bash
 rm -rf .dolt/stats
@@ -139,5 +139,5 @@ rm -rf .dolt/stats
 
 Statistics can be recollected at any time to improve join and indexing
 execution performance. See
-[the stats docs](../reference/sql/sql-support/miscellaneous#stats-controller-functions)
+[the stats docs](../reference/sql/sql-support/miscellaneous.md#stats-controller-functions)
 for more details.

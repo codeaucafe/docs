@@ -8,42 +8,42 @@ You must have a host(s) running a supported operating system, hardware that meet
 
 # Supported operating systems
 
-- [Linux](./installation/linux.md)
+- [Linux](./linux.md)
 
 # Minimum recommended hardware
 
 DoltLab requires the following minimum system resources:
 
-* 4 CPU
-* 16 GB of memory
-* 300 GB of disk (DoltLab's container images alone require about 4 GBs of disk).
+- 4 CPU
+- 16 GB of memory
+- 300 GB of disk (DoltLab's container images alone require about 4 GBs of disk).
 
 # Networking requirements
 
 DoltLab requires the following networking configuration:
 
-* The IP address or domain name of the host must be discoverable by the Dolt CLI and web browser.
-* Hosts must allow egress `TCP` connections.
-* The following ports _must_ allow `TCP` connections:
-  * `22`, for `ssh` connections.
-  * `80`, for ingress `HTTP` connections.
-  * `443` for ingress `HTTPS` connections, if DoltLab will use TLS.
-  * `100`, for ingress connections to DoltLab's [remote data file server](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/#doltlab-remoteapi-server). This is only required for DoltLab <= `v2.3.7`.
-  * `50051`, for ingress connections to DoltLab's [remote API](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/#doltlab-remoteapi-server).
-  * `4321`, for ingress connections to DoltLab's [file upload service API](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/#doltlab-file-service-api-server).
+- The IP address or domain name of the host must be discoverable by the Dolt CLI and web browser.
+- Hosts must allow egress `TCP` connections.
+- The following ports _must_ allow `TCP` connections:
+  - `22`, for `ssh` connections.
+  - `80`, for ingress `HTTP` connections.
+  - `443` for ingress `HTTPS` connections, if DoltLab will use TLS.
+  - `100`, for ingress connections to DoltLab's [remote data file server](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/#doltlab-remoteapi-server). This is only required for DoltLab <= `v2.3.7`.
+  - `50051`, for ingress connections to DoltLab's [remote API](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/#doltlab-remoteapi-server).
+  - `4321`, for ingress connections to DoltLab's [file upload service API](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/#doltlab-file-service-api-server).
 
 # Dependencies
 
 DoltLab requires the following dependencies:
 
-> [curl](https://www.tecmint.com/install-curl-in-linux/)<br/>
-> [unzip](https://www.tecmint.com/install-zip-and-unzip-in-linux/)<br/>
-> [docker](https://docs.docker.com/engine/install/)<br/>
-> [docker-compose](https://docs.docker.com/compose/install/)<br/>
-> [amazon-ecr-credential-helper](https://github.com/awslabs/amazon-ecr-credential-helper)<br/>
-> Access to an [SMTP server](https://aws.amazon.com/what-is/smtp/), like [smtp.gmail.com](https://support.google.com/a/answer/176600?hl=en).
+- [curl](https://www.tecmint.com/install-curl-in-linux/)
+- [unzip](https://www.tecmint.com/install-zip-and-unzip-in-linux/)
+- [docker](https://docs.docker.com/engine/install/)
+- [docker-compose](https://docs.docker.com/compose/install/)
+- [amazon-ecr-credential-helper](https://github.com/awslabs/amazon-ecr-credential-helper)
+- Access to an [SMTP server](https://aws.amazon.com/what-is/smtp/), like [smtp.gmail.com](https://support.google.com/a/answer/176600?hl=en).
 
-To streamline dependency installation, with DoltLab >= `v2.1.2` you can run the [installer](../reference/installer.md) with one of the following flags to generate a dependency installation script:
+To streamline dependency installation, with DoltLab >= `v2.1.2` you can run the [installer](../../reference/installer.md) with one of the following flags to generate a dependency installation script:
 
 ```bash
 # generate a script to install DoltLab dependencies on Ubuntu

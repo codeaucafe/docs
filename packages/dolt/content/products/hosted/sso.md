@@ -20,7 +20,7 @@ layers of security.
 
 This is what a SAML SSO workflow looks like on Hosted Dolt:
 
-![SAML workflow](../../.gitbook/assets/hosted-sso-saml-diagram.png)
+![](../../.gitbook/assets/hosted-sso-saml-diagram.png)
 
 ## How to set up SSO for your Hosted organization
 
@@ -34,7 +34,7 @@ organization](https://hosted.doltdb.com/organizations). In order to set up SSO, 
 required that your organization has at least one bootstrap admin user at all times that
 was not created through the SAML workflow.
 
-![Create organization](../../.gitbook/assets/hosted-create-org.png)
+![](../../.gitbook/assets/hosted-create-org.png)
 
 ### 2. Set up your third-party IdP
 
@@ -45,26 +45,26 @@ First, you must create an [Okta Developer Edition
 Organization](https://developer.okta.com/signup/). Then, navigate to Applications >
 Applications and create a new app integration.
 
-![Okta new app integration](../../.gitbook/assets/okta-new-app-integration.png)
+![](../../.gitbook/assets/okta-new-app-integration.png)
 
 Give your app a name and (optional) logo.
 
-![Okta create SAML integration general settings](../../.gitbook/assets/okta-create-saml-integration-general.png)
+![](../../.gitbook/assets/okta-create-saml-integration-general.png)
 
 Fill out the SAML settings. You can find this information in the SSO tab of your
 organization on Hosted.
 
-![Okta create SAML integration configure SAML](../../.gitbook/assets/okta-create-saml-integration-configure.png)
+![](../../.gitbook/assets/okta-create-saml-integration-configure.png)
 
 If you'd like to add a signature certificate to verify the digital signatures, you can
 download the certificate from your Hosted organization's SSO page and upload it in
 Advanced Settings.
 
-![Okta create SAML integration advanced settings](../../.gitbook/assets/okta-create-saml-integration-advanced-settings.png)
+![](../../.gitbook/assets/okta-create-saml-integration-advanced-settings.png)
 
 Once your SAML integration is created it should look something like this:
 
-![Okta SAML integration](../../.gitbook/assets/okta-saml-integration.png)
+![](../../.gitbook/assets/okta-saml-integration.png)
 
 Download the metadata details from the provided Metadata URL. You'll need this when you
 add this identity provider to your Hosted organization.
@@ -76,33 +76,33 @@ curl -OL https://dev-99612740.okta.com/app/exkb7ksuh3Jn9h90I5d7/sso/saml/metadat
 Then in the Assignments tab, choose some People or Groups to assign to your integration.
 These people or groups will have single sign on into your Hosted organization.
 
-![Okta assign people](../../.gitbook/assets/okta-saml-assign-people.png)
+![](../../.gitbook/assets/okta-saml-assign-people.png)
 
 ### 3. Set up Hosted with the metadata from your IdP
 
 Now back to the Hosted website. In the SSO tab of your organization, add the metadata
 descriptor you downloaded from your Okta integration and click `Configure`.
 
-![Create SAML provider form](../../.gitbook/assets/hosted-configure-saml-sso.png)
+![](../../.gitbook/assets/hosted-configure-saml-sso.png)
 
 You can now share your organization's SSO login url (in this case
 https://hosted.doltdb.com/organizations/mycompany/sso) with the people you added to your
 Okta integration. They'll also have this link when they log in to their Okta account.
 
-![Okta My Apps](../../.gitbook/assets/okta-my-apps.png)
+![](../../.gitbook/assets/okta-my-apps.png)
 
 ### 4. Signing in to your organization's login URL
 
 When people from your Okta integration navigate to your organization's Login URL, they'll
 be redirected to the Okta SSO URL and prompted to log in (if they aren't already).
 
-![Okta SSO login](../../.gitbook/assets/okta-sso-url.png)
+![](../../.gitbook/assets/okta-sso-url.png)
 
 After successfully entering their Okta credentials, the Hosted website will check if a
 user exists that matches the Name ID from the SAML response from Okta. If a Hosted user
 does not already exist, they will be prompted for an email and username.
 
-![Create SAML account](../../.gitbook/assets/hosted-create-saml-account.png)
+![](../../.gitbook/assets/hosted-create-saml-account.png)
 
 The user will receive an email to verify their email address and automatically be added as
 a member to your organization. In the future when they log in they will be immediately

@@ -39,7 +39,7 @@ Using a [remote](../git/remotes.md) for backup allows you to back up all committ
 a remote using the [`select dolt_remote()`
 function](../../reference/sql/version-control/dolt-sql-functions.md#dolt_remote). Then you push a
 branch to a remote using the [`dolt_push()`
-function](../../reference/sql/version-control/dolt-sql-function.md#dolt_push).
+function](../../reference/sql/version-control/dolt-sql-functions.md#dolt_push).
 
 ## Not yet supported: non-remote backups
 
