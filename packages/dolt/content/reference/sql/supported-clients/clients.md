@@ -12,7 +12,7 @@ Once a server is running, any MySQL client should be able to connect to Dolt SQL
 $ mysql -u root
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 2
-Server version: 5.7.9-Vitess 
+Server version: 5.7.9-Vitess
 
 Copyright (c) 2000, 2022, Oracle and/or its affiliates.
 
@@ -71,7 +71,7 @@ We support the standard `mysql` Node library.
 
 We support the Java client distributed on the MySQL website called `mysql-connector-java`. For our test we use the architecture independent build.
 
-- [Official Client Documentation](https://dev.mysql.com/doc/connector-j/8.0/en/)
+- [Official Client Documentation](https://dev.mysql.com/doc/connector-j/en/)
 - [Java mysql-connector test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/java/MySQLConnectorTest.java)
 
 ## C
@@ -93,10 +93,12 @@ We support `mysql-connector-cpp`. Getting it to work correctly required we check
 We support [MySQL.Data.MySqlClient](https://dev.mysql.com/doc/connector-net/en/) distributed by MySQL and the asynchronous [MySqlConnector](https://mysqlconnector.net/). On OSX and Ubuntu we tested the client using [.Net core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1).
 
 ### MySQL.Data.MySqlClient
+
 - [Official Client Documentation](https://dev.mysql.com/doc/connector-net/en/)
 - [MySql.Data test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/dotnet/MySqlClient/Program.cs)
 
 ### MySQLConnector
+
 - [Official Client Documentation](https://mysqlconnector.net/)
 - [MySqlConnector test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/dotnet/MySqlConnector/Program.cs)
 
@@ -108,6 +110,7 @@ We support the [DBD::mysql](https://metacpan.org/pod/DBD::mysql) package that im
 - [DBD:mysql test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/perl/dbd-mysql-test.pl)
 
 ## PHP
+
 We support the built in [mysqli](https://www.php.net/manual/en/book.mysqli.php) extension and [PDO](https://www.php.net/manual/en/book.pdo.php) API for connecting to MySQL.
 
 - [Official mysqli Client Documentation](https://www.php.net/manual/en/book.mysqli.php)
@@ -127,10 +130,12 @@ We support the [go-sql-driver/mysql](https://github.com/go-sql-driver/mysql) pac
 We support the native [ruby/mysql](http://www.tmtm.org/en/ruby/mysql/) library and the native [mysql2](https://github.com/brianmario/mysql2) library. The [mysql/ruby](http://www.tmtm.org/en/mysql/ruby/) package uses the MySQL C API and [has not been ported to MySQL client version 8](https://github.com/luislavena/mysql-gem/issues/35). Thus, we do not support `mysql/ruby`.
 
 ### mysql2
+
 - [Official Client Documentation](https://www.rubydoc.info/gems/mysql2)
 - [mysql2 test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/ruby/mysql2-test.rb)
 
 ### ruby/mysql
+
 - [Official Client Documentation](http://www.tmtm.org/en/ruby/mysql/)
 - [ruby/mysql test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/ruby/ruby-mysql-test.rb)
 

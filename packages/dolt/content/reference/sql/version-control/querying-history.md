@@ -107,7 +107,7 @@ ORDER BY state, to_commit_date;
 ```
 
 For more information, see the [system table
-docs](dolt-system-tables.md).
+docs](./dolt-system-tables.md).
 
 ## Querying historical view data
 
