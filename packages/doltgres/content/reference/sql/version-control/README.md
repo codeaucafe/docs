@@ -27,5 +27,3 @@ system variables, functions, and stored procedures.
 - [System variables](./dolt-sysvars.md) documents all the
   Doltgres-provided system variables that expose and control various
   aspects of Doltgres's behavior.
-- [Saved Queries](./saved-queries.md) documents a Doltgres feature to save
-  queries for later execution.

@@ -69,7 +69,7 @@ SELECT DOLT_ADD('.');
 ```
 
 Version control features that only inspect the state of the database are modeled as [system
-tables](./dolt_system_tables.md) or [table functions](#table-functions) instead.
+tables](./dolt-system-tables.md) or [table functions](#table-functions) instead.
 
 The functions in this section are also available as stored procedures. Whether you access them as
 functions or as procedures is up to you. The main difference is that in Postgres, stored procedures
