@@ -72,7 +72,7 @@ Additional notes:
 
 Dolt currently supports table statistics for index and join costing.
 
-Statistics are auto-collected by default for servers, but cab be manually collected by running `ANALYZE TABLE <table, ...>`.
+Statistics are auto-collected by default for servers, but can be manually collected by running `ANALYZE TABLE <table, ...>`.
 
 Here is an example of how to initialize and observe statistics:
 
@@ -121,7 +121,7 @@ call dolt_stats_purge();
 A stopped-stats server can be restarted, or have a single collection cycle performed by an operator:
 
 ```sql
-call dolt_stats_starts();
+call dolt_stats_restart();
 call dolt_stats_once();
 ```
 
