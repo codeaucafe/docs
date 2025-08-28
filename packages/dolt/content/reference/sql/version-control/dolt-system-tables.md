@@ -50,6 +50,7 @@ title: Dolt System Tables
 - [Configuration](#configuration-tables)
 
   - [dolt_ignore](#dolt_ignore)
+  - [dolt_tests](#dolt_tests)
 
 - [Rebasing](#rebasing-tables)
 
@@ -1443,6 +1444,53 @@ WHERE staged=true;
 | foo                 | true   | new table |
 | generated_exception | true   | new table |
 +---------------------+--------+-----------+
+```
+
+## `dolt_tests`
+
+`dolt_tests` stores test definitions that can be executed using the [`DOLT_TEST_RUN()` table function](dolt-sql-functions.md#dolt_test_run). Tests define SQL queries with assertions about their expected results, providing a way to validate database behavior and catch regressions.
+
+### Schema
+
+```text
++----------------------+------+------+-----+
+| Field                | Type | Null | Key |
++----------------------+------+------+-----+
+| test_name            | text | NO   | PRI |
+| test_group           | text | YES  |     |
+| test_query           | text | NO   |     |
+| assertion_type       | text | NO   |     |
+| assertion_comparator | text | NO   |     |
+| assertion_value      | text | NO   |     |
++----------------------+------+------+-----+
+```
+
+### Notes
+
+Test queries must be read-only (no `INSERT`, `UPDATE`, `DELETE`, or DDL statements) and can only contain a single SQL statement.
+
+There are three types of assertions available:
+
+- `expected_rows`: Asserts on the number of rows returned by the query. The assertion_value should be an integer.
+- `expected_columns`: Asserts on the number of columns returned by the query. The assertion_value should be an integer.
+- `expected_single_value`: Asserts on the value of a single cell. The query must return exactly one row and one column. The assertion_value is compared against the returned value.
+
+The `assertion_comparator` field supports the following comparison operators: `==`, `!=`, `<`, `>`, `<=`, `>=`.
+
+### Example Queries
+
+Create a test that verifies a table has the expected number of rows:
+
+```sql
+INSERT INTO dolt_tests VALUES 
+('check_user_count', 'users', 'SELECT * FROM users', 'expected_rows', '==', '10');
+```
+
+Create a test that validates a specific calculated value:
+
+```sql
+INSERT INTO dolt_tests VALUES 
+('total_revenue', 'finance', 'SELECT SUM(amount) FROM sales', 'expected_single_value', '>=', '100000');
 ```
 
 # Rebasing Tables
