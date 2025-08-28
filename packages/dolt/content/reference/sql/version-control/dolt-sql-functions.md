@@ -28,6 +28,7 @@ title: Dolt SQL Functions
   - [dolt_schema_diff()](#dolt_schema_diff)
   - [dolt_query_diff()](#dolt_query_diff)
   - [dolt_branch_status()](#dolt_branch_status)
+  - [dolt_test_run()](#dolt_test_run)
 
 # Informational Functions
 
@@ -1480,3 +1481,84 @@ tmp/main> SELECT * FROM DOLT_BRANCH_STATUS('main', 'other');
 ```
 
 This means that `other` has commits `"other commit 1"` and `"other commit 2"` that are missing from `main`, and `main` has commit `"main commit"` that is missing from `other`.
+
+## `DOLT_TEST_RUN()`
+
+The `DOLT_TEST_RUN()` table function executes tests defined in the [`dolt_tests` system table](dolt-system-tables.md#dolt_tests) and returns the results. Tests can be run individually by name, by test group, or all at once.
+
+### Privileges
+
+`DOLT_TEST_RUN()` table function requires `SELECT` privilege for all tables used in test queries, as well as access to the `dolt_tests` system table.
+
+### Options
+
+```sql
+DOLT_TEST_RUN()
+DOLT_TEST_RUN('*')
+DOLT_TEST_RUN(<test_name>)
+DOLT_TEST_RUN(<group_name>)
+DOLT_TEST_RUN(<test_name>, <test_name>, <group_name>)             
+```
+
+The `DOLT_TEST_RUN()` table function will accept any number of arguments:
+
+- If called with no arguments, or with the wildcard `*`, it will run all tests in the `dolt_tests` table
+- One or more test names, or test group names, can be passed in.
+
+### Schema
+
+```text
++-----------------+------+
+| field           | type |
++-----------------+------+
+| test_name       | TEXT |
+| test_group_name | TEXT |
+| query           | TEXT |
+| status          | TEXT |
+| message         | TEXT |
++-----------------+------+
+```
+
+The `status` field will be either `PASS` or `FAIL`. The `message` field contains information about test failures, and will be empty for passing tests.
+
+### Example
+
+Consider a `dolt_tests` table with the following test definitions:
+
+```sql
+INSERT INTO dolt_tests VALUES 
+('user_count_test', 'users', 'SELECT COUNT(*) FROM users', 'expected_single_value', '>=', '10'),
+('active_users_test', 'users', 'SELECT COUNT(*) FROM users WHERE active = 1', 'expected_single_value', '>', '5'),
+('table_columns_test', 'schema', 'SELECT * FROM products', 'expected_columns', '==', '4');
+```
+
+Run all tests:
+
+```sql
+SELECT * FROM DOLT_TEST_RUN();
+```
+
+Results might look like:
+
+```text
++-------------------+-----------------+-----------------------------------------------+--------+-----------------------------------------------------------------+
+| test_name         | test_group_name | query                                         | status | message                                                         |
++-------------------+-----------------+-----------------------------------------------+--------+-----------------------------------------------------------------+
+| user_count_test   | users           | SELECT COUNT(*) FROM users                    | PASS   |                                                                 |
+| active_users_test | users           | SELECT COUNT(*) FROM users WHERE active = 1   | FAIL   | Assertion failed: expected_single_value greater than 5, got 3   |
+| table_columns_test| schema          | SELECT * FROM products                        | PASS   |                                                                 |
++-------------------+-----------------+-----------------------------------------------+--------+-----------------------------------------------------------------+
+```
+
+Other valid arguments include:
+```sql
+--- This will run all tests
+SELECT * FROM DOLT_TEST_RUN('*');
+
+--- This will run both groups
+SELECT * FROM DOLT_TEST_RUN('users', 'schema')
+
+--- This will run these two specific tests
+SELECT * FROM DOLT_TEST_RUN('user_count_test', 'table_columns_test')
+```
+
