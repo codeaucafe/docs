@@ -1501,7 +1501,7 @@ DOLT_TEST_RUN(<test_name_or_group>...)
 The `DOLT_TEST_RUN()` table function will accept any number of arguments:
 
 - If called with no arguments, or with the wildcard `*`, it will run all tests in the `dolt_tests` table
-- `test_name_or_group` — the name of a specific test or test group to run. The function will first look for an exact match on test name, then fall back to matching test group names.
+- `test_name_or_group`: one or more test names, or test group names to be run. For each argument, the function will first look for an exact match on the test name, then fall back to groups.
 
 ### Schema
 
@@ -1548,20 +1548,15 @@ Results might look like:
 +-------------------+-----------------+-----------------------------------------------+--------+-----------------------------------------------------------------+
 ```
 
-Run all tests using the wildcard:
-
+Other valid arguments include:
 ```sql
+--- This will run all tests
 SELECT * FROM DOLT_TEST_RUN('*');
+
+--- This will run both groups
+SELECT * FROM DOLT_TEST_RUN('users', 'schema')
+
+--- This will run these two specific tests
+SELECT * FROM DOLT_TEST_RUN('user_count_test', 'table_columns_test')
 ```
 
-Run tests for a specific group:
-
-```sql
-SELECT * FROM DOLT_TEST_RUN('users');
-```
-
-Run a specific test:
-
-```sql
-SELECT * FROM DOLT_TEST_RUN('user_count_test');
-```
