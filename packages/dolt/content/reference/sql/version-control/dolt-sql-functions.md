@@ -1543,7 +1543,7 @@ Results might look like:
 | test_name         | test_group_name | query                                         | status | message                                                         |
 +-------------------+-----------------+-----------------------------------------------+--------+-----------------------------------------------------------------+
 | user_count_test   | users           | SELECT COUNT(*) FROM users                    | PASS   |                                                                 |
-| active_users_test | users           | SELECT COUNT(*) FROM users WHERE active = 1  | FAIL   | Assertion failed: expected_single_value greater than 5, got 3  |
+| active_users_test | users           | SELECT COUNT(*) FROM users WHERE active = 1   | FAIL   | Assertion failed: expected_single_value greater than 5, got 3   |
 | table_columns_test| schema          | SELECT * FROM products                        | PASS   |                                                                 |
 +-------------------+-----------------+-----------------------------------------------+--------+-----------------------------------------------------------------+
 ```
