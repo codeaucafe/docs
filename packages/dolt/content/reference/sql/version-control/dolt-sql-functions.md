@@ -1495,13 +1495,15 @@ The `DOLT_TEST_RUN()` table function executes tests defined in the [`dolt_tests`
 ```sql
 DOLT_TEST_RUN()
 DOLT_TEST_RUN('*')
-DOLT_TEST_RUN(<test_name_or_group>...)
+DOLT_TEST_RUN(<test_name>)
+DOLT_TEST_RUN(<group_name>)
+DOLT_TEST_RUN(<test_name>, <test_name>, <group_name>)             
 ```
 
 The `DOLT_TEST_RUN()` table function will accept any number of arguments:
 
 - If called with no arguments, or with the wildcard `*`, it will run all tests in the `dolt_tests` table
-- `test_name_or_group`: one or more test names, or test group names to be run. For each argument, the function will first look for an exact match on the test name, then fall back to groups.
+- One or more test names, or test group names, can be passed in.
 
 ### Schema
 
