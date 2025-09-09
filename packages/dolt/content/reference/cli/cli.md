@@ -48,12 +48,14 @@ Valid commands for dolt are
              version - Displays the version for the Dolt binary.
                 dump - Export all tables in the working set into a file.
                 docs - Commands for working with Dolt documents.
-               stash - Stash the changes in a dirty working directory away.
+               stash - Stash the changes in a dirty workspace away.
              profile - Manage dolt profiles for CLI global options.
           query-diff - Shows table diff between two queries.
               reflog - Show history of named refs.
               rebase - Reapplies commits on top of another base tip
                   ci - Commands for working with Dolt continuous integration configuration.
+               debug - Run a query in profile and trace mode
+                  rm - Drops a table and removes it from tracking
 ```
 
 ## Global Arguments
@@ -277,7 +279,10 @@ Delete a branch. The branch must be fully merged in its upstream branch.
 Shortcut for `--delete --force`.
 
 `-t`, `--track`:
-When creating a new branch, set up 'upstream' configuration.
+Set up upstream configuration for a branch. Uses current branch as default
+
+`-u`, `--set-upstream-to`:
+Set upstream configuration for a branch.
 
 `--list`:
 List branches
@@ -425,7 +430,29 @@ dolt ci import <file>
 
 **Description**
 
-Import a Dolt continuous integration workflow file into the database and create a Dolt commit
+Import a Dolt continuous integration workflow file into the database 
+and create a Dolt commit.
+
+Workflow YAML Specification:
+
+  name: <workflow-name>
+
+  on:
+    push:
+      branches: [<branch-name>, ...]
+    pull_request:
+      branches: [<branch-name>, ...]
+      activities: [opened, closed, reopened, synchronized]
+    workflow_dispatch: {}
+
+  jobs:
+    - name: <job-name>
+      steps:
+        - name: <step-name>
+          saved_query_name: <query-name>
+          saved_query_statement: <optional-sql-statement>
+          expected_columns: <optional-expected-columns>
+          expected_rows: <optional-expected-rows>
 
 **Arguments and options**
 
@@ -484,6 +511,46 @@ Removes a Dolt continuous integration workflow by name and creates a Dolt commit
 **Arguments and options**
 
 No options for this command.
+
+## `dolt ci run`
+
+Run a Dolt CI workflow
+
+**Synopsis**
+
+```bash
+dolt ci run <workflow name>
+```
+
+**Description**
+
+Run a Dolt CI workflow by executing all saved queries and validating their results
+
+**Arguments and options**
+
+No options for this command.
+
+## `dolt ci view`
+
+View details of a specific Dolt CI workflow
+
+**Synopsis**
+
+```bash
+dolt ci view <workflow name>
+dolt ci view <workflow name> --job <job name>
+```
+
+**Description**
+
+View details of a specific Dolt CI workflow including steps, configuration, and status
+
+**Arguments and options**
+
+`-j`, `--job`:
+View workflow details for the given `<job name>`
+
+
 
 ## `dolt clean`
 
@@ -916,6 +983,52 @@ You can see your available credentials with 'dolt creds ls'.
 
 No options for this command.
 
+## `dolt debug`
+
+Runs a SQL query
+
+**Synopsis**
+
+```bash
+dolt debug 
+dolt debug < script.sql
+dolt debug -q <query> [-r <result format>] [-s <name> -m <message>] [-b]
+dolt debug -x <name>
+dolt debug --list-saved
+```
+
+**Description**
+
+Runs a SQL query you specify. With no arguments, begins an interactive shell to run queries and view the results. With the `-q` option, runs the given query and prints any results, then exits.
+
+Multiple SQL statements must be separated by semicolons. Use `-b` to enable batch mode to speed up large batches of INSERT / UPDATE statements. Pipe SQL files to dolt sql (no `-q`) to execute a SQL import or update script. 
+
+By default this command uses the dolt database in the current working directory. If you would prefer to use a different directory, user the `--data-dir <directory>` argument before the sql subcommand.
+
+If a server is running for the database in question, then the query will go through the server automatically. If connecting to a remote server is preferred, used the `--host <host>` and `--port <port>` global arguments. See 'dolt --help' for more information about global arguments.
+
+**Arguments and options**
+
+`-q`, `--query`:
+Runs a single query and exits.
+
+`-r`, `--result-format`:
+How to format result output. Valid values are tabular, csv, json, vertical, and parquet. Defaults to tabular.
+
+`-c`, `--continue`:
+Continue running queries on an error. Used for batch mode only.
+
+`-f`, `--file`:
+Execute statements from the file given.
+
+`-t`, `--time`:
+Execute for at least time seconds.
+
+`-o`, `--output`:
+Result directory (Defaults to temporary director)
+
+
+
 ## `dolt diff`
 
 Show changes between commits, commit and working tree, etc
@@ -956,6 +1069,12 @@ The `--diff-mode` argument controls how modified rows are presented when the for
 
 **Arguments and options**
 
+`-sk`, `--skinny`:
+Shows only primary key columns and any columns with data changes.
+
+`-ic`, `--include-cols`:
+A list of columns to include in the diff.
+
 `-d`, `--data`:
 Show only the data changes, do not show the schema changes (Both shown by default).
 
@@ -983,12 +1102,6 @@ Show only the staged data changes.
 `-c`, `--cached`:
 Synonym for --staged
 
-`-sk`, `--skinny`:
-Shows only primary key columns and any columns with data changes.
-
-`-ic`,`--include-cols=<columns>`:
-A comma-separated list of additional columns to include in the skinny output even if they did not change.
-
 `--merge-base`:
 Uses merge base of the first commit and second commit (or HEAD if not supplied) as the first commit
 
@@ -1000,6 +1113,9 @@ Reverses the direction of the diff.
 
 `--name-only`:
 Only shows table names.
+
+`--system`:
+Show system tables in addition to user tables
 
 
 
@@ -1243,6 +1359,9 @@ perform a fast, but incomplete garbage collection pass
 `-f`, `--full`:
 perform a full garbage collection, including the old generation
 
+`--archive-level`:
+Specify the archive compression level garbage collection results. Default is 0. Max is 1
+
 
 
 ## `dolt init`
@@ -1275,9 +1394,6 @@ Specify the date used in the initial commit. If not specified the current system
 
 `-b`, `--initial-branch`:
 The branch name used to initialize this database. If not provided will be taken from `init.defaultbranch` in the global config. If unset, the default initialized branch will be named 'main'.
-
-`--new-format`:
-Specify this flag to use the new storage format (__DOLT__).
 
 `--fun`
 
@@ -1336,6 +1452,9 @@ Shows refs next to commits. Valid options are short, full, no, and auto
 
 `--not`:
 Excludes commits from revision.
+
+`--all`:
+Automatically select every branch in database
 
 `--show-signature`:
 Shows the signature of each commit.
@@ -1885,6 +2004,34 @@ Specify an explicit author using the standard A U Thor `<author@example.com>` fo
 
 
 
+## `dolt rm`
+
+Drops a table and removes it from tracking
+
+**Synopsis**
+
+```bash
+dolt rm [<table>...]
+```
+
+**Description**
+
+
+In it's default mode, this command drops a table and removes it from tracking. Without '--cached', you can only call rm on committed tables.
+
+The option '--cached' can be used to untrack tables, but leave them in the working set. You can restage them with 'dolt add'.
+
+The dolt status command can be used to obtain a summary of which tables have changes that are staged for the next commit.'
+
+**Arguments and options**
+
+`<table>`: table(s) to remove from the list of tables staged to be committed.
+
+`--cached`:
+Use this option to unstage and remove tables only from the index. Working tree tables, whether modified or not, will be left alone.
+
+
+
 ## `dolt schema export`
 
 Exports table schemas as SQL DDL statements.
@@ -2176,6 +2323,15 @@ Continue running queries on an error. Used for batch mode only.
 `-f`, `--file`:
 Execute statements from the file given.
 
+`--binary-as-hex`:
+Print binary data as hex. Enabled by default for interactive terminals.
+
+`--skip-binary-as-hex`:
+Disable binary data as hex output.
+
+`--disable-auto-gc`:
+Disable automatically running GC.
+
 
 
 ## `dolt sql-server`
@@ -2197,6 +2353,8 @@ This is an example yaml configuration file showing all supported items and their
 
 	log_level: info
 	
+	log_format: text
+	
 	behavior:
 	  read_only: false
 	  autocommit: true
@@ -2205,11 +2363,14 @@ This is an example yaml configuration file showing all supported items and their
 	  event_scheduler: "ON"
 	  auto_gc_behavior:
 	    enable: false
+	    archive_level: 0
 	
 	listener:
 	  host: localhost
 	  port: 3306
-	  max_connections: 100
+	  max_connections: 1000
+	  back_log: 50
+	  max_connections_timeout_millis: 60000
 	  read_timeout_millis: 28800000
 	  write_timeout_millis: 28800000
 	
@@ -2239,6 +2400,8 @@ SUPPORTED CONFIG FILE FIELDS:
 
 `log_level`: Level of logging provided. Options are: `trace`, `debug`, `info`, `warning`, `error`, and `fatal`.
 
+`log_format`: Format of logging provided. Options are: `text`, `json`.
+
 `privilege_file`: "Path to a file to load and store users and grants. Defaults to `$doltcfg-dir/privileges.db`. Will be created automatically if it doesn't exist.
 
 `branch_control_file`: Path to a file to load and store branch control permissions. Defaults to `$doltcfg-dir/branch_control.db`. Will be created as needed.
@@ -2249,15 +2412,19 @@ SUPPORTED CONFIG FILE FIELDS:
 
 `behavior.autocommit`: If true every statement is committed automatically. Defaults to true. @@autocommit can also be specified in each session.
 
-`behavior.dolt_transaction_commit`: If true all SQL transaction commits will automatically create a Dolt commit, with a generated commit message. This is useful when a system working with Dolt wants to create versioned data, but doesn't want to directly use Dolt features such as dolt_commit().
+`behavior.dolt_transaction_commit`: If true all SQL transaction commits will automatically create a Dolt commit, with a generated commit message. This is useful when a system working with Dolt wants to create versioned data, but doesn't want to directly use Dolt features such as dolt_commit(). 
 
-`behavior.auto_gc_behavior.enable`: If true, the running server will periodically run a garbage collection against databases as they grow. When this is true, running a GC does not disrupt inflight queries or client connections to the server.
+`behavior.auto_gc_behavior.enabled`: If true, garbage collection will run automatically in the background. 
 
 `listener.host`: The host address that the server will run on.  This may be `localhost` or an IPv4 or IPv6 address
 
 `listener.port`: The port that the server should listen on
 
 `listener.max_connections`: The number of simultaneous connections that the server will accept
+
+`listener.back_log`: The number of simultaneous connections that the server will allow to block waiting for a connection before new connections result in immediate rejection. Default 50.
+
+`listener.max_wait_connections_timeout`: The maximum amount of time that a connection will block waiting for a connection before being rejected.
 
 `listener.read_timeout_millis`: The number of milliseconds that the server will wait for a read operation
 
@@ -2312,6 +2479,10 @@ Disable modification of the database.
 Defines the level of logging provided
 Options are: `trace`, `debug`, `info`, `warning`, `error`, `fatal`. Defaults to `info`.
 
+`-f`, `--logformat`:
+Defines the output format of the server log
+Options are: `text`, `json`. Defaults to `text`.
+
 `--data-dir`:
 Defines a directory to find databases to serve. Defaults to the current directory.
 
@@ -2328,7 +2499,13 @@ Set @@autocommit = off for the server.
 Deprecated, no effect in current versions of Dolt
 
 `--max-connections`:
-Set the number of connections handled by the server. Defaults to `100`.
+Set the number of connections handled by the server. Defaults to `1000`.
+
+`--back-log`:
+Set the number of connections that can block waiting for a connection before new connections are rejected. Defaults to `50`.
+
+`--max-connections-timeout`:
+Set the maximum duration that a connection will block waiting for a connection before being rejected. Defaults to `1m0s`.
 
 `--privilege-file`:
 Path to a file to load and store users and grants. Defaults to `$doltcfg-dir/privileges.db`. Will be created as needed.
@@ -2354,11 +2531,23 @@ Provides a connection string to a MySQL instance to be used to validate query re
 `--event-scheduler`:
 Determines whether the Event Scheduler is enabled and running on the server. It has one of the following values: 'ON', 'OFF' or 'DISABLED'.
 
+`--mcp-port`:
+If provided, runs a Dolt MCP HTTP server on this port alongside the sql-server.
+
+`--mcp-user`:
+SQL user for MCP to connect as (required when --mcp-port is set).
+
+`--mcp-password`:
+Optional SQL password for MCP to connect with (requires --mcp-user).
+
+`--mcp-database`:
+Optional SQL database name MCP should connect to (requires --mcp-port and --mcp-user).
+
 
 
 ## `dolt stash`
 
-Stash the changes in a dirty working directory away.
+Stash the changes in a dirty workspace away.
 
 **Synopsis**
 
@@ -2372,9 +2561,9 @@ dolt stash drop <stash>
 
 **Description**
 
-Use dolt stash when you want to record the current state of the working directory and the index, but want to go back to a clean working directory. 
+Use dolt stash when you want to record the current state of the workspace and the index, but want to go back to a clean workspace. 
 
-The command saves your local modifications away and reverts the working directory to match the HEAD commit. The stash entries that are saved away can be listed with 'dolt stash list'.
+The command saves your local modifications away and reverts the workspace to match the HEAD commit. The stash entries that are saved away can be listed with 'dolt stash list'.
 
 
 **Arguments and options**
@@ -2386,86 +2575,6 @@ Untracked tables are also stashed.
 All tables are stashed, including untracked and ignored tables.
 
 
-
-## `dolt stash clear`
-
-Remove all the stash entries.
-
-**Synopsis**
-
-```bash
-dolt stash clear 
-```
-
-**Description**
-
-Removes all the stash entries from the current stash list. This command cannot be reverted and stash entries may not be recoverable.
-
-This command does not apply the stash on current working directory, use 'dolt stash pop' to apply a stash on current working directory.
-
-**Arguments and options**
-
-No options for this command.
-
-## `dolt stash drop`
-
-Remove a single stash entry.
-
-**Synopsis**
-
-```bash
-dolt stash drop <stash>
-```
-
-**Description**
-
-Removes a single stash entry at given index from the list of stash entries (e.g. 'dolt stash drop stash@{1}' will drop the stash entry at index 1 in the stash list). 
-
-This command does not apply the stash on current working directory, use 'dolt stash pop' to apply a stash on current working directory.
-
-**Arguments and options**
-
-No options for this command.
-
-## `dolt stash list`
-
-List the stash entries that you currently have.
-
-**Synopsis**
-
-```bash
-dolt stash list 
-```
-
-**Description**
-
-Each stash entry is listed with its name (e.g. stash@{0} is the latest entry, stash@{1} is the one before, etc.), the name of the branch that was current when the entry was made, and a short description of the commit the entry was based on.
-
-
-**Arguments and options**
-
-No options for this command.
-
-## `dolt stash pop`
-
-Remove a single stash from the stash list and apply it on top of the current working set.
-
-**Synopsis**
-
-```bash
-dolt stash pop <stash>
-```
-
-**Description**
-
-Apply a single stash at given index and drop that stash entry from the stash list (e.g. 'dolt stash pop stash@{1}' will apply and drop the stash entry at index 1 in the stash list).
-
-Applying the stash entry can fail with conflicts; in this case, the stash entry is not removed from the stash list. You need to resolve the conflicts by hand and call dolt stash drop manually afterwards.
-
-
-**Arguments and options**
-
-No options for this command.
 
 ## `dolt status`
 
@@ -2556,10 +2665,10 @@ Imports data into a dolt table
 **Synopsis**
 
 ```bash
-dolt table import -c [-f] [--pk <field>] [--all-text] [--schema <file>] [--map <file>] [--continue]  [--quiet] [--disable-fk-checks] [--file-type <type>] <table> <file>
-dolt table import -u [--map <file>] [--continue] [--quiet] [--file-type <type>] <table> <file>
-dolt table import -a [--map <file>] [--continue] [--quiet] [--file-type <type>] <table> <file>
-dolt table import -r [--map <file>] [--file-type <type>] <table> <file>
+dolt table import -c [-f] [--pk <field>] [--all-text] [--schema <file>] [--map <file>] [--continue] [--quiet] [--disable-fk-checks] [--file-type <type>] [--no-header] [--columns <col1,col2,...>] <table> <file>
+dolt table import -u [--map <file>] [--continue] [--quiet] [--file-type <type>] [--no-header] [--columns <col1,col2,...>] <table> <file>
+dolt table import -a [--map <file>] [--continue] [--quiet] [--file-type <type>] [--no-header] [--columns <col1,col2,...>] <table> <file>
+dolt table import -r [--map <file>] [--file-type <type>] [--no-header] [--columns <col1,col2,...>] <table> <file>
 ```
 
 **Description**
@@ -2651,6 +2760,12 @@ Specify a delimiter for a csv style file with a non-comma delimiter.
 
 `--all-text`:
 Treats all fields as text. Can only be used when creating a table.
+
+`--no-header`:
+Treats the first row of a CSV file as data instead of a header row with column names.
+
+`--columns`:
+Comma-separated list of column names. If used with --no-header, defines column names for the file. If used without --no-header, overrides the column names in the file's header row.
 
 
 
@@ -2767,4 +2882,6 @@ display the feature version of this repository.
 
 `-v`, `--verbose`:
 display verbose details, including the storage format of this repository.
+
+
 
