@@ -56,6 +56,12 @@ remotesapi:
   port: null
   read_only: null
 
+mcp_server:
+  port: 7007
+  user: root
+  password: ""
+  database: ""
+
 system_variables: {}
 
 user_session_vars: []
