@@ -231,7 +231,7 @@ The `DOLT_DIFF()` table function takes either two or three required arguments:
 - `from_revision...to_revision` — gets the three dot diff, or revision of table data between the `from_revision` and `to_revision`, _starting at the last common commit_.
 - `tablename` — the name of the table containing the data to diff.
 
-In addition to positional arguments, `DOLT_DIFF()` supports the following flags:
+In addition to required arguments listed above, `DOLT_DIFF()` also supports the following optional arguments:
 
 - `--skinny`: Shows only primary key columns and any columns with data changes. Always includes primary keys, commit metadata columns, and `diff_type`.
 - `--include-cols=<columns>`: A comma-separated list of additional columns to include in the output even if they did not change.
