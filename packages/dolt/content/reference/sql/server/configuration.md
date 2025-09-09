@@ -1344,7 +1344,7 @@ $ DOLT_REMOTE_PASSWORD= dolt push --user root origin main
 
 ## mcp_server
 
-Starts a [Dolt MCP](https://github.com/dolthub/dolt-mcp) HTTP server that will be connected to the started Dolt SQL server when enabling these configuration values. When the MCP server is enabled, your AI agents can call tools against your Dolt database. Additional information is provided in [this blog article]().
+Starts a [Dolt MCP](https://github.com/dolthub/dolt-mcp) HTTP server that will be connected to the started Dolt SQL server when enabling these configuration values. When the MCP server is enabled, your AI agents can call tools against your Dolt database. Additional information is provided in [this blog article](). Note: MCP server logs respect the log level of the `dolt sql-server` command, and will be written to the Dolt server log output.
   
 ### port 
 
