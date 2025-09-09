@@ -56,6 +56,12 @@ remotesapi:
   port: null
   read_only: null
 
+mcp_server:
+  port: 7007
+  user: root
+  password: ""
+  database: ""
+
 system_variables: {}
 
 user_session_vars: []
@@ -1335,6 +1341,89 @@ Date:  Wed Dec 11 14:07:35 -0800 2024
 $ DOLT_REMOTE_PASSWORD= dolt push --user root origin main
 - Uploading...unknown push error; rpc error: code = PermissionDenied desc = this server only provides read-only access
 ```
+
+## mcp_server
+
+Starts a [Dolt MCP](https://github.com/dolthub/dolt-mcp) HTTP server that will be connected to the started Dolt SQL server when enabling these configuration values. When the MCP server is enabled, your AI agents can call tools against your Dolt database. Additional information is provided in [this blog article]().
+  
+### port 
+
+**Default**: `7007`
+
+**Required**
+
+**Values**: Any integer between 1024 to 49151
+
+### user 
+
+**Default**: `root`
+
+**Required**
+
+**Values**: The SQL user the MCP server will use. 
+
+### password 
+
+**Optional**
+
+**Values**: The password of the SQL user used by the MCP server. 
+
+### database 
+
+**Optional**
+
+**Values**: The specific database the MCP server is connected to. 
+
+**Example:**
+
+```sh
+$ grep -5 mcp_server config.yaml
+
+# remotesapi:
+  # port: 8000
+  # read_only: false
+
+mcp_server:
+  port: 7007
+  user: root 
+  password: "" 
+  database: ""
+
+$ dolt sql-server --config config.yaml
+Starting server with Config HP="0.0.0.0:3306"|T="28800000"|R="false"|L="debug"
+DEBU[0000] Loading events
+DEBU[0000] privileges.db already exists, not creating root superuser
+INFO[0000] Server ready. Accepting connections.
+WARN[0000] secure_file_priv is set to "", which is insecure.
+WARN[0000] Any user with GRANT FILE privileges will be able to read any file which the sql-server process can read.
+WARN[0000] Please consider restarting the server with secure_file_priv set to a safe (or non-existent) directory.
+```
+
+In another shell, I can register the MCP server with an agent an it can start using it immediately.
+
+```sh
+$ claude mcp add -t http dolt-mcp http://localhost:7007/mcp
+Added HTTP MCP server dolt-mcp with URL: http://localhost:7007/mcp to local config
+```
+
+```sh
+$ claude
+╭───────────────────────────────────────────────────╮
+│ ✻ Welcome to Claude Code!                         │
+│                                                   │
+│   /help for help, /status for your current setup  │
+│                                                   │
+╰───────────────────────────────────────────────────╯
+╭──────────────────────────────────────────────────────────────╮
+│ Manage MCP servers                                           │
+│                                                              │
+│ ❯ 1. dolt-mcp  ✔ connected · Enter to view details           │
+│                                                              │
+╰──────────────────────────────────────────────────────────────╯
+   Esc to exit
+```
+
+I now have a Dolt SQL server on port `3306` and a Dolt MCP server on port `7007`.
 
 ## system_variables
 
