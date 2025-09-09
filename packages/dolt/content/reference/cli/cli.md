@@ -986,6 +986,9 @@ Synonym for --staged
 `-sk`, `--skinny`:
 Shows only primary key columns and any columns with data changes.
 
+`-ic`,`--include-cols=<columns>`:
+A comma-separated list of additional columns to include in the skinny output even if they did not change.
+
 `--merge-base`:
 Uses merge base of the first commit and second commit (or HEAD if not supplied) as the first commit
 
