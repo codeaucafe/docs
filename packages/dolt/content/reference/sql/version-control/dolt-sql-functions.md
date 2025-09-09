@@ -234,7 +234,7 @@ The `DOLT_DIFF()` table function takes either two or three required arguments:
 In addition to required arguments listed above, `DOLT_DIFF()` also supports the following optional arguments:
 
 - `--skinny`: Shows only primary key columns and any columns with data changes. Always includes primary keys, commit metadata columns, and `diff_type`.
-- `--include-cols=<columns>`: A comma-separated list of additional columns to include in the output even if they did not change.
+- `--include-cols=<columns>`: A comma-separated list of additional columns to include in the skinny output even if they did not change.
 
 ### Schema
 
