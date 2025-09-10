@@ -117,7 +117,8 @@ enterprise:
   no_multihost_default_placement_preferences_spreads: false
   scheme: "http"
   tls:
-    cert_chain: "/path/to/cert.pem"
+    cert_chain: "/path/to/cert.pem" # Deprecated: use `full_chain_cert` instead.
+    full_chain_cert: "/path/to/cert.pem"
     private_key: "/path/to/key.pem"
   smtp:
     host: "smtp.email.com"
@@ -1305,12 +1306,13 @@ Command line equivalent [scheme](./cli.md#scheme).
 
 _Dictionary_. TLS configuration options. DoltLab Enterprise only. _Optional_. See [serving DoltLab natively over HTTPS](../../guides/enterprise.md#serve-doltlab-over-https-natively) for more information.
 
-- [cert_chain](#cert_chain)
+- [cert_chain](#cert_chain) Deprecated, use `full_chain_cert` instead.
+- [full_chain_cert](#full_chain_cert)
 - [private_key](#private_key)
 
 ### cert_chain
 
-_String_. The absolute path to a TLS certificate chain with `.pem` extension. _Required_.
+_String_. Deprecated, use `full_chain_cert` instead. The absolute path to a TLS full chain certificate with `.pem` extension. _Required_.
 
 ```yaml
 # example installer_config.yaml
@@ -1320,6 +1322,19 @@ enterprise:
 ```
 
 Command line equivalent [tls-cert-chain](./cli.md#tls-cert-chain).
+
+### full_chain_cert
+
+_String_. The absolute path to a TLS full chain certificate with `.pem` extension. _Required_.
+
+```yaml
+# example installer_config.yaml
+enterprise:
+  tls:
+    full_chain_cert: /path/to/tls/cert/chain.pem
+```
+
+Command line equivalent [tls-full-chain-cert](./cli.md#tls-full-chain-cert).
 
 ### private_key
 
