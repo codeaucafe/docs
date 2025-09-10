@@ -643,9 +643,15 @@ Configuration file equivalent [super_admins](./configuration-file.md#super_admin
 
 ## tls-cert-chain
 
-_String_. Absolute path to TLS certificate chain with `.pem` extension. DoltLab Enterprise only.
+_String_. Deprecated, use `tls-full-chain-cert` instead. Absolute path to a TLS full chain certificate with `.pem` extension. DoltLab Enterprise only.
 
 Configuration file equivalent [cert_chain](./configuration-file.md#cert_chain).
+
+## tls-full-chain-cert
+
+_String_. Absolute path to a TLS full chain certificate with `.pem` extension. DoltLab Enterprise only.
+
+Configuration file equivalent [full_chain_cert](./configuration-file.md#full_chain_cert).
 
 ## tls-private-key
 
