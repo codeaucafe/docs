@@ -34,23 +34,23 @@ attempt to run as many queries as possible in a fixed 2 minute time
 window. The `Dolt` and `MySQL` columns show the median latency in 
 milliseconds (ms) of each query during that 2 minute time window.
 
-The Dolt version is `1.59.7`.
+The Dolt version is `1.59.8`.
 
 <!-- START___DOLT___LATENCY_RESULTS_TABLE -->
 |       Read Tests        | MySQL |  Dolt  | Multiple |
 |:-----------------------:|:-----:|:------:|:--------:|
-|  covering\_index\_scan  | 1.82  |  0.65  |   0.36   |
+|  covering\_index\_scan  | 1.86  |  0.67  |   0.36   |
 |      groupby\_scan      | 13.7  | 18.61  |   1.36   |
 |       index\_join       |  1.5  |  2.43  |   1.62   |
 |    index\_join\_scan    |  1.5  |  1.39  |   0.93   |
-|       index\_scan       | 34.33 | 30.26  |   0.88   |
-|   oltp\_point\_select   | 0.21  |  0.28  |   1.33   |
-|    oltp\_read\_only     | 3.89  |  5.28  |   1.36   |
-| select\_random\_points  | 0.36  |  0.57  |   1.58   |
+|       index\_scan       | 34.95 | 30.26  |   0.87   |
+|   oltp\_point\_select   |  0.2  |  0.28  |   1.4    |
+|    oltp\_read\_only     | 3.82  |  5.28  |   1.38   |
+| select\_random\_points  | 0.35  |  0.57  |   1.63   |
 | select\_random\_ranges  | 0.39  |  0.61  |   1.56   |
 |       table\_scan       | 34.95 | 32.53  |   0.93   |
 |   types\_table\_scan    | 75.82 | 125.52 |   1.66   |
-| reads\_mean\_multiplier |       |        |   1.23   |
+| reads\_mean\_multiplier |       |        |   1.25   |
 
 |       Write Tests        | MySQL | Dolt  | Multiple |
 |:------------------------:|:-----:|:-----:|:--------:|
@@ -65,10 +65,10 @@ The Dolt version is `1.59.7`.
 
 |    TPC-C TPS Tests    | MySQL | Dolt  | Multiple |
 |:---------------------:|:-----:|:-----:|:--------:|
-|  tpcc-scale-factor-1  | 93.4  | 39.75 |   2.35   |
-| tpcc\_tps\_multiplier |       |       |   2.35   |
+|  tpcc-scale-factor-1  | 94.0  | 39.86 |   2.36   |
+| tpcc\_tps\_multiplier |       |       |   2.36   |
 
-| Overall Mean Multiple | 1.50 |
+| Overall Mean Multiple | 1.51 |
 |:---------------------:|:----:|
 <!-- END___DOLT___LATENCY_RESULTS_TABLE -->
 <br/>
