@@ -22,4 +22,5 @@ This section is divided into five main categories:
 4. [Information Schema](information-schema.md): Dolt support for MySQL information schema
 5. [Collations and Character Sets](collations-and-charsets.md): SQL features for describing and comparing strings
 6. [System Variables](system-variables.md): SQL features for configuring server behavior
-7. [Miscellaneous](miscellaneous.md): miscellaneous SQL features 
+7. [SQL Modes](sql-modes.md): Dolt support for MySQL SQL modes
+8. [Miscellaneous](miscellaneous.md): miscellaneous SQL features 
