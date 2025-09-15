@@ -89,6 +89,7 @@
   - [MySQL Information Schema](reference/sql/sql-support/information-schema.md)
   - [Collations and Character Sets](reference/sql/sql-support/collations-and-charsets.md)
   - [System Variables](reference/sql/sql-support/system-variables.md)
+  - [SQL Modes](reference/sql/sql-support/sql-modes.md)
   - [Miscellaneous](reference/sql/sql-support/miscellaneous.md)
 - [Supported Clients](reference/sql/supported-clients/README.md)
   - [Programmatic](reference/sql/supported-clients/clients.md)
