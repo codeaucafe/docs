@@ -475,7 +475,7 @@ Most functions are simple to implement. If you need one that isn't implemented, 
 | `UTC_TIME()`                      | ❌            |                                                                                                                                               |
 | `UTC_TIMESTAMP()`                 | ✅            |                                                                                                                                               |
 | `UUID()`                          | ✅            |                                                                                                                                               |
-| `UUID_SHORT()`                    | ✅            | Returns a 64-bit unsigned integer UUID using server_id, startup time, and counter. |
+| `UUID_SHORT()`                    | ✅            | Returns a 64-bit unsigned integer UUID using server_id, startup time, and counter                                                             |
 | `UUID_TO_BIN()`                   | ✅            |                                                                                                                                               |
 | `UPDATEXML()`                     | ❌            |                                                                                                                                               |
 | `VALIDATE_PASSWORD_STRENGTH()`    | ✅            |                                                                                                                                               |
