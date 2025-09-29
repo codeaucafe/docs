@@ -79,3 +79,15 @@ Some system tables are not supported on DoltHub, for example, `dolt_conflicts`, 
 Make sure the query works on DoltHub before adding the console.
 
 To avoid timeout, use a small-size database. sometimes queries with `ORDER BY` will time out. After removing `ORDER BY`, it will return much faster.
+
+## Generate Dolt CLI docs
+
+The [Dolt CLI docs](https://docs.dolthub.com/cli-reference/cli) are generated from Dolt using the `dolt dump-docs` command.
+
+Make sure you have the latest version Dolt installed.
+
+```
+docs % cd packages/dolt/content/reference/cli
+cli % rm cli.md
+cli % dolt dump-docs
+```

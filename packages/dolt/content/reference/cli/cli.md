@@ -448,11 +448,17 @@ Workflow YAML Specification:
   jobs:
     - name: <job-name>
       steps:
+        # Saved query step
         - name: <step-name>
           saved_query_name: <query-name>
           saved_query_statement: <optional-sql-statement>
           expected_columns: <optional-expected-columns>
           expected_rows: <optional-expected-rows>
+
+        # Dolt test step
+        - name: <step-name>
+          dolt_test_groups: [<group-name>, ...]   # optional
+          dolt_test_tests:  [<test-name>,  ...]   # optional
 
 **Arguments and options**
 
@@ -798,9 +804,9 @@ dolt conflicts resolve --ours|--theirs <table>...
 **Description**
 
 
-	When a merge finds conflicting changes, it documents them in the dolt_conflicts table. A conflict is between two versions: ours (the rows at the destination branch head) and theirs (the rows at the source branch head).
+When a merge finds conflicting changes, it documents them in the dolt_conflicts table. A conflict is between two versions: ours (the rows at the destination branch head) and theirs (the rows at the source branch head).
 
-	dolt conflicts resolve will automatically resolve the conflicts by taking either the ours or theirs versions for each row.
+dolt conflicts resolve will automatically resolve the conflicts by taking either the ours or theirs versions for each row.
 
 
 **Arguments and options**
