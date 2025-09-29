@@ -62,7 +62,7 @@ We can query the table and see the new schema and data:
 +----+-----+
 ```
 
-You can reference the [`dolt table import`](https://docs.dolthub.com/cli-reference/cli#dolt-table-import) documenation for additional ways to modify your database such as updating or replacing your existing data.
+You can reference the [`dolt table import`](https://docs.dolthub.com/cli-reference/cli#dolt-table-import) documentation for additional ways to modify your database such as updating or replacing your existing data.
 
 2. Importing with a schema
 
@@ -222,7 +222,7 @@ The other way to work with spreadsheet data is with Dolthub's ["edit like a spre
 
 ## Pandas Dataframe
 
-We recommend standard MySQL + Python techniques when intergrating Dolt with Pandas. First you want to connect to your
+We recommend standard MySQL + Python techniques when integrating Dolt with Pandas. First you want to connect to your
 Dolt database with the [SQLAlchemy](https://www.sqlalchemy.org/) ORM. Here's some sample code below:
 
 ```python
