@@ -463,7 +463,7 @@ Most functions are simple to implement. If you need one that isn't implemented, 
 | `TO_DAYS()`                       | ✅            |                                                                                                                                               |
 | `TO_SECONDS()`                    | ❌            |                                                                                                                                               |
 | `TRIM()`                          | ✅            |                                                                                                                                               |
-| `TRUNCATE()`                      | ✅            | Truncate to specified number of decimal places                                                                                               |
+| `TRUNCATE()`                      | ✅            |                                                                                                                                               |
 | `UCASE()`                         | ✅            |                                                                                                                                               |
 | `UNCOMPRESS()`                    | ✅            |                                                                                                                                               |
 | `UNCOMPRESSED_LENGTH()`           | ✅            |                                                                                                                                               |
