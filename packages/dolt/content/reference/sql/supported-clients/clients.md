@@ -27,7 +27,7 @@ mysql>
 
 We explicitly support the programmatic clients outlined in this document through integration testing. Tests are run on GitHub pull requests to Dolt in a Ubuntu environment in a Docker container. If you would like another MySQL compatible client supported and tested, [please let us know](https://www.dolthub.com/contact).
 
-The test code linked to below is a good way to get started connecting to a Dolt SQL server if you are not familiar how to connect to MySQL in your language of choice. The code establishes a connection, runs some simple queries, verifies the output comes back as expected, and closes the connection.'
+The test code linked to below is a good way to get started connecting to a Dolt SQL server if you are not familiar how to connect to MySQL in your language of choice. The code establishes a connection, runs some simple queries, verifies the output comes back as expected, and closes the connection.
 
 > ⚠️ **Disclaimer:** This is a recommendation based on our testing with Dolt. While the MySQL and MariaDB connector libraries are largely similar, we recommend using the MySQL connectors. They are more thoroughly tested with Dolt, whereas the MariaDB connectors have some known quirks, such as silently stripping certain SQL join hint comments.
 
