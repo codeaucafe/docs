@@ -27,11 +27,14 @@ mysql>
 
 We explicitly support the programmatic clients outlined in this document through integration testing. Tests are run on GitHub pull requests to Dolt in a Ubuntu environment in a Docker container. If you would like another MySQL compatible client supported and tested, [please let us know](https://www.dolthub.com/contact).
 
-The test code linked to below is a good way to get started connecting to a Dolt SQL server if you are not familiar how to connect to MySQL in your language of choice. The code establishes a connection, runs some simple queries, verifies the output comes back as expected, and closes the connection.
+The test code linked to below is a good way to get started connecting to a Dolt SQL server if you are not familiar how to connect to MySQL in your language of choice. The code establishes a connection, runs some simple queries, verifies the output comes back as expected, and closes the connection.'
+
+> ⚠️ **Disclaimer:** This is a recommendation based on our testing with Dolt. While the MySQL and MariaDB connector libraries are largely similar, we recommend using the MySQL connectors. They are more thoroughly tested with Dolt, whereas the MariaDB connectors have some known quirks, such as silently stripping certain SQL join hint comments.
+
 
 ## Python
 
-We currently support multiple Python MySQL connectors, including [mysql.connector](https://dev.mysql.com/doc/connector-python/en/), [pymysql](https://pymysql.readthedocs.io/en/latest/), and [mariadb](https://mariadb.com/docs/server/connect/programming-languages/python/). These are all native \(ie. do not depend on a MySQL compiled C library\) Python libraries available through `pip`.
+We currently support multiple Python MySQL connectors, including [mysql.connector](https://dev.mysql.com/doc/connector-python/en/), [pymysql](https://pymysql.readthedocs.io/en/latest/), and [mariadb](https://mariadb.com/docs/server/connect/programming-languages/python/). These are all fully written in Python, however, the MariaDB connector does build from the C connector.
 
 ### mysql.connector
 
@@ -86,17 +89,17 @@ We support multiple Java MySQL connectors, including `mysql-connector-j`, `maria
 ### mysql-connector-j
 
 - [Official Client Documentation](https://dev.mysql.com/doc/connector-j/en/)
-- [Java mysql-connector test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/java/MySQLConnectorTest.java)
+- [Java mysql-connector test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/java/src/main/java/MySQLConnectorTest.java)
 
 ### mariadb-java-client
 
 - [Official Client Documentation](https://mariadb.com/kb/en/about-mariadb-connector-j/)
-- [Java mariadb-java-client test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/java/MariaDBConnectorTest.java)
+- [Java mariadb-java-client test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/java/src/main/java/MariaDBConnectorTest.java)
 
 ### r2dbc-mariadb
 
 - [Official Client Documentation](https://mariadb.com/docs/connectors/mariadb-connector-r2dbc/mariadb-connector-r2dbc-guide)
-- [Java r2dbc-mariadb test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/java/R2DBCMariaDBTest.java)
+- [Java r2dbc-mariadb test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/java/src/main/java/MariaDBR2DBCTest.java)
 
 ## C
 
@@ -105,12 +108,12 @@ We support [libmysqlclient](https://dev.mysql.com/doc/c-api/8.0/en/) distributed
 ### libmysqlclient
 
 - [Official Client Documentation](https://dev.mysql.com/doc/c-api/8.0/en/)
-- [C libmysqlclient test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/c/mysql-client-test.c)
+- [C libmysqlclient test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/c/mysql-connector-test.c)
 
 ### MariaDB Connector/C
 
 - [Official Client Documentation](https://mariadb.com/kb/en/mariadb-connector-c/)
-- [C MariaDB Connector/C test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/c/mariadb-client-test.c)
+- [C MariaDB Connector/C test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/c/mariadb-connector-test.c)
 
 ### MariaDB ODBC
 
@@ -119,7 +122,7 @@ We support [libmysqlclient](https://dev.mysql.com/doc/c-api/8.0/en/) distributed
 
 ## C++
 
-We support `mysql-connector-cpp` and `mariadb-connector-cpp`. We build with the connnectors through the available OS packages.
+We support `mysql-connector-cpp` and `mariadb-connector-cpp`. We build these connectors through the available packages in MariaDB [download page](https://mariadb.com/downloads/connectors/connectors-data-access/cpp-connector/) or Debian's `apt-get`.
 
 ### mysql-connector-cpp
 
@@ -133,7 +136,7 @@ We support `mysql-connector-cpp` and `mariadb-connector-cpp`. We build with the 
 
 ## Dotnet
 
-We support [MySQL.Data.MySqlClient](https://dev.mysql.com/doc/connector-net/en/) distributed by MySQL and the asynchronous [MySqlConnector](https://mysqlconnector.net/). We tested the client using [.Net 9.0 SDK](https://dotnet.microsoft.com/en-us/download).
+We support [MySQL.Data.MySqlClient](https://dev.mysql.com/doc/connector-net/en/) distributed by MySQL and the asynchronous [MySqlConnector](https://mysqlconnector.net/). We tested the client using [.NET 9.0 SDK](https://dotnet.microsoft.com/en-us/download).
 
 ### MySQL.Data.MySqlClient
 
@@ -161,7 +164,7 @@ We support the [DBD::mysql](https://metacpan.org/pod/DBD::mysql) and [DBD::Maria
 
 ## PHP
 
-We support the built in [mysqli](https://www.php.net/manual/en/book.mysqli.php) extension and [PDO](https://www.php.net/manual/en/book.pdo.php) API for connecting to MySQL.
+We support the built-in [mysqli](https://www.php.net/manual/en/book.mysqli.php) extension and [PDO](https://www.php.net/manual/en/book.pdo.php) API for connecting to MySQL.
 
 - [Official mysqli Client Documentation](https://www.php.net/manual/en/book.mysqli.php)
 - [mysqli test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/php/mysqli_connector_test.php)
@@ -176,12 +179,12 @@ We support multiple Go MySQL clients, including [go-sql-driver/mysql](https://gi
 ### go-sql-driver/mysql
 
 - [Official Client Documentation](https://github.com/go-sql-driver/mysql)
-- [go-sql-driver/mysql test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/go/go-sql-driver-mysql-test.go)
+- [go-sql-driver/mysql test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/go/sql-driver-mysql-test.go)
 
 ### go-mysql
 
 - [Official Client Documentation](https://github.com/go-mysql-org/go-mysql)
-- [go-mysql test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/go-mysql/main.go)
+- [go-mysql test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/go-mysql/mysql-client-test.go)
 
 ## Ruby
 
@@ -195,11 +198,11 @@ We support the native [ruby/mysql](http://www.tmtm.org/en/ruby/mysql/) library a
 ### ruby/mysql
 
 - [Official Client Documentation](http://www.tmtm.org/en/ruby/mysql/)
-- [ruby/mysql test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/ruby/ruby-mysql-test.rb)
+- [ruby/mysql test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/ruby/mysql-client-test.rb)
 
 ## R
 
-We support the legacy [RMySQL](https://github.com/r-dbi/RMySQL) and newer [RMariaDB](https://github.com/r-dbi/RMariaDB) R clients. Both implement [DBI](https://metacpan.org/pod/DBI) and require either [libmysqlclient](https://dev.mysql.com/doc/c-api/8.0/en/) or [MariaDBConnector/C](https://downloads.mariadb.org/connector-c/).
+We support the legacy [RMySQL](https://github.com/r-dbi/RMySQL) and newer [RMariaDB](https://github.com/r-dbi/RMariaDB) R clients. Both implement [DBI](https://metacpan.org/pod/DBI) and require either [libmysqlclient](https://dev.mysql.com/doc/c-api/8.0/en/) or [MariaDBConnector/C](https://mariadb.com/docs/connectors/mariadb-connector-c/mariadb-connector-c-guide).
 
 - [RMySQL Official Client Documentation](https://github.com/r-dbi/RMySQL)
 - [RMYSQL test code](https://github.com/dolthub/dolt/blob/main/integration-tests/mysql-client-tests/r/rmysql-test.r)
@@ -209,7 +212,7 @@ We support the legacy [RMySQL](https://github.com/r-dbi/RMySQL) and newer [RMari
 
 There is also an open-source, third-party wrapper for working with Dolt, called [DoltR](https://github.com/noamross/doltr). This tool is well-maintained by [EcoHealth Alliance](https://www.ecohealthalliance.org/) and provides an easy way to work with local or remote Dolt databases from within R Studio.
 
-- [Getting Started with Doltr](https://rdrr.io/github/ecohealthalliance/doltr/f/README.md)
+- [Getting Started with DoltR](https://rdrr.io/github/ecohealthalliance/doltr/f/README.md)
 - [DoltR on GitHub](https://github.com/ecohealthalliance/doltr)
 
 ## Rust
