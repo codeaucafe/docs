@@ -104,7 +104,7 @@ Possible values from most logging to least. Each log level logs everything below
 
 **Example**:
 
-In this example, I set the log level to `info` and run a bad query. Then, I restart the server with `debug` log level an re-run the same bad query.
+In this example, I set the log level to `info` and run a bad query. Then, I restart the server with `debug` log level and re-run the same bad query.
 
 ```sh
 $ grep log_level config.yaml        
@@ -696,7 +696,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 **Example**:
 
-Astute readers may have noticed I've been running this example on port 3310 the whole time. I'm using port 3306 for [my long-running Wikipedia import](https://www.dolthub.com/blog/2024-12-09-wikipedia-update/). I have this port configured in muy `config.yaml`. The second and third port settings are for a Remote API and a metrics endpoint which are not covered in this article.
+Astute readers may have noticed I've been running this example on port 3310 the whole time. I'm using port 3306 for [my long-running Wikipedia import](https://www.dolthub.com/blog/2024-12-09-wikipedia-update/). I have this port configured in my `config.yaml`. The second and third port settings are for a Remote API and a metrics endpoint which are not covered in this article.
 
 ```sh
 $ grep port config.yaml  
@@ -893,7 +893,7 @@ We were a bit confused how to trigger this timeout and could only do it within D
 
 ### `tls_key`
 
-`tls_key`, `tls_cert`, and `require_secure_transport` as used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). `tls_key` is the path to the key file to use for secure transport.
+`tls_key`, `tls_cert`, and `require_secure_transport` are used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). `tls_key` is the path to the key file to use for secure transport.
 
 From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
 
@@ -905,7 +905,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 ### `tls_cert`
 
-`tls_key`, `tls_cert`, and `require_secure_transport` as used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). `tls_cert` is the path to the ket file to use for secure transport.
+`tls_key`, `tls_cert`, and `require_secure_transport` are used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). `tls_cert` is the path to the cert file to use for secure transport.
 
 From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
 
@@ -999,7 +999,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 **Example**:
 
-I set the `log_level` to `debug` and the `max_logged_query_len` to 10 and start theDolt SQL server.
+I set the `log_level` to `debug` and the `max_logged_query_len` to 10 and start the Dolt SQL server.
 
 ```sh
 $ grep log_level config.yaml 
