@@ -104,7 +104,7 @@ Possible values from most logging to least. Each log level logs everything below
 
 **Example**:
 
-In this example, I set the log level to `info` and run a bad query. Then, I restart the server with `debug` log level an re-run the same bad query.
+In this example, I set the log level to `info` and run a bad query. Then, I restart the server with `debug` log level and re-run the same bad query.
 
 ```sh
 $ grep log_level config.yaml        
@@ -542,7 +542,7 @@ The `auto_gc_behavior` subsection of `behavior` controls the configuration of [a
 
 #### `enable`
 
-**Default**: false
+**Default**: true
 
 **Values**: false, true
 
@@ -563,7 +563,7 @@ MySQL [auto_gc_test]> select 1;
 ERROR 1105 (HY000): this connection was established when this server performed an online garbage collection. this connection can no longer be used. please reconnect.
 ```
 
-When running with `auto_gc_behavior: enable: true`, the server will periodically run a garbage collection of a growing database in the background. The impact of running a garabage collection on the server will also be different. It will no longer terminate in flight connections and it will no longer leave the calling conection in an invalid state.
+When running with `auto_gc_behavior: enable: true`, the server will periodically run a garbage collection of a growing database in the background. The impact of running a garbage collection on the server will also be different. It will no longer terminate in flight connections and it will no longer leave the calling connection in an invalid state.
 
 ```sh
 % cat config.yaml
@@ -634,19 +634,15 @@ mysql> call dolt_gc();
 ERROR 1105 (HY000): no changes since last gc
 ```
 
-Automatic garbage collection in Dolt is currently experimental. Its scheduling and pacing of the GC process itself is not yet configurable, and enabling it may have material performance impact on the running server.
-
 #### `archive_level`
 
-**Default**: 0
+**Default**: 1
 
 **Values**: 0, 1
 
 When automatic garbage collection is enabled, you can optionally specify the amount of compression performed on the storage files.
 
-The default value of `0` will perform minimal compression, while level `1` will result in ~25% less space used.
-
-Automated Garbage Collection, and Archive support are both considered experimental features.
+The default level `1` will result in ~30% less space used, but may force older clients to perform more computational work if they are not upgraded. Setting this value to `0` should only be done if there are a considerable number of contributors to the database who can not upgrade.
 
 **Example**:
 ```sh
@@ -700,7 +696,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 **Example**:
 
-Astute readers may have noticed I've been running this example on port 3310 the whole time. I'm using port 3306 for [my long-running Wikipedia import](https://www.dolthub.com/blog/2024-12-09-wikipedia-update/). I have this port configured in muy `config.yaml`. The second and third port settings are for a Remote API and a metrics endpoint which are not covered in this article.
+Astute readers may have noticed I've been running this example on port 3310 the whole time. I'm using port 3306 for [my long-running Wikipedia import](https://www.dolthub.com/blog/2024-12-09-wikipedia-update/). I have this port configured in my `config.yaml`. The second and third port settings are for a Remote API and a metrics endpoint which are not covered in this article.
 
 ```sh
 $ grep port config.yaml  
@@ -897,7 +893,7 @@ We were a bit confused how to trigger this timeout and could only do it within D
 
 ### `tls_key`
 
-`tls_key`, `tls_cert`, and `require_secure_transport` as used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). `tls_key` is the path to the key file to use for secure transport.
+`tls_key`, `tls_cert`, and `require_secure_transport` are used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). `tls_key` is the path to the key file to use for secure transport.
 
 From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
 
@@ -909,7 +905,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 ### `tls_cert`
 
-`tls_key`, `tls_cert`, and `require_secure_transport` as used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). `tls_cert` is the path to the ket file to use for secure transport.
+`tls_key`, `tls_cert`, and `require_secure_transport` are used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). `tls_cert` is the path to the cert file to use for secure transport.
 
 From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-reference/cli#dolt-sql-server):
 
@@ -1003,7 +999,7 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 **Example**:
 
-I set the `log_level` to `debug` and the `max_logged_query_len` to 10 and start theDolt SQL server.
+I set the `log_level` to `debug` and the `max_logged_query_len` to 10 and start the Dolt SQL server.
 
 ```sh
 $ grep log_level config.yaml 
