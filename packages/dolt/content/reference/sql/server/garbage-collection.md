@@ -53,4 +53,4 @@ At the end of the run, the connection which ran `call dolt_gc()` will be left op
 
 The connection should be closed. In some connection pools it can be awkward to cause a single connection to actually close. If you need to run `call dolt_gc()` programmatically, one workaround is to use a separate connection pool with a size of 1 which can be closed after the run is successful.
 
-NOTE: Performing GC on [a cluster replica](../server/replication.md) which is in standby mode is not yet supported, and running `call dolt_gc()` on the replica will fail.
+NOTE: Performing GC on [a cluster replica](../server/replication.md) which is in standby mode is not yet supported, and running `call dolt_gc()` on the replica will fail. This only applies when Automatic GC is disabled on the secondary.
