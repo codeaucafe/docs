@@ -15,6 +15,7 @@ title: Dolt System Tables
   - [dolt_backups](#dolt_backups)
   - [dolt_schemas](#dolt_schemas)
   - [dolt_tags](#dolt_tags)
+  - [dolt_branch_activity](#dolt_branch_activity)
   - [dolt_statistics](#dolt_statistics)
 
 - [Database History](#database-history-system-tables)
@@ -419,6 +420,43 @@ CALL DOLT_TAG('_migrationtest','head','-m','savepoint for migration testing');
 Get all the tags.
 
 {% embed url="https://www.dolthub.com/repositories/dolthub/first-hour-db/embed/main?q=SELECT+*+FROM+dolt_tags%3B" %}
+
+## `dolt_branch_activity`
+`dolt_branch_activity` provides insights into branch usage within the lifetime of a running `dolt sql-server`. This table helps administrators identify stale or unused branches. The data is global to the server, and it not related to the persisted data in the database. For the reason, the `system_start_time` column will always be the start time of your server, and the `last_read` and `last_write` columns should be considered in relation to that time. Activity for branches which have been deleted will not be included in this table.
+### Schema
+
+```text
++-------------------+----------+------+-----+---------+-------+
+| Field             | Type     | Null | Key | Default | Extra |
++-------------------+----------+------+-----+---------+-------+
+| branch            | text     | NO   | PRI | NULL    |       |
+| last_read         | datetime | YES  |     | NULL    |       |
+| last_write        | datetime | YES  |     | NULL    |       |
+| active_sessions   | int      | NO   |     | NULL    |       |
+| system_start_time | datetime | NO   |     | NULL    |       |
++-------------------+----------+------+-----+---------+-------+
+```
+
+### Column Descriptions
+
+- `branch`: The name of the branch. All current branches are listed, even if unused.
+- `last_read`: The last time the branch was accessed in a query or checked out. `NULL` indicates no reads during the server's lifetime.
+- `last_write`: The last time the branch was updated or committed to. `NULL` indicates no writes during the server's lifetime.
+- `active_sessions`: The number of active server connections to the branch.
+- `system_start_time`: The server's start time. All `last_read` and `last_write` timestamps occur after this time.
+
+### Example Queries
+
+Find branches with no active sessions and no activity in the last 7 days:
+
+```sql
+SELECT *
+FROM dolt_branch_activity
+WHERE active_sessions = 0
+  AND system_start_time < NOW() - INTERVAL 7 DAY
+  AND (last_read  IS NULL OR last_read  < NOW() - INTERVAL 7 DAY)
+  AND (last_write IS NULL OR last_write < NOW() - INTERVAL 7 DAY);
+```
 
 ## `dolt_statistics`
 
