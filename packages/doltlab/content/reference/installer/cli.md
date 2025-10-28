@@ -663,6 +663,12 @@ Configuration file equivalent [private_key](./configuration-file.md#private_key)
 
 _Boolean_. If true will generate a script to install DoltLab's dependencies on Ubuntu.
 
+## podman
+
+_Boolean_. If true, generates assets targeting Podman/Podman Compose (rootless) instead of Docker. This adjusts generated files to be compatible with Podman, such as removing service depends_on, setting appropriate container user, and mapping the Podman socket.
+
+Configuration file equivalent [use_podman](./configuration-file.md#use_podman).
+
 ## upgrade
 
 _Boolean_. If true will upgrade DoltLab to the latest version. DoltLab Enterprise only.

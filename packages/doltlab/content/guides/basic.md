@@ -6,6 +6,8 @@ title: "Basic Administrator Guide"
 
 This guide will cover how to perform common DoltLab administrator configuration and tasks for the latest versions of DoltLab, >= `v2.1.0`. These versions use the [installer](../reference/installer.md) binary included in DoltLab's `.zip` file. For instructions on running DoltLab in Enterprise mode and configuring exclusive Enterprise features, see the [Enterprise Guide](./enterprise.md). If you're using an older version of DoltLab that does not include the [installer](../reference/installer.md), please see the [pre-installer Admin guide](../older/pre-installer-administrator-guide.md).
 
+> Note: If you enabled Podman mode (`--podman` flag or `use_podman: true` in `installer_config.yaml`), substitute `docker` with `podman` and `docker-compose` with `podman-compose` in the commands below. Container names may use hyphens instead of underscores (e.g., `doltlab-doltlabapi-1`).
+
 1. [File issues and view release notes](#file-issues-and-view-release-notes)
 2. [Backup DoltLab data](#backup-and-restore-volumes)
 3. [Connect with the DoltLab team](#connect-with-the-doltlab-team)
@@ -218,16 +220,26 @@ If you need to connect to a DoltLab team member, the best way to do so is on [Di
 
 # View DoltLab Service Logs
 
-DoltLab is composed of [multiple services](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/) running in a single Docker network via Docker compose. Docker writes the logs of each DoltLab service to an internal location. Logs for a particular service can be viewed using the `docker logs <container name>` command. For example, to view to logs of `doltlabapi` service, run:
+DoltLab is composed of [multiple services](https://www.dolthub.com/blog/2022-02-25-doltlab-101-services-and-roadmap/) running in a single container network via Compose. The container engine writes the logs of each DoltLab service to an internal location. Logs for a particular service can be viewed using the engine's logs command. For example, to view logs of `doltlabapi` service, run:
 
 ```bash
 docker logs doltlab_doltlabapi_1
 ```
 
-You can find the location where Docker writes a service's logs by inspecting the `LogPath` of the service.
+Podman equivalent:
+```bash
+podman logs doltlab-doltlabapi-1
+```
+
+You can find the location where the engine writes a service's logs by inspecting the `LogPath` of the service.
 
 ```bash
 docker inspect --format='{{.LogPath}}' doltlab_doltlabapi_1
+```
+
+Podman equivalent:
+```bash
+podman inspect --format='{{.LogPath}}' doltlab-doltlabapi-1
 ```
 
 ## Data logged by DoltLab Services

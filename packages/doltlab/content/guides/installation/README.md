@@ -40,10 +40,12 @@ DoltLab requires the following dependencies:
 - [unzip](https://www.tecmint.com/install-zip-and-unzip-in-linux/)
 - [docker](https://docs.docker.com/engine/install/)
 - [docker-compose](https://docs.docker.com/compose/install/)
+- [podman](https://podman.io/docs/installation) (optional; supported by the installer)
+- [podman-compose](https://github.com/containers/podman-compose) (optional)
 - [amazon-ecr-credential-helper](https://github.com/awslabs/amazon-ecr-credential-helper)
 - Access to an [SMTP server](https://aws.amazon.com/what-is/smtp/), like [smtp.gmail.com](https://support.google.com/a/answer/176600?hl=en).
 
-To streamline dependency installation, with DoltLab >= `v2.1.2` you can run the [installer](../../reference/installer.md) with one of the following flags to generate a dependency installation script:
+To streamline dependency installation, with DoltLab >= `v2.1.2` you can run the [installer](../../reference/installer.md) with one of the following flags to generate a dependency installation script. These scripts install Docker and Docker Compose, and also install Podman and Podman Compose so you can choose either runtime.
 
 ```bash
 # generate a script to install DoltLab dependencies on Ubuntu

@@ -13,6 +13,7 @@ docker_network: "doltlab"
 metrics_disabled: false
 whitelist_all_users: true
 use_env: false
+use_podman: false
 services:
   doltlabenvoy:
     replicas: 1
@@ -172,6 +173,7 @@ The following are top-level `installer_config.yaml` options:
 - [metrics_disabled](#metrics_disabled)
 - [whitelist_all_users](#whitelist_all_users)
 - [use_env](#use_env)
+- [use_podman](#use_podman)
 - [services](#services)
 - [default_user](#default_user)
 - [jobs](#jobs)
@@ -247,6 +249,22 @@ use_env: true
 ```
 
 Command line equivalent [use-env](./cli.md#use-env).
+
+## use_podman
+
+_Boolean_. If true, generates assets targeting Podman/Podman Compose (rootless) instead of Docker. This adjusts generated files to be compatible with Podman, including:
+
+- Removing service `depends_on` entries (not supported by podman-compose)
+- Setting `doltlabapi` service `user: "${UID}:${GID}"` and exporting `UID`/`GID` in `start.sh`
+- Mapping the rootless Podman socket at `/run/user/${UID}/podman/podman.sock:/var/run/docker.sock`
+- Setting `ENVOY_UID=0` for the `doltlabenvoy` service
+
+```yaml
+# example installer_config.yaml
+use_podman: true
+```
+
+Command line equivalent [podman](./cli.md#podman).
 
 ## services
 
