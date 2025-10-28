@@ -55,3 +55,11 @@ Let us know what else you'd like to see tested by sending us [email](mailto:inte
 | [Retool](https://retool.com/)                                                              | [Blog](https://www.dolthub.com/blog/2023-01-03-superpower-retool-with-dolt/)              |
 | [WordPress](https://wordpress.com/)                                                        | [Blog](https://www.dolthub.com/blog/2023-08-04-wordpress-on-dolt/)                        |
 | [XCA](https://hohnstaedt.de/xca/)                                                          | [Blog](https://www.dolthub.com/blog/2023-08-21-xca-on-dolt/)                              |
+
+## App Builders
+
+| App Builder                        | Blog                                                                       |
+|------------------------------------|----------------------------------------------------------------------------|
+| [Replit](https://replit.com/)      | [Blog](https://www.dolthub.com/blog/2025-10-15-replit-works-with-dolt/)    |
+| [Vercel v0](https://vercel.com/v0) | [Blog](https://www.dolthub.com/blog/2025-10-01-vercel-v0-works-with-dolt/) |
+| [Lovable](https://lovable.dev/)    | [Blog](https://www.dolthub.com/blog/2025-10-28-lovable-works-with-dolt/)   |
