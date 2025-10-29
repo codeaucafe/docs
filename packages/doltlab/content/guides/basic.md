@@ -1023,6 +1023,8 @@ To run DoltLab with Podman (rootless), do the following:
    sudo sysctl -p
    ```
 
+   You may also need to restart the host.
+
 4. Start the Podman REST API so Docker-compatible clients can connect (use a background process or systemd):
 
    ```bash
