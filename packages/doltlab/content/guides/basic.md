@@ -29,6 +29,7 @@ This guide will cover how to perform common DoltLab administrator configuration 
 19. [Reset password attempts for a user](#reset-password-attempts-for-a-user)
 20. [Change `doltlabdb` Server Configuration](#change-doltlabdb-server-configuration)
 21. [Troubleshoot common issues](#troubleshoot-common-issues)
+22. [Run DoltLab with Podman](#run-doltlab-with-podman)
 
 # File issues and view release notes
 
@@ -982,3 +983,58 @@ docker volume rm doltlab_doltlabdb-dolt-data
 After deleting the volume, start your DoltLab instance again. DoltLab will recreate the volume and it will be initialized with the new credentials you provided in `installer_config.yaml`.
 
 For all other issues not covered in this section, please reach out to our support team on [Discord](https://discord.gg/dolthub).
+
+# Run DoltLab with Podman
+
+To run DoltLab with Podman (rootless), do the following:
+
+1. Enable Podman mode when generating assets with the [installer](../reference/installer.md):
+
+   - Pass the `--podman` flag, or
+   - Set `use_podman: true` in `installer_config.yaml` and rerun `./installer`.
+
+   When Podman mode is enabled, use `podman`/`podman-compose` in place of `docker`/`docker-compose`. Container names may use hyphens instead of underscores (e.g., `doltlab-doltlabapi-1`).
+
+2. Install Podman and Podman Compose.
+
+   - If you are using the generated install scripts, these will be installed for you automatically.
+   - Otherwise, install them via your distro's package manager. Examples:
+
+   ```bash
+   # Debian / Ubuntu
+   sudo apt update && sudo apt install -y podman podman-compose
+
+   # Fedora
+   sudo dnf install -y podman podman-compose
+
+   # Arch Linux
+   sudo pacman -S --needed podman podman-compose
+   ```
+
+3. Allow rootless containers to bind to port 80 by lowering the unprivileged port start. Add the following to `/etc/sysctl.conf`:
+
+   ```
+   net.ipv4.ip_unprivileged_port_start=80
+   ```
+
+   Then apply the change:
+
+   ```bash
+   sudo sysctl -p
+   ```
+
+4. Start the Podman REST API so Docker-compatible clients can connect (use a background process or systemd):
+
+   ```bash
+   podman system service -t 0 &
+   ```
+
+   If your environment expects a Docker socket, you may also need to export `DOCKER_HOST` to point at Podman's socket (for example, `unix:///run/user/$UID/podman/podman.sock`).
+
+5. Start DoltLab as usual with the generated scripts:
+
+   ```bash
+   ./start.sh
+   ```
+
+With these steps, DoltLab should run under Podman without requiring root privileges.
