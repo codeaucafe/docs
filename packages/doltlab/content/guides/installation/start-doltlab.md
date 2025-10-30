@@ -129,19 +129,19 @@ For more ways to configure and run your DoltLab instance, checkout [DoltLab's Ad
 
 ## Running with Podman
 
-If you prefer Podman, the installer can generate Podman-ready assets. Enable Podman mode with either:
+If you prefer Podman, the installer can generate Podman-ready assets. Select the Podman runtime with either:
 
 ```bash
-./installer --podman
+./installer --runtime=podman
 ```
 
 or by adding the following to `installer_config.yaml`:
 
 ```yaml
-use_podman: true
+runtime: podman
 ```
 
-In Podman mode, `start.sh` uses `podman-compose`, exports `UID`/`GID` for rootless volumes, removes unsupported `depends_on` entries in the compose file, and maps the rootless socket at `/run/user/${UID}/podman/podman.sock`.
+When the Podman runtime is selected, `start.sh` uses `podman-compose`, exports `UID`/`GID` for rootless volumes, removes unsupported `depends_on` entries in the compose file, and maps the rootless socket at `/run/user/${UID}/podman/podman.sock`.
 
 # Next Steps
 

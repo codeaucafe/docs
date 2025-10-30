@@ -6,7 +6,7 @@ title: "Basic Administrator Guide"
 
 This guide will cover how to perform common DoltLab administrator configuration and tasks for the latest versions of DoltLab, >= `v2.1.0`. These versions use the [installer](../reference/installer.md) binary included in DoltLab's `.zip` file. For instructions on running DoltLab in Enterprise mode and configuring exclusive Enterprise features, see the [Enterprise Guide](./enterprise.md). If you're using an older version of DoltLab that does not include the [installer](../reference/installer.md), please see the [pre-installer Admin guide](../older/pre-installer-administrator-guide.md).
 
-> Note: If you enabled Podman mode (`--podman` flag or `use_podman: true` in `installer_config.yaml`), substitute `docker` with `podman` and `docker-compose` with `podman-compose` in the commands below. Container names may use hyphens instead of underscores (e.g., `doltlab-doltlabapi-1`).
+> Note: If you selected the Podman runtime (`--runtime=podman` flag or `runtime: podman` in `installer_config.yaml`), substitute `docker` with `podman` and `docker-compose` with `podman-compose` in the commands below. Container names may use hyphens instead of underscores (e.g., `doltlab-doltlabapi-1`).
 
 1. [File issues and view release notes](#file-issues-and-view-release-notes)
 2. [Backup DoltLab data](#backup-and-restore-volumes)
@@ -988,10 +988,10 @@ For all other issues not covered in this section, please reach out to our suppor
 
 To run DoltLab with Podman (rootless), do the following:
 
-1. Enable Podman mode when generating assets with the [installer](../reference/installer.md):
+1. Select the Podman runtime when generating assets with the [installer](../reference/installer.md):
 
-   - Pass the `--podman` flag, or
-   - Set `use_podman: true` in `installer_config.yaml` and rerun `./installer`.
+   - Pass the `--runtime=podman` flag, or 
+   - Set `runtime: podman` in `installer_config.yaml` and rerun `./installer`.
 
    When Podman mode is enabled, use `podman`/`podman-compose` in place of `docker`/`docker-compose`. Container names may use hyphens instead of underscores (e.g., `doltlab-doltlabapi-1`).
 
