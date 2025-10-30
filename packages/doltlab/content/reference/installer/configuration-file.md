@@ -12,7 +12,8 @@ host: "127.0.0.1"
 docker_network: "doltlab"
 metrics_disabled: false
 whitelist_all_users: true
-use_env: false
+  use_env: false
+  runtime: docker
 services:
   doltlabenvoy:
     replicas: 1
@@ -172,6 +173,7 @@ The following are top-level `installer_config.yaml` options:
 - [metrics_disabled](#metrics_disabled)
 - [whitelist_all_users](#whitelist_all_users)
 - [use_env](#use_env)
+- [runtime](#runtime)
 - [services](#services)
 - [default_user](#default_user)
 - [jobs](#jobs)
@@ -247,6 +249,24 @@ use_env: true
 ```
 
 Command line equivalent [use-env](./cli.md#use-env).
+
+## runtime
+
+_String_. Selects the container runtime used by generated assets. Allowed values: `docker` (default) or `podman`.
+
+When `runtime: podman` is set, the installer adjusts generated files to be compatible with Podman, including:
+
+- Removing service `depends_on` entries (not supported by podman-compose)
+- Setting `doltlabapi` service `user: "${UID}:${GID}"` and exporting `UID`/`GID` in `start.sh`
+- Mapping the rootless Podman socket at `/run/user/${UID}/podman/podman.sock:/var/run/docker.sock`
+- Setting `ENVOY_UID=0` for the `doltlabenvoy` service
+
+```yaml
+# example installer_config.yaml
+runtime: podman
+```
+
+Command line equivalent [runtime](./cli.md#runtime).
 
 ## services
 

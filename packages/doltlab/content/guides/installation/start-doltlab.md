@@ -127,6 +127,22 @@ Navigating to `http://${HOST_IP}:80` in a web browser, where `HOST_IP` is the do
 
 For more ways to configure and run your DoltLab instance, checkout [DoltLab's Administrator Guide](../basic.md).
 
+## Running with Podman
+
+If you prefer Podman, the installer can generate Podman-ready assets. Select the Podman runtime with either:
+
+```bash
+./installer --runtime=podman
+```
+
+or by adding the following to `installer_config.yaml`:
+
+```yaml
+runtime: podman
+```
+
+When the Podman runtime is selected, `start.sh` uses `podman-compose`, exports `UID`/`GID` for rootless volumes, removes unsupported `depends_on` entries in the compose file, and maps the rootless socket at `/run/user/${UID}/podman/podman.sock`.
+
 # Next Steps
 
 - [Administrator Guide](../basic.md)
