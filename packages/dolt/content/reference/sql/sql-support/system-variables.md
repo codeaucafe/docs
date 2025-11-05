@@ -490,7 +490,7 @@ This is generally done to make `mysqldump` files import into Dolt with no errors
 | last_insert_id                                                 | ✅         |
 | lc_messages                                                    | ✅         |
 | lc_messages_dir                                                | ✅         |
-| lc_time_names                                                  | ✅         |
+| lc_time_names                                                  | ❌         |
 | license                                                        | ✅         |
 | local_infile                                                   | ✅         |
 | lock_order                                                     | ❌         |

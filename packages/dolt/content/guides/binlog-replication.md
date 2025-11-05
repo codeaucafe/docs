@@ -81,6 +81,16 @@ Stop replication: `STOP REPLICA;`
 Clear out replication source and filtering configuration: `RESET REPLICA ALL;`
 
 
+## BINLOG Statement Support
+
+Dolt supports the [`BINLOG` statement](https://dev.mysql.com/doc/refman/8.4/en/binlog.html), an internal-use statement that replays base64-encoded binary log events. Tools like `mysqldump` and `mariadb-binlog` generate this statement to output database changes that can be replayed on another server. For example:
+
+```bash
+mariadb-binlog mariadb-bin.000001 mariadb-bin.000002 | mariadb -u root -p -h 127.0.0.1 --skip-ssl
+```
+
+> ⚠️ Concurrent `BINLOG` statements can corrupt each other's states; pipe through a singular client only.
+
 ## Limitations
 
 **Syntax gaps** – Dolt aims for 100% compatibility with MySQL, but there are still some gaps in supported syntax that we're actively working on filling in. Overall, Dolt supports the **vast** majority of MySQL's syntax, although you may still find a statement that executes on the MySQL primary, but won't execute on the Dolt read-replica because of a syntax gap. Please [let us know](https://github.com/dolthub/dolt/issues/new) if you hit this so we can help find a temporary workaround and fill in the syntax gap for you.    
@@ -91,7 +101,7 @@ Clear out replication source and filtering configuration: `RESET REPLICA ALL;`
 
 **Replication checksums** – We do not currently validate replication checksums due to a limitation in the library we use to deserialize binlog events. If the source server sends events with checksums, they will be ignored. 
 
-Please [cut us an issue](https://github.com/dolthub/dolt/issues/new) if any of the above limitations are an issue for you, and we'll be happy to dig in and see how we can make Dolt’s binlog replication work for your environment.
+Please [cut us an issue](https://github.com/dolthub/dolt/issues/new) if any of the above limitations are an issue for you, and we'll be happy to dig in and see how we can make Dolt's binlog replication work for your environment.
 
 
 ## Roadmap
