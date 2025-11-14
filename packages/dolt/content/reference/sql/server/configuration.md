@@ -34,6 +34,7 @@ listener:
   max_connections_timeout_millis: 60000
   read_timeout_millis: 28800000
   write_timeout_millis: 28800000
+  ca_cert: null
   tls_key: null
   tls_cert: null
   require_secure_transport: null
@@ -890,6 +891,14 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 **Example**:
 
 We were a bit confused how to trigger this timeout and could only do it within Dolt code. Practically, we think this type of timeout is triggered very rarely in the wild.
+
+### `ca_cert`
+
+`ca_cert` allows you to specify a CA (Certificate Authority) certificate that will be used to validate client certificates. You can configure user accounts to require a valid client certificate when creating the user account by specifying the `REQUIRE X509` clause, for example: `CREATE USER user1@'%' REQUIRE X509`.   
+
+**Default**: null
+
+**Values**: A path on your filesystem to a `.pem` file.
 
 ### `tls_key`
 
