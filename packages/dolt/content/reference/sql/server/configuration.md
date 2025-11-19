@@ -651,6 +651,21 @@ behavior: { auto_gc_behavior: { enable: true, archive_level: 1 } }
 % dolt sql-server --config config.yaml
 ```
 
+### `branch_activity_tracking`
+
+**Default**: false
+
+**Values**: true, false, null
+
+This flag is used to enable the `dolt_branch_activity` [system table](https://docs.dolthub.com/sql-reference/version-control/dolt-system-tables#dolt_branch_activity). This feature can impact performance on high-throughput servers, so it is disabled by default.
+
+**Example**:
+```sh
+% cat config.yaml
+behavior: { branch_activity_tracking: true } }
+% dolt sql-server --config config.yaml
+```
+
 ## `listener`
 
 The listener section of `config.yaml` is configuration for the SQL server transport layer.
