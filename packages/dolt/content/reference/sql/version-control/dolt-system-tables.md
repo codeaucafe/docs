@@ -423,6 +423,9 @@ Get all the tags.
 
 ## `dolt_branch_activity`
 `dolt_branch_activity` provides insights into branch usage within the lifetime of a running `dolt sql-server`. This table helps administrators identify stale or unused branches. The data is global to the server, and it not related to the persisted data in the database. For the reason, the `system_start_time` column will always be the start time of your server, and the `last_read` and `last_write` columns should be considered in relation to that time. Activity for branches which have been deleted will not be included in this table.
+
+For performance reasons, this table is only available if you opt-in to enable it. See [server configuration](https://docs.dolthub.com/sql-reference/server/configuration#branch_activity_tracking) for details. 
+
 ### Schema
 
 ```text
