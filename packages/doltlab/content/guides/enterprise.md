@@ -426,6 +426,75 @@ And now DoltLab is Starbucks branded!
 See other examples of utilizing colors to brand DoltLab for some well-known companies
 [here](https://dolthub.awsdev.ld-corp.com/blog/2024-05-23-customizing-doltlab-colors/#other-examples).
 
+# Deploy DoltLab on Kubernetes (single-host)
+
+This section describes how to deploy DoltLab Enterprise to Kubernetes. The installer generates Kubernetes manifests for a single-host logical deployment. Multi-host Kubernetes on DoltLab is not yet supported.
+
+Notes:
+- Kubernetes deployments require DoltLab Enterprise.
+- The installer’s `docker_network` becomes the Kubernetes namespace.
+- Generated assets are written under `k8s/` and applied with `kubectl`.
+- Envoy is the unified edge exposed as a LoadBalancer Service.
+- With TLS enabled, the UI is served on 443 and port 80 is disabled. Without TLS, the UI is served on 80.
+- Internal server-to-server traffic uses the in-cluster file service endpoint.
+
+### Prerequisites
+- A Kubernetes cluster with a working `kubectl` context.
+- LoadBalancer support in your environment.
+- A default StorageClass (volumeBindingMode: WaitForFirstConsumer recommended).
+- Optional: ExternalDNS configured in the cluster.
+
+### Example configuration (TLS)
+```yaml
+version: "vX.Y.Z"
+host: "doltlab.example.com"
+docker_network: "doltlab"   # becomes the K8s namespace
+runtime: "k8s"
+enterprise:
+  scheme: "https"
+  tls:
+    full_chain_cert: "/path/to/fullchain.pem"
+    private_key: "/path/to/privkey.pem"
+  online_product_code: "<code>"
+  online_shared_key: "<key>"
+  online_api_key: "<key>"
+  online_license_key: "<key>"
+```
+
+### Example configuration (non‑TLS)
+```yaml
+version: "vX.Y.Z"
+host: "doltlab.example.com"
+docker_network: "doltlab"
+runtime: "k8s"
+enterprise:
+  scheme: "http"
+```
+
+### Generate and apply manifests
+```bash
+./installer --config ./installer_config.yaml
+kubectl apply -f ./k8s/all.yaml
+```
+
+### Verify deployment
+```bash
+kubectl -n <namespace> get pods
+kubectl -n <namespace> get svc doltlabenvoy
+```
+
+If you use ExternalDNS, add an annotation to the `doltlabenvoy` Service:
+```yaml
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: doltlab.example.com
+```
+
+### Uninstall
+```bash
+kubectl delete -f ./k8s/all.yaml
+```
+
 # Add Super Admins to a DoltLab instance
 
 DoltLab Enterprise allows administrators to specify users who will be "super admins" on their DoltLab instance.

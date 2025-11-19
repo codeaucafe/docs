@@ -252,7 +252,7 @@ Command line equivalent [use-env](./cli.md#use-env).
 
 ## runtime
 
-_String_. Selects the container runtime used by generated assets. Allowed values: `docker` (default) or `podman`.
+_String_. Selects the runtime used by generated assets. Allowed values: `docker` (default), `podman`, or `k8s`.
 
 When `runtime: podman` is set, the installer adjusts generated files to be compatible with Podman, including:
 
@@ -267,6 +267,19 @@ runtime: podman
 ```
 
 Command line equivalent [runtime](./cli.md#runtime).
+
+When `runtime: k8s` is set, the installer generates Kubernetes manifests under `k8s/`. Apply them with `kubectl apply -f ./k8s/all.yaml`. The value of `docker_network` is used as the Kubernetes namespace. Kubernetes deployments are single-host logical deployments in DoltLab Enterprise; multi-host Kubernetes topologies are not supported.
+
+```yaml
+# example installer_config.yaml
+runtime: k8s
+docker_network: doltlab   # becomes the K8s namespace
+enterprise:
+  scheme: https
+  tls:
+    full_chain_cert: /path/to/fullchain.pem
+    private_key: /path/to/privkey.pem
+```
 
 ## services
 
