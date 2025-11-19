@@ -37,6 +37,7 @@ listener:
   ca_cert: null
   tls_key: null
   tls_cert: null
+  require_client_cert: null
   require_secure_transport: null
   allow_cleartext_passwords: null
 
@@ -985,6 +986,27 @@ Conn.  characterset:	utf8mb4
 TCP port:		3310
 --------------
 ```
+
+### `require_client_cert`
+
+Setting this field requires all client connections to present a client certificate. If the server also defines `ca_cert`, then the client certificates will also be verified against the server's CA cert. Using this option requires also setting `tls_key` and `tls_cert` since use of certificates require a TLS connection.  
+
+**Default**: null
+
+**Values**: null, false, or true
+
+**Example**:
+
+The following snippet from a `config.yaml` file shows how to set `require_client_cert`, along with `tls_key`, and `tls_cert`. 
+
+```yaml
+listener:
+  require_client_cert: true
+  tls_key: /path/to/my/certs/server_key.pem
+  tls_cert: /path/to/my/certs/server_cert.pem
+```
+
+When running with this configuration, all clients **must** present a certificate in order to connect to the sever. If `ca_cert` is also configured, then the client's certificate will be verified against the server's CA cert.
 
 ### `allow_cleartext_passwords`
 
