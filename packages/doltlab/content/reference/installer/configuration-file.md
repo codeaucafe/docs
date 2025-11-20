@@ -9,11 +9,11 @@ title: Installer configuration file reference
 
 version: "v2.3.0"
 host: "127.0.0.1"
-docker_network: "doltlab"
+network: "doltlab" # Replaces deprecated `docker_network`
 metrics_disabled: false
 whitelist_all_users: true
-  use_env: false
-  runtime: docker
+use_env: false
+runtime: docker
 services:
   doltlabenvoy:
     replicas: 1
@@ -169,7 +169,7 @@ The following are top-level `installer_config.yaml` options:
 
 - [version](#version)
 - [host](#host)
-- [docker_network](#docker_network)
+- [network](#network)
 - [metrics_disabled](#metrics_disabled)
 - [whitelist_all_users](#whitelist_all_users)
 - [use_env](#use_env)
@@ -204,16 +204,20 @@ host: 123.456.78.90
 
 Command line equivalent [host](./cli.md#host).
 
-## docker_network
+## network
 
-_String_. The name of the docker network used for DoltLab, defaults to `doltlab`. _Optional_.
+_String_. The name of the Docker network (docker/podman) or the Kubernetes namespace (k8s) used by DoltLab. Defaults to `doltlab`. _Optional_.
 
 ```yaml
 # example installer_config.yaml
-docker_network: doltlab
+network: doltlab
 ```
 
-Command line equivalent [docker-network](./cli.md#docker-network).
+Command line equivalent [network](./cli.md#network). Deprecated alias: [docker-network](./cli.md#docker-network).
+
+### Deprecated: docker_network
+
+`docker_network` is deprecated in favor of `network`. Existing configs continue to work; the installer promotes `docker_network` to `network` internally.
 
 ## metrics_disabled
 
@@ -268,12 +272,12 @@ runtime: podman
 
 Command line equivalent [runtime](./cli.md#runtime).
 
-When `runtime: k8s` is set, the installer generates Kubernetes manifests under `k8s/`. Apply them with `kubectl apply -f ./k8s/all.yaml`. The value of `docker_network` is used as the Kubernetes namespace. Kubernetes deployments are single-host logical deployments in DoltLab Enterprise; multi-host Kubernetes topologies are not supported.
+When `runtime: k8s` is set, the installer generates Kubernetes manifests under `k8s/`. Apply them with `kubectl apply -f ./k8s/all.yaml`. The value of `network` is used as the Kubernetes namespace. Kubernetes deployments are single-host logical deployments in DoltLab Enterprise; multi-host Kubernetes topologies are not supported.
 
 ```yaml
 # example installer_config.yaml
 runtime: k8s
-docker_network: doltlab   # becomes the K8s namespace
+network: doltlab   # becomes the K8s namespace
 enterprise:
   scheme: https
   tls:

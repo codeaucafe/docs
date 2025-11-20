@@ -94,17 +94,18 @@ The following contents on this page covers how to configure various Enterprise f
 1. [Use custom Logo on DoltLab instance](#use-custom-logo-on-doltlab-instance)
 2. [Customize automated emails](#customize-automated-emails)
 3. [Customize DoltLab colors](#customize-doltlab-colors)
-4. [Add Super Admins to a DoltLab instance](#add-super-admins-to-a-doltlab-instance)
-5. [Configure SAML Single-Sign-on](#configure-saml-single-sign-on)
-6. [Configure OIDC Single-Sign-on](#configure-oidc-single-sign-on)
-7. [Automated Remote Backups](#automated-remote-backups)
-8. [Deploy DoltLab across multiple hosts](#deploy-doltlab-across-multiple-hosts)
-9. [Connect DoltLab to an SMTP server](#connect-doltlab-to-an-smtp-server)
-10. [Connect DoltLab to an SMTP server with implicit TLS](#connect-doltlab-to-an-smtp-server-with-implicit-tls)
-11. [Troubleshoot SMTP server connection problems](#troubleshoot-smtp-server-connection-problems)
-12. [Set up a SMTP server using any Gmail address](#set-up-a-smtp-server-using-any-gmail-address)
-13. [Serve DoltLab over HTTPS natively](#serve-doltlab-over-https-natively)
-14. [Automatically upgrade DoltLab](#automatically-upgrade-doltlab)
+4. [Deploy DoltLab on Kubernetes](#deploy-doltlab-on-kubernetes)
+5. [Add Super Admins to a DoltLab instance](#add-super-admins-to-a-doltlab-instance)
+6. [Configure SAML Single-Sign-on](#configure-saml-single-sign-on)
+7. [Configure OIDC Single-Sign-on](#configure-oidc-single-sign-on)
+8. [Automated Remote Backups](#automated-remote-backups)
+9. [Deploy DoltLab across multiple hosts](#deploy-doltlab-across-multiple-hosts)
+10. [Connect DoltLab to an SMTP server](#connect-doltlab-to-an-smtp-server)
+11. [Connect DoltLab to an SMTP server with implicit TLS](#connect-doltlab-to-an-smtp-server-with-implicit-tls)
+12. [Troubleshoot SMTP server connection problems](#troubleshoot-smtp-server-connection-problems)
+13. [Set up a SMTP server using any Gmail address](#set-up-a-smtp-server-using-any-gmail-address)
+14. [Serve DoltLab over HTTPS natively](#serve-doltlab-over-https-natively)
+15. [Automatically upgrade DoltLab](#automatically-upgrade-doltlab)
 
 # Use custom logo on DoltLab instance
 
@@ -428,27 +429,43 @@ See other examples of utilizing colors to brand DoltLab for some well-known comp
 
 # Deploy DoltLab on Kubernetes (single-host)
 
-This section describes how to deploy DoltLab Enterprise to Kubernetes. The installer generates Kubernetes manifests for a single-host logical deployment. Multi-host Kubernetes on DoltLab is not yet supported.
+Starting with DoltLab Enterprise >= v2.5.0, Kubernetes deployments are supported. To configure a DoltLab Enterprise instance to run on Kubernetes, the standard DoltLab `installer` tool is used to generate static Kubernetes manifests for a single-host, logical deployment. Multi-host Kubernetes deployments are not yet supported.
 
 Notes:
-- Kubernetes deployments require DoltLab Enterprise.
-- The installer’s `docker_network` becomes the Kubernetes namespace.
-- Generated assets are written under `k8s/` and applied with `kubectl`.
-- Envoy is the unified edge exposed as a LoadBalancer Service.
-- With TLS enabled, the UI is served on 443 and port 80 is disabled. Without TLS, the UI is served on 80.
-- Internal server-to-server traffic uses the in-cluster file service endpoint.
+- The installer’s `network` becomes the Kubernetes namespace, which defaults to `doltlab`. (`docker_network` is deprecated but still supported.)
+- Generated assets are written under `k8s/` and can be applied with `kubectl`.
+- `doltlabenvoy`, the Envoy proxy deployed in DoltLab, is the unified edge-proxy, exposed as a LoadBalancer Service.
+
+### Generated Kubernetes assets 
+
+For a Kubernetes deployment, the `installer` will generate individual files for each resource required to deploy DoltLab, in addition to a single
+file containing all defintions called `all.yaml`. This file makes it easy to deploy everything in a single apply command, and is the recommended way to deploy DoltLab.
+
+Additionally, a subdirectory called `k8s/admin-templates` contains the following optional static resource definitions that allow DoltLab administrators to add
+some customization to `doltlabapi` Job specifications, which are the Jobs it deploys to do the file import, pull-request merging, and long-running query work.
+
+Specifically, the `k8s/admin-templates/doltlab-job-overrides.yaml` contains a commented ConfigMap template you can edit to apply per-job PodSpec overrides for DoltLab jobs (import/merge/sqlread).
+This file is not applied by default, so to you need to uncomment the snippets you need, then run:
+    - `kubectl apply -f k8s/admin-templates/doltlab-job-overrides.yaml`
+
+`k8s/admin-templates/doltlabapi-config-rbac.yaml` contains the Role/RoleBinding allowing the `doltlabapi` ServiceAccount to read the overrides ConfigMap above.
+ This also is not applied by default, and should be applied once if the Job overrides have been applied:
+    - `kubectl apply -f k8s/admin-templates/doltlabapi-config-rbac.yaml`
 
 ### Prerequisites
+
+Before you're able to deploy a DoltLab Enterprise instance on Kubernetes, you will need the following:
+
 - A Kubernetes cluster with a working `kubectl` context.
 - LoadBalancer support in your environment.
 - A default StorageClass (volumeBindingMode: WaitForFirstConsumer recommended).
-- Optional: ExternalDNS configured in the cluster.
+- ExternalDNS configured in the cluster, or a way to map an external IP or DNS name to the `doltlabenvoy` Service.
 
 ### Example configuration (TLS)
 ```yaml
 version: "vX.Y.Z"
 host: "doltlab.example.com"
-docker_network: "doltlab"   # becomes the K8s namespace
+network: "doltlab"   # becomes the K8s namespace
 runtime: "k8s"
 enterprise:
   scheme: "https"
@@ -465,7 +482,7 @@ enterprise:
 ```yaml
 version: "vX.Y.Z"
 host: "doltlab.example.com"
-docker_network: "doltlab"
+network: "doltlab"
 runtime: "k8s"
 enterprise:
   scheme: "http"
@@ -484,10 +501,16 @@ kubectl -n <namespace> get svc doltlabenvoy
 ```
 
 If you use ExternalDNS, add an annotation to the `doltlabenvoy` Service:
+
 ```yaml
 metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: doltlab.example.com
+```
+
+### Stop the running deployments and statefulsets
+```bash
+kubectl scale deploy,statefulset --replicas=0 -n doltlab
 ```
 
 ### Uninstall
