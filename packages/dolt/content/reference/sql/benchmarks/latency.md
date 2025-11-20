@@ -34,23 +34,23 @@ attempt to run as many queries as possible in a fixed 2 minute time
 window. The `Dolt` and `MySQL` columns show the median latency in 
 milliseconds (ms) of each query during that 2 minute time window.
 
-The Dolt version is `1.78.0`.
+The Dolt version is `1.78.2`.
 
 <!-- START___DOLT___LATENCY_RESULTS_TABLE -->
 |       Read Tests        | MySQL | Dolt  | Multiple |
 |:-----------------------:|:-----:|:-----:|:--------:|
-|  covering\_index\_scan  | 1.82  | 0.55  |   0.3    |
+|  covering\_index\_scan  | 1.86  | 0.55  |   0.3    |
 |      groupby\_scan      | 13.7  | 13.7  |   1.0    |
 |       index\_join       |  1.5  | 2.07  |   1.38   |
-|    index\_join\_scan    | 1.47  | 1.34  |   0.91   |
-|       index\_scan       | 34.33 | 28.67 |   0.84   |
+|    index\_join\_scan    |  1.5  | 1.34  |   0.89   |
+|       index\_scan       | 34.33 | 23.95 |   0.7    |
 |   oltp\_point\_select   |  0.2  | 0.28  |   1.4    |
-|    oltp\_read\_only     | 3.82  | 5.18  |   1.36   |
-| select\_random\_points  | 0.35  | 0.57  |   1.63   |
+|    oltp\_read\_only     | 3.82  | 5.28  |   1.38   |
+| select\_random\_points  | 0.35  | 0.58  |   1.66   |
 | select\_random\_ranges  | 0.39  | 0.57  |   1.46   |
 |       table\_scan       | 34.95 | 28.16 |   0.81   |
-|   types\_table\_scan    | 75.82 | 92.42 |   1.22   |
-| reads\_mean\_multiplier |       |       |   1.12   |
+|   types\_table\_scan    | 75.82 | 80.03 |   1.06   |
+| reads\_mean\_multiplier |       |       |   1.09   |
 
 |       Write Tests        | MySQL | Dolt  | Multiple |
 |:------------------------:|:-----:|:-----:|:--------:|
@@ -63,12 +63,12 @@ The Dolt version is `1.78.0`.
 |  types\_delete\_insert   | 8.58  | 6.91  |   0.81   |
 | writes\_mean\_multiplier |       |       |   0.9    |
 
-|    TPC-C TPS Tests    | MySQL | Dolt | Multiple |
-|:---------------------:|:-----:|:----:|:--------:|
-|  tpcc-scale-factor-1  | 92.8  | 36.2 |   2.56   |
-| tpcc\_tps\_multiplier |       |      |   2.56   |
+|    TPC-C TPS Tests    | MySQL | Dolt  | Multiple |
+|:---------------------:|:-----:|:-----:|:--------:|
+|  tpcc-scale-factor-1  | 93.7  | 36.51 |   2.57   |
+| tpcc\_tps\_multiplier |       |       |   2.57   |
 
-| Overall Mean Multiple | 1.53 |
+| Overall Mean Multiple | 1.52 |
 |:---------------------:|:----:|
 <!-- END___DOLT___LATENCY_RESULTS_TABLE -->
 <br/>
