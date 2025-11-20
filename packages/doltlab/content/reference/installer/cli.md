@@ -150,11 +150,15 @@ _Boolean_. If true, will not collect first-party metrics.
 
 Configuration file equivalent [metrics_disabled](./configuration-file.md#metrics_disabled).
 
+## network
+
+_String_. The network or namespace to run DoltLab in (default "doltlab"). For Docker/Podman this is the Docker network name; for Kubernetes it is the namespace.
+
+Configuration file equivalent [network](./configuration-file.md#network).
+
 ## docker-network
 
-_String_. The docker network to run DoltLab in, (default "doltlab").
-
-Configuration file equivalent [docker_network](./configuration-file.md#docker_network).
+Deprecated alias for [network](#network). Still accepted for backwards compatibility.
 
 ## doltlabapi-asyncworker-aws-sqs-queue
 
@@ -665,7 +669,11 @@ _Boolean_. If true will generate a script to install DoltLab's dependencies on U
 
 ## runtime
 
-_String_. Selects the container runtime to target: `docker` (default) or `podman`. When set to `podman`, the installer adjusts generated files for Podman, such as removing service `depends_on`, setting appropriate container user, and mapping the Podman socket.
+_String_. Selects the runtime to target: `docker` (default), `podman`, or `k8s`.
+
+When set to `podman`, the installer adjusts generated files for Podman (removes service `depends_on`, sets appropriate container user, maps the Podman socket).
+
+When set to `k8s`, the installer generates Kubernetes manifests under `k8s/`. Apply them with `kubectl apply -f ./k8s/all.yaml`. The value of `network` is used as the Kubernetes namespace. Kubernetes deployments are single-host logical deployments in DoltLab Enterprise; multi-host Kubernetes is not yet supported.
 
 Configuration file equivalent [runtime](./configuration-file.md#runtime).
 
