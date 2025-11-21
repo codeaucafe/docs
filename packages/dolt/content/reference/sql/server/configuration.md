@@ -34,8 +34,10 @@ listener:
   max_connections_timeout_millis: 60000
   read_timeout_millis: 28800000
   write_timeout_millis: 28800000
+  ca_cert: null
   tls_key: null
   tls_cert: null
+  require_client_cert: null
   require_secure_transport: null
   allow_cleartext_passwords: null
 
@@ -906,6 +908,14 @@ From the [`dolt sql-server` help documentation](https://docs.dolthub.com/cli-ref
 
 We were a bit confused how to trigger this timeout and could only do it within Dolt code. Practically, we think this type of timeout is triggered very rarely in the wild.
 
+### `ca_cert`
+
+`ca_cert` allows you to specify a CA (Certificate Authority) certificate that will be used to validate client certificates. You can configure user accounts to require a valid client certificate when creating the user account by specifying the `REQUIRE X509` clause, for example: `CREATE USER user1@'%' REQUIRE X509`.   
+
+**Default**: null
+
+**Values**: A path on your filesystem to a `.pem` file.
+
 ### `tls_key`
 
 `tls_key`, `tls_cert`, and `require_secure_transport` are used together and are covered in [this article](https://www.dolthub.com/blog/2024-12-03-ssl-mode/). `tls_key` is the path to the key file to use for secure transport.
@@ -991,6 +1001,27 @@ Conn.  characterset:	utf8mb4
 TCP port:		3310
 --------------
 ```
+
+### `require_client_cert`
+
+Setting this field requires all client connections to present a client certificate. If the server also defines `ca_cert`, then the client certificates will also be verified against the server's CA cert. Using this option requires also setting `tls_key` and `tls_cert` since use of certificates require a TLS connection.  
+
+**Default**: null
+
+**Values**: null, false, or true
+
+**Example**:
+
+The following snippet from a `config.yaml` file shows how to set `require_client_cert`, along with `tls_key`, and `tls_cert`. 
+
+```yaml
+listener:
+  require_client_cert: true
+  tls_key: /path/to/my/certs/server_key.pem
+  tls_cert: /path/to/my/certs/server_cert.pem
+```
+
+When running with this configuration, all clients **must** present a certificate in order to connect to the sever. If `ca_cert` is also configured, then the client's certificate will be verified against the server's CA cert.
 
 ### `allow_cleartext_passwords`
 
