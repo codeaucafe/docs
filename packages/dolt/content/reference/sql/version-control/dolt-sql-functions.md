@@ -698,14 +698,14 @@ And here's the initial state of `inventory` has at the tip of `main`:
 We then create (but don't stage) a number of different changes, resulting in a working set that looks like this:
 
 ```text
-+----+-------+------------------+
-| pk | name  | metadata.        |
-+----+-------+------------------+
++----+-------+-------------------------------------------------------------+
+| pk | name  | metadata                                                    |
++----+-------+-------------------------------------------------------------+
 | 1  | shirt | {"colors": ["red", "blue"], "types": ["tee", "hawaiian"] }  |
-| 2  | shoes | {"colors": ["white"], "size": "medium" } |
-| 3  | pants | {"colors": ["blue"] } |
-| 4  | tie | { "colors": ["red"], "clip-on": false }  |
-+----+-------+------------------+
+| 2  | shoes | {"colors": ["white"], "size": "medium" }                    |
+| 3  | pants | {"colors": ["blue"] }                                       |
+| 4  | tie   | { "colors": ["red"], "clip-on": false }                     |
++----+-------+-------------------------------------------------------------+
 ```
 
 We added values to the "shirt" document, edited data in the "shoes" document, deleted data from the "pants" document, and renamed a key in the "tie" document.
