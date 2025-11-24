@@ -634,6 +634,124 @@ With result of single row:
 +-----------------+---------------+-----------+-------------+---------------+
 ```
 
+## `DOLT_JSON_DIFF()`
+
+The `DOLT_JSON_DIFF()` table function is a summary of the changes between two JSON documents.
+
+### Options
+
+```sql
+DOLT_DIFF_SUMMARY(<from_document>, <to_document>)
+```
+
+The `DOLT_DIFF_SUMMARY()` table function takes two arguments:
+
+- `from_document` — the document for the start of the diff. This
+  argument is required. This may be a value from a JSON column, or a string that can
+  be converted to JSON.
+- `to_document` — the document for the end of the diff. This
+  argument is required. This may be a value from a JSON column, or a string that can
+  be converted to JSON.
+
+### Schema
+
+```text
++-----------------+---------+
+| field           | type    |
++-----------------+---------+
+| diff_type       | TEXT    |
+| path            | TEXT    |
+| from_value      | JSON    |
+| to_value        | JSON    |
++-----------------+---------+
+```
+
+### Example
+
+Consider we start with a table `inventory` in a database on `main` branch. 
+
+Here is the schema of `inventory` at the tip of `main`:
+
+```text
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| pk       | int         | NO   | PRI | NULL    |       |
+| name     | varchar(50) | YES  |     | NULL    |       |
+| metadata | json        | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+```
+
+And here's the initial state of `inventory` has at the tip of `main`:
+
+```text
++----+-------+----------------------------------------------------------------+
+| pk | name  | metadata.                                                      |
++----+-------+----------------------------------------------------------------+
+| 1  | shirt | {"colors": ["red"] }                                           |
+| 2  | shoes | {"colors": ["black"], "size": "small" }                        |
+| 3  | pants | {"colors": ["blue", "beige"], "materials": ["denim", "silk"] } |
+| 4  | tie   | {"colours": ["red"], "clip-on": true }                         |
++----+-------+----------------------------------------------------------------+
+```
+
+We then create (but don't stage) a number of different changes, resulting in a working set that looks like this:
+
+```text
++----+-------+------------------+
+| pk | name  | metadata.        |
++----+-------+------------------+
+| 1  | shirt | {"colors": ["red", "blue"], "types": ["tee", "hawaiian"] }  |
+| 2  | shoes | {"colors": ["white"], "size": "medium" } |
+| 3  | pants | {"colors": ["blue"] } |
+| 4  | tie | { "colors": ["red"], "clip-on": false }  |
++----+-------+------------------+
+```
+
+We added values to the "shirt" document, edited data in the "shoes" document, deleted data from the "pants" document, and renamed a key in the "tie" document.
+
+If we want to get a list of every unstaged change made to any value in the metadata column, we can combine the DOLT_JSON_DIFF() table function with the DOLT_WORKSPACE_inventory table, via a lateral join:
+
+```sql
+SELECT
+    to_pk as pk,
+    to_name as name,
+    json_diff.diff_type as json_diff_type,
+    row_diff.from_metadata,
+    row_diff.to_metadata,
+    path,
+    json_diff.from_value,
+    json_diff.to_value
+FROM
+    DOLT_WORKSPACE_inventory AS row_diff
+    JOIN
+    lateral (SELECT * FROM DOLT_JSON_DIFF(from_metadata, to_metadata)) json_diff
+WHERE row_diff.diff_type = 'modified' and row_diff.staged = false;
+```
+
+The results of the query provide a summary of only the parts of the JSON documents that have changed between the staged version and the working set:
+
+```
++----+-------+----------------+----------------------------------------------------------+------------------------------------------------------+-------------+------------------+--------------------+
+| pk | name  | json_diff_type | from_metadata                                            | to_metadata                                          | path        | from_value       | to_value           |
++----+-------+----------------+----------------------------------------------------------+------------------------------------------------------+-------------+------------------+--------------------+
+| 0  | shirt | added          | {"colors":["red"]}                                       | {"colors":["red","blue"],"types":["tee","hawaiian"]} | $.colors[1] | NULL             | "blue"             |
+| 0  | shirt | added          | {"colors":["red"]}                                       | {"colors":["red","blue"],"types":["tee","hawaiian"]} | $.types     | NULL             | ["tee","hawaiian"] |
+| 1  | shoes | modified       | {"colors":["black"],"size":"small"}                      | {"colors":["white"],"size":"medium"}                 | $.colors[0] | "black"          | "white"            |
+| 1  | shoes | modified       | {"colors":["black"],"size":"small"}                      | {"colors":["white"],"size":"medium"}                 | $.size      | "small"          | "medium"           |
+| 2  | pants | removed        | {"colors":["blue","beige"],"materials":["denim","silk"]} | {"colors":["blue"]}                                  | $.colors[1] | "beige"          | NULL               |
+| 2  | pants | removed        | {"colors":["blue","beige"],"materials":["denim","silk"]} | {"colors":["blue"]}                                  | $.materials | ["denim","silk"] | NULL               |
+| 3  | tie   | modified       | {"clip-on":true,"colours":["red"]}                       | {"clip-on":false,"colors":["red"]}                   | $.clip-on   | true             | false              |
+| 3  | tie   | added          | {"clip-on":true,"colours":["red"]}                       | {"clip-on":false,"colors":["red"]}                   | $.colors    | NULL             | ["red"]            |
+| 3  | tie   | removed        | {"clip-on":true,"colours":["red"]}                       | {"clip-on":false,"colors":["red"]}                   | $.colours   | ["red"]          | NULL               |
++----+-------+----------------+----------------------------------------------------------+------------------------------------------------------+-------------+------------------+--------------------+
+```
+
+Note how multiple changes in a single row of the `inventory` table are rendered as multiple rows in the result. When multiple keys in the same object have changed, `DOLT_JSON_DIFF` reports an individual diff for each key, instead of reporting a single diff for the entire object.
+
+Arrays are diffed by considering each index of the array separately. This means that inserting or removing values
+in an array anywhere other than the end will shift the indexes of each element, and will be reported as a modification at each index where the value changed.
+
 ## `DOLT_LOG()`
 
 The `DOLT_LOG` table function gets the commit log for all commits reachable from the
