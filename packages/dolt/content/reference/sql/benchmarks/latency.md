@@ -34,30 +34,30 @@ attempt to run as many queries as possible in a fixed 2 minute time
 window. The `Dolt` and `MySQL` columns show the median latency in 
 milliseconds (ms) of each query during that 2 minute time window.
 
-The Dolt version is `1.78.2`.
+The Dolt version is `1.78.5`.
 
 <!-- START___DOLT___LATENCY_RESULTS_TABLE -->
 |       Read Tests        | MySQL | Dolt  | Multiple |
 |:-----------------------:|:-----:|:-----:|:--------:|
 |  covering\_index\_scan  | 1.86  | 0.55  |   0.3    |
-|      groupby\_scan      | 13.7  | 13.7  |   1.0    |
+|      groupby\_scan      | 13.95 | 12.98 |   0.93   |
 |       index\_join       |  1.5  | 2.07  |   1.38   |
-|    index\_join\_scan    |  1.5  | 1.34  |   0.89   |
-|       index\_scan       | 34.33 | 23.95 |   0.7    |
+|    index\_join\_scan    |  1.5  | 1.37  |   0.91   |
+|       index\_scan       | 34.33 | 24.38 |   0.71   |
 |   oltp\_point\_select   |  0.2  | 0.28  |   1.4    |
 |    oltp\_read\_only     | 3.82  | 5.28  |   1.38   |
 | select\_random\_points  | 0.35  | 0.58  |   1.66   |
 | select\_random\_ranges  | 0.39  | 0.57  |   1.46   |
-|       table\_scan       | 34.95 | 28.16 |   0.81   |
-|   types\_table\_scan    | 75.82 | 80.03 |   1.06   |
+|       table\_scan       | 34.33 | 28.16 |   0.82   |
+|   types\_table\_scan    | 75.82 | 81.48 |   1.07   |
 | reads\_mean\_multiplier |       |       |   1.09   |
 
 |       Write Tests        | MySQL | Dolt  | Multiple |
 |:------------------------:|:-----:|:-----:|:--------:|
-|   oltp\_delete\_insert   | 8.43  | 6.55  |   0.78   |
+|   oltp\_delete\_insert   | 8.43  | 6.43  |   0.76   |
 |       oltp\_insert       | 4.18  | 3.19  |   0.76   |
 |    oltp\_read\_write     | 9.22  | 11.65 |   1.26   |
-|   oltp\_update\_index    | 4.25  | 3.25  |   0.76   |
+|   oltp\_update\_index    | 4.18  | 3.25  |   0.78   |
 | oltp\_update\_non\_index | 4.25  | 3.19  |   0.75   |
 |    oltp\_write\_only     | 5.28  | 6.32  |   1.2    |
 |  types\_delete\_insert   | 8.58  | 6.91  |   0.81   |
@@ -65,7 +65,7 @@ The Dolt version is `1.78.2`.
 
 |    TPC-C TPS Tests    | MySQL | Dolt  | Multiple |
 |:---------------------:|:-----:|:-----:|:--------:|
-|  tpcc-scale-factor-1  | 93.7  | 36.51 |   2.57   |
+|  tpcc-scale-factor-1  | 93.95 | 36.61 |   2.57   |
 | tpcc\_tps\_multiplier |       |       |   2.57   |
 
 | Overall Mean Multiple | 1.52 |
