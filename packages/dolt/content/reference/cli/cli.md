@@ -139,7 +139,7 @@ Allow adding otherwise ignored tables.
 
 ## `dolt backup`
 
-Manage server backups
+Manage database backups, including creation, sync, and restore.
 
 **Synopsis**
 
@@ -147,32 +147,32 @@ Manage server backups
 dolt backup [-v | --verbose]
 dolt backup add [--aws-region <region>] [--aws-creds-type <creds-type>] [--aws-creds-file <file>] [--aws-creds-profile <profile>] <name> <url>
 dolt backup remove <name>
-dolt backup restore [--force] <url> <name>
+dolt backup restore [--aws-region <region>] [--aws-creds-type <creds-type>] [--aws-creds-file <file>] [--aws-creds-profile <profile>] [--force] <url> <name>
 dolt backup sync <name>
 dolt backup sync-url [--aws-region <region>] [--aws-creds-type <creds-type>] [--aws-creds-file <file>] [--aws-creds-profile <profile>] <url>
 ```
 
 **Description**
 
-With no arguments, shows a list of existing backups. Several subcommands are available to perform operations on backups, point in time snapshots of a database's contents.
+
+With no arguments, shows a list of existing backups. Several subcommands are available to perform operations on backups; point in time snapshots of a database's contents.
 
 `add`
 Adds a backup named `<name>` for the database at `<url>`.
-The `<url>` parameter supports url schemes of http, https, aws, gs, and file. The url prefix defaults to https. If the `<url>` parameter is in the format `<organization>/<repository>` then dolt will use the `backups.default_host` from your configuration file (Which will be dolthub.com unless changed).
+The `<url>` parameter supports http, https, aws, gs, and file schemes (https as default). If the `<url>` parameter is in the format `<organization>/<repository>` then dolt will use the `backups.default_host` from your configuration file (dolthub.com by default).
 The URL address must be unique to existing remotes and backups.
 
-AWS cloud backup urls should be of the form `aws://[dynamo-table:s3-bucket]/database`. You may configure your aws cloud backup using the optional parameters `aws-region`, `aws-creds-type`, `aws-creds-file`.
+AWS cloud backup URLs should be of the form `aws://[dynamo-table:s3-bucket]/database`. You may configure your AWS cloud backup using the optional parameters `aws-region`, `aws-creds-type`, `aws-creds-file`, `aws-creds-profile`.
 
-aws-creds-type specifies the means by which credentials should be retrieved in order to access the specified cloud resources (specifically the dynamo table, and the s3 bucket). Valid values are 'role', 'env', or 'file'.
+aws-creds-type specifies the means by which credentials should be retrieved in order to access the specified cloud resources (required for DynamoDB tables, and S3 buckets). Valid values are 'role', 'env', or 'file'.
 
-	role: Use the credentials installed for the current user
-	env: Looks for environment variables AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
-	file: Uses the credentials file specified by the parameter aws-creds-file
+	role: Use the credentials installed for the current user.
+	env:  Looks for environment variables AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.
+	file: Uses the credentials file specified by the parameter aws-creds-file.
 
-	
-GCP backup urls should be of the form gs://gcs-bucket/database and will use the credentials setup using the gcloud command line available from Google.
+GCP backup URLs should follow the format `gs://gcs-bucket/database`. Backups will use the credentials that you configure using the gcloud CLI.
 
-The local filesystem can be used as a backup by providing a repository url in the format file://absolute path. See https://en.wikipedia.org/wiki/File_URI_scheme
+The local filesystem can be used as a backup by providing a repository URL in the format `file://absolute-path`. See https://en.wikipedia.org/wiki/File_URI_scheme.
 
 `remove`, `rm`
 Remove the backup named `<name>`. All configuration settings for the backup are removed. The contents of the backup are not affected.
@@ -183,9 +183,9 @@ Restore a Dolt database from a given `<url>` into a specified directory `<name>`
 `sync`
 Snapshot the database and upload to the backup `<name>`. This includes branches, tags, working sets, and remote tracking refs.
 
-	
 `sync-url`
-Snapshot the database and upload the backup to `<url>`. Like sync, this includes branches, tags, working sets, and remote tracking refs, but it does not require you to create a named backup
+Snapshot the database and upload the backup to `<url>`. Like sync, this includes branches, tags, working sets, and remote tracking refs, but it does not require you to create a named backup.
+
 
 **Arguments and options**
 
@@ -1070,6 +1070,8 @@ The diffs displayed can be limited to show the first N by providing the paramete
 
 To filter which data rows are displayed, use `--where <SQL expression>`. Table column names in the filter expression must be prefixed with `from_` or `to_`, e.g. `to_COLUMN_NAME > 100` or `from_COLUMN_NAME + to_COLUMN_NAME = 0`.
 
+To filter diff output by change type, use `--filter <type>` where `<type>` is one of `added`, `modified`, `renamed`, or `dropped`. The `added` filter shows only additions (new tables or rows), `modified` shows only schema modifications or row updates, `renamed` shows only renamed tables, and `dropped` shows only deletions (dropped tables or deleted rows). You can also use `removed` as an alias for `dropped`. For example, `dolt diff --filter=dropped` shows only deleted rows and dropped tables.
+
 The `--diff-mode` argument controls how modified rows are presented when the format output is set to `tabular`. When set to `row`, modified rows are presented as old and new rows. When set to `line`, modified rows are presented as a single row, and changes are presented using "+" and "-" within the column. When set to `in-place`, modified rows are presented as a single row, and changes are presented side-by-side with a color distinction (requires a color-enabled terminal). When set to `context`, rows that contain at least one column that spans multiple lines uses `line`, while all other rows use `row`. The default value is `context`.
 
 
@@ -1101,6 +1103,9 @@ filters columns based on values in the diff.  See `dolt diff --help` for details
 
 `--limit`:
 limits to the first N diffs.
+
+`--filter`:
+filters results based on the type of change (added, modified, renamed, dropped). 'removed' is accepted as an alias for 'dropped'.
 
 `--staged`:
 Show only the staged data changes.
@@ -1366,7 +1371,7 @@ perform a fast, but incomplete garbage collection pass
 perform a full garbage collection, including the old generation
 
 `--archive-level`:
-Specify the archive compression level garbage collection results. Default is 0. Max is 1
+Specify the archive compression level garbage collection results. Default is 1, Disable with 0
 
 
 
@@ -2368,8 +2373,9 @@ This is an example yaml configuration file showing all supported items and their
 	  dolt_transaction_commit: false
 	  event_scheduler: "ON"
 	  auto_gc_behavior:
-	    enable: false
-	    archive_level: 0
+	    enable: true
+	    archive_level: 1
+	  branch_activity_tracking: false
 	
 	listener:
 	  host: localhost
@@ -2395,6 +2401,9 @@ This is an example yaml configuration file showing all supported items and their
 	metrics:
 	  labels: {}
 	  port: -1
+	  tls_cert: ""
+	  tls_key: ""
+	  tls_ca: ""
 
 
 
@@ -2432,15 +2441,19 @@ SUPPORTED CONFIG FILE FIELDS:
 
 `listener.max_wait_connections_timeout`: The maximum amount of time that a connection will block waiting for a connection before being rejected.
 
-`listener.read_timeout_millis`: The number of milliseconds that the server will wait for a read operation
+`listener.read_timeout_millis`: The number of milliseconds that the server will wait for a read operation.
 
-`listener.write_timeout_millis`: The number of milliseconds that the server will wait for a write operation
+`listener.write_timeout_millis`: The number of milliseconds that the server will wait for a write operation.
 
-`listener.require_secure_transport`: Boolean flag to turn on TLS/SSL transport
+`listener.require_secure_transport`: Boolean flag to turn on TLS/SSL transport.
 
-`listener.tls_cert`: The path to the TLS certicifcate used for secure transport
+`listener.require_client_cert`: Boolean flag to require all connections present a certificate. This implies that all connections must be over TLS, so listener.tls_key and listener.tls_cert must also be set.
 
-`listener.tls_key`: The path to the TLS key used for secure transport
+`listener.ca_cert`: The path to a Certificate Authority (CA) certificate used to validate client certificates.
+
+`listener.tls_cert`: The path to the TLS certificate used for secure transport.
+
+`listener.tls_key`: The path to the TLS key used for secure transport.
 
 `remotesapi.port`: A port to listen for remote API operations on. If set to a positive integer, this server will accept connections from clients to clone, pull, etc. databases being served.
 

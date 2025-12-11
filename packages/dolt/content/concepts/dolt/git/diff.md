@@ -30,6 +30,33 @@ For instance, are you expecting no `NULL` cells but have some? This indicates a 
 
 Programmatically, you can use SQL to explore very large diffs using the [`dolt_diff_<tablename>` system tables](../../../reference/sql/version-control/dolt-system-tables.md).
 
+## Filtering Diffs by Change Type
+
+When reviewing large diffs, you may want to focus on specific types of changes. The `dolt diff` command supports a `--filter` option to show only certain change types:
+
+- `--filter=added` - Show only new tables and inserted rows
+- `--filter=modified` - Show only schema modifications and row updates
+- `--filter=renamed` - Show only renamed tables
+- `--filter=dropped` - Show only dropped tables and deleted rows (alias: `removed`)
+
+This is particularly useful when:
+- Reviewing diffs with thousands of changes across multiple tables
+- Focusing on deletions that may need extra scrutiny
+- Isolating schema changes from data changes
+
+```bash
+# Show only deleted rows and dropped tables
+dolt diff HEAD~1 --filter=dropped
+
+# Show only new tables and inserted rows as SQL
+dolt diff HEAD~1 --filter=added -r sql
+
+# Show only renamed tables
+dolt diff HEAD~1 --filter=renamed
+```
+
+For SQL-based filtering, see the [`dolt_diff_<tablename>` system tables documentation](../../../reference/sql/version-control/dolt-system-tables.md#database-diffs), which supports filtering via `WHERE diff_type = 'added'` (or `'modified'`, `'removed'`).
+
 ## Difference between Git diffs and Dolt diffs
 
 Git and Dolt diffs are conceptually the same. Display the differences between two sets of files in Git's case and tables in Dolt's case. 
