@@ -11,10 +11,8 @@ throughput metric.
 
 ## Performance Roadmap
 
-Dolt is slightly slower than MySQL on the `sysbench` test suite. 
-The goal is to get Dolt to match MySQL latency for common operations. 
-Dolt is currently 10% slower than MySQL, approximately 10% faster 
-on writes and 33% slower on reads. The `multiple` column represents this 
+Dolt is slightly faster than MySQL on the `sysbench` test suite, approximately 10% 
+faster on writes and 5% slower on reads. The `multiple` column represents this 
 relationship with regard to a particular benchmark.
 
 Dolt gets about 40% of the transactional throughput on TPC-C than MySQL, 
@@ -22,7 +20,7 @@ Dolt gets about 40% of the transactional throughput on TPC-C than MySQL,
 are not sensitive to transactional throughput beyond a handful per second.
 
 It's important recognize that these are industry standard tests, and
-are OLTP oriented. Performance results may vary but Dolt is 
+are OLTP-oriented. Performance results may vary but Dolt is 
 generally competitive on latency with MySQL and Postgres.
 
 ## Benchmark Data
