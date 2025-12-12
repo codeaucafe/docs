@@ -89,12 +89,10 @@ Our goal is to be a 100% drop-in replacement for MySQL.
 
 ## Why does Dolt use so much disk space?
 
-Dolt generates a lot of garbage during some writes, especially during initial import. It's not
-unusual to get a local storage size of 20x the actual data size after an import. Running `dolt gc`
-will remove the garbage and reclaim local storage. See the [docs on `dolt gc`](../reference/cli/cli.md#dolt-gc)
-and the [`dolt_gc` stored procedure](../reference/sql/version-control/dolt-sql-procedures.md#dolt_gc) for details.
-
-If you are concerned about the growth of a Dolt database at steady state while running the SQL server, there is [an experimental feature](../reference/sql/server/garbage-collection.md#automated-gc) to automatically run `dolt_gc()` as the database grows.
+Dolt generates a lot of garbage during some writes, especially during initial import. As of Dolt 1.75, Dolt 
+collects disk garbage non-intrusively by default, a feature called automatic garbage collection. So, users of the
+newest Dolt versions should not notice high disk usage. If you do see unusually high disk usage, you can manually
+initiate garbage collection by calling [`dolt_gc()`](../reference/sql/version-control/dolt-sql-procedures.md#dolt_gc).
 
 ## How do I squash the history of a Dolt database? I only want the latest.
 
