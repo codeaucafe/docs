@@ -40,17 +40,13 @@ Dolt operational issues usually manifest as slow SQL queries. In rare occasions,
 
 ## Server Consuming Disk
 
-Dolt creates disk garbage on write. This can sometimes become a substantial portion of the disk Dolt is consuming. Dolt ships with a garbage collection function. Running the garbage collection function can free disk.
+Dolt creates disk garbage on write. As of Dolt 1.75, automatic garbage collection is on by default. Thus, you should not experience disk garbage accumulation under normal operation for newer versions of Dolt.
 
-To run garbage collection online, run [`call dolt_gc()`](../version-control/dolt-sql-procedures.md#dolt_gc). There is [an experimental feature](./garbage-collection.md#automated-gc) you can enable to run this periodically in the background as the database grows.
-
-To run garbage collection offline, stop your `dolt sql-server`, navigate to the Dolt directory where your database is stored and run `dolt gc`. Once the operation is complete, restart your server using `dolt sql-server`. 
-
-Disk garbage is especially pronounced after imports. We recommend concluding imports with a `dolt gc` call.
+However, you may want to manually initiate garbage collection if you notice high disk usage. To manually trigger garbage collection online, run [`call dolt_gc()`](../version-control/dolt-sql-procedures.md#dolt_gc). To run garbage collection offline, stop your `dolt sql-server`, navigate to the Dolt directory where your database is stored and run `dolt gc`. Once the operation is complete, restart your server using `dolt sql-server`. 
 
 Another potential cause is a commit-heavy workflow that uses a database design that is antagonistic to Dolt's structural sharing. We've written thoroughly about this [here](https://www.dolthub.com/blog/2020-05-13-dolt-commit-graph-and-structural-sharing/), but some examples include
 
-* Using primary keys with random values. Inserts into indexes with random values guarantees that edits will occur all throughout the index instead of being clustered around the same key space. This results in a rewrite of the prolly tree thereby increasing storage disproportionately to the delta of the changes.
+* Using primary keys with random values. Inserts into indexes with random values guarantees that edits will occur all throughout the index instead of being clustered around the same key space. This results in a rewrite of the Prolly Tree thereby increasing storage disproportionately to the delta of the changes.
 * Adding a column to a table. A new column forks the storage of the table resulting in a loss of structural sharing. Dolt is row major and builds chunks for each primary key, row values pair. The row values encodes the schema length so every row now requires a new chunk.
 
 ## Server Consuming Memory
