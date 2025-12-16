@@ -228,12 +228,12 @@ For table data, a map of primary key to data columns is stored in a Prolly Tree.
 
 # Prolly Trees In Practice
 
-This all looks good on paper. How do Prolly Trees work in practice? On a standard suite of `sysbench` performance tests, Dolt is approximately [10% slower than MySQL](https://docs.dolthub.com/sql-reference/benchmarks/latency). 
+This all looks good on paper. How do Prolly Trees work in practice? On a standard suite of `sysbench` performance tests, Dolt is approximately [as fast as MySQL](https://docs.dolthub.com/sql-reference/benchmarks/latency). 
 
-Upon profiling, we find most of the performance difference to be unrelated to Prolly Trees. The performance difference comes from:
+Upon profiling, we find any performance differences to be unrelated to Prolly Trees. Performance differences come from:
 
 1. Dolt is implemented in Golang. MySQL is implemented in C.
-2. MySQL's SQL analyzer is faster than Dolt's because it is more mature.
+2. MySQL's SQL analyzer is sometimes faster than Dolt's because it is more mature.
 3. MySQL does fewer transformations on data than Dolt to get it into the necessary wire format.
 
 Dolt can [compute diffs in time proportional to the size of the differences](https://www.dolthub.com/blog/2022-06-03-dolt-diff-vs-sqlite-diff/). Dolt structurally shares [data across versions](https://www.dolthub.com/blog/2023-12-06-sizing-your-dolt-instance/#version-storage).

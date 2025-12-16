@@ -42,7 +42,7 @@ Valid commands for dolt are
              migrate - Executes a database migration to use the latest Dolt data format.
          read-tables - Fetch table(s) at a specific commit into a new dolt repo
                   gc - Cleans up unreferenced data from the repository.
-                fsck - Verifies the contents of the database are not corrupted.
+                fsck - Verifies the contents of the database are not corrupted. Provides repair when possible.
        filter-branch - Edits the commit history using the provided query.
           merge-base - Find the common ancestor of two commits.
              version - Displays the version for the Dolt binary.
@@ -1325,6 +1325,7 @@ Verifies the contents of the database are not corrupted.
 
 ```bash
 dolt fsck [--quiet]
+dolt fsck --revive-journal-with-data-loss
 ```
 
 **Description**
@@ -1335,6 +1336,12 @@ Verifies the contents of the database are not corrupted.
 
 `--quiet`:
 Don't show progress. Just print final report.
+
+`--revive-journal-with-data-loss`:
+Revives a corrupted chunk journal by discarding unparsable data.
+WARNING: This may result in data loss. Your original data will be preserved in a backup file. Use this option to restore
+the ability to use your Dolt database. Please contact Dolt (https://github.com/dolthub/dolt/issues) for assistance.
+
 
 
 
@@ -2390,9 +2397,9 @@ This is an example yaml configuration file showing all supported items and their
 	
 	cfg_dir: .doltcfg
 	
-	privilege_file: .doltcfg/privileges.db
+	privilege_file: .doltcfg\privileges.db
 	
-	branch_control_file: .doltcfg/branch_control.db
+	branch_control_file: .doltcfg\branch_control.db
 	
 	user_session_vars: []
 	
@@ -2404,6 +2411,7 @@ This is an example yaml configuration file showing all supported items and their
 	  tls_cert: ""
 	  tls_key: ""
 	  tls_ca: ""
+	  jwt_required_for_localhost: false
 
 
 
